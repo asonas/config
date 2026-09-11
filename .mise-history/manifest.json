@@ -8,6 +8,54 @@
       "variants": []
     },
     {
+      "path": "home/.apm/apm.yml",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.apm/instructions/base.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.apm/instructions/debugging.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.apm/instructions/git-workflow.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.apm/instructions/github-cli.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.apm/instructions/installer.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.apm/instructions/shell.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.apm/instructions/testing.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/.claude/commands/gemini-search.md",
       "autosave": true,
       "encrypt": false,

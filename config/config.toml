@@ -17,6 +17,14 @@ idiomatic_version_file_enable_tools = ["node", "ruby"]
 builtin = "history-watch"
 
 [dotfiles]
+"~/.apm/apm.yml" = { mode = "track" }
+"~/.apm/instructions/base.instructions.md" = { mode = "track" }
+"~/.apm/instructions/debugging.instructions.md" = { mode = "track" }
+"~/.apm/instructions/git-workflow.instructions.md" = { mode = "track" }
+"~/.apm/instructions/github-cli.instructions.md" = { mode = "track" }
+"~/.apm/instructions/installer.instructions.md" = { mode = "track" }
+"~/.apm/instructions/shell.instructions.md" = { mode = "track" }
+"~/.apm/instructions/testing.instructions.md" = { mode = "track" }
 "~/.claude/commands/gemini-search.md" = { mode = "track" }
 "~/.claude/commands/talk-review" = { mode = "track" }
 "~/.claude/scripts" = { mode = "track" }
