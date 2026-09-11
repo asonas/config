@@ -2,10 +2,10 @@
 
 Personal configuration managed as live files with mise.
 
-This repository is intended to replace the symlink-based
-`asonas/dotfiles` setup. The migration has not started yet. Until each path is
-explicitly migrated and verified, the existing dotfiles repository remains the
-authority for that path.
+This repository is replacing the symlink-based `asonas/dotfiles` setup through
+an incremental migration. The existing dotfiles repository remains the
+authority only for paths and bootstrap behavior that have not yet been migrated
+and verified here.
 
 ## Goals
 
@@ -176,8 +176,15 @@ accounted for. Archive it only after a second-machine restore succeeds.
 ## Current status
 
 - Repository design documented.
-- No live files migrated.
-- No history watcher configured.
-- No synchronization origin connected.
-- No old symlinks removed.
-- No bootstrap workflow verified.
+- mise 2026.9.5 installed.
+- 24 legacy dotfile entries migrated from symlinks to regular live paths.
+- Eight APM source files migrated to regular live paths.
+- 32 explicit entries covering 67 files tracked in local mise history.
+- The `mise-history` user service is running and automatic capture is active.
+- No synchronization origin connected; `asonas/config` does not yet exist on
+  GitHub.
+- Global APM install and compile were previewed but not applied. The install
+  preview would remove two skills installed by the separate Gist workflow, so
+  that workflow must be migrated before APM bootstrap can replace the old
+  installer.
+- No second-machine bootstrap workflow verified.
