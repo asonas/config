@@ -1,0 +1,40 @@
+[tools]
+"github:cli/cli" = "latest"
+node = "lts"
+ruby = "latest"
+yarn = "1.22.19"
+colima = "latest"
+"github:hokaccha/givy" = "latest"
+"github:sorah/mairu" = "latest"
+"github:tokuhirom/mdroll" = "latest"
+aws-cli = { version = "latest", symlink_bins = "true" }
+
+[settings]
+github_attestations = false
+idiomatic_version_file_enable_tools = ["node", "ruby"]
+
+[dotfiles]
+"~/.claude/commands/gemini-search.md" = { mode = "track" }
+"~/.claude/commands/talk-review" = { mode = "track" }
+"~/.claude/scripts" = { mode = "track" }
+"~/.claude/settings.json" = { mode = "track" }
+"~/.config/ghostty" = { mode = "track" }
+"~/.config/htop" = { mode = "track" }
+"~/.config/karabiner" = { mode = "track" }
+"~/.config/mise/config.toml" = { mode = "track" }
+"~/.config/nvim" = { mode = "track" }
+"~/.config/peco" = { mode = "track" }
+"~/.config/qmd/index.yml" = { mode = "track" }
+"~/.config/rubocop" = { mode = "track" }
+"~/.config/starship.toml" = { mode = "track" }
+"~/.config/wezterm" = { mode = "track" }
+"~/.gemrc" = { mode = "track" }
+"~/.gitconfig" = { mode = "track" }
+"~/.gitignore" = { mode = "track" }
+"~/.irbrc" = { mode = "track" }
+"~/.psqlrc" = { mode = "track" }
+"~/.skhdrc" = { mode = "track" }
+"~/.tigrc" = { mode = "track" }
+"~/.tmux.conf" = { mode = "track" }
+"~/.yabairc" = { mode = "track" }
+"~/.zshrc" = { mode = "track" }
