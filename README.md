@@ -179,10 +179,11 @@ accounted for. Archive it only after a second-machine restore succeeds.
 - mise 2026.9.5 installed.
 - 24 legacy dotfile entries migrated from symlinks to regular live paths.
 - Eight APM source files migrated to regular live paths.
-- 32 explicit entries covering 67 files tracked in local mise history.
+- 32 explicit entries covering 62 files tracked in mise history.
+- Neovim history and Karabiner automatic backups excluded from future captures.
 - The `mise-history` user service is running and automatic capture is active.
-- No synchronization origin connected; `asonas/config` does not yet exist on
-  GitHub.
+- The public `asonas/config` repository is connected as the setup origin in
+  manual sync mode, and the initial history has been published.
 - Global APM install and compile were previewed but not applied. The install
   preview would remove two skills installed by the separate Gist workflow, so
   that workflow must be migrated before APM bootstrap can replace the old
