@@ -1,0 +1,9 @@
+# source path in asonas/dotfiles<TAB>live path
+apm.yml	.apm/apm.yml
+.apm/instructions/base.instructions.md	.apm/instructions/base.instructions.md
+.apm/instructions/debugging.instructions.md	.apm/instructions/debugging.instructions.md
+.apm/instructions/git-workflow.instructions.md	.apm/instructions/git-workflow.instructions.md
+.apm/instructions/github-cli.instructions.md	.apm/instructions/github-cli.instructions.md
+.apm/instructions/installer.instructions.md	.apm/instructions/installer.instructions.md
+.apm/instructions/shell.instructions.md	.apm/instructions/shell.instructions.md
+.apm/instructions/testing.instructions.md	.apm/instructions/testing.instructions.md

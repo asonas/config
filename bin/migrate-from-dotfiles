@@ -1,0 +1,165 @@
+#!/bin/bash
+set -euo pipefail
+
+usage() {
+  echo 'usage: migrate-from-dotfiles (--dry-run|--apply) --manifest FILE --source DIR --home DIR' >&2
+  exit 2
+}
+
+mode=
+manifest=
+source_root=
+home_dir=
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --dry-run|--apply)
+      [ -z "$mode" ] || usage
+      mode=$1
+      shift
+      ;;
+    --manifest)
+      [ "$#" -ge 2 ] || usage
+      manifest=$2
+      shift 2
+      ;;
+    --source)
+      [ "$#" -ge 2 ] || usage
+      source_root=$2
+      shift 2
+      ;;
+    --home)
+      [ "$#" -ge 2 ] || usage
+      home_dir=$2
+      shift 2
+      ;;
+    *) usage ;;
+  esac
+done
+
+[ -n "$mode" ] || usage
+[ -f "$manifest" ] || { echo "error: manifest not found: $manifest" >&2; exit 1; }
+[ -d "$source_root" ] || { echo "error: source directory not found: $source_root" >&2; exit 1; }
+[ -d "$home_dir" ] || { echo "error: home directory not found: $home_dir" >&2; exit 1; }
+
+source_root=$(realpath "$source_root")
+home_dir=$(realpath "$home_dir")
+
+same_content() {
+  left=$1
+  right=$2
+  if [ -d "$left" ] && [ -d "$right" ]; then
+    diff -qr "$left" "$right" >/dev/null 2>&1
+  elif [ -f "$left" ] && [ -f "$right" ]; then
+    cmp -s "$left" "$right"
+  else
+    return 1
+  fi
+}
+
+print_directory_candidates() {
+  source_directory=$1
+  live_directory=$2
+  find "$source_directory" -mindepth 1 -print | LC_ALL=C sort | while IFS= read -r child; do
+    child_relative=${child#"$source_directory"/}
+    if [ -L "$child" ]; then
+      child_type=symlink
+    elif [ -d "$child" ]; then
+      child_type=directory
+    elif [ -f "$child" ]; then
+      child_type=file
+    else
+      child_type=other
+    fi
+    echo "  candidate ($child_type): $live_directory/$child_relative"
+  done
+}
+
+while IFS=$'\t' read -r source_relative live_relative || [ -n "$source_relative" ]; do
+  case "$source_relative" in
+    ''|'#'*) continue ;;
+    /*|..|../*|*/../*|*/..)
+      echo "error: manifest source path must stay beneath its root: $source_relative" >&2
+      exit 1
+      ;;
+  esac
+
+  [ -n "$live_relative" ] || live_relative=$source_relative
+  case "$live_relative" in
+    /*|..|../*|*/../*|*/..)
+      echo "error: manifest live path must stay beneath its root: $live_relative" >&2
+      exit 1
+      ;;
+  esac
+
+  source_path="$source_root/$source_relative"
+  live_path="$home_dir/$live_relative"
+
+  if [ ! -e "$source_path" ]; then
+    echo "error: source does not resolve: $source_path" >&2
+    exit 1
+  fi
+
+  resolved_source=$(realpath "$source_path")
+  case "$resolved_source" in
+    "$source_root"/*) ;;
+    *)
+      echo "error: source resolves outside source directory: $source_path" >&2
+      exit 1
+      ;;
+  esac
+
+  if [ ! -f "$resolved_source" ] && [ ! -d "$resolved_source" ]; then
+    echo "error: source must resolve to a regular file or directory: $source_path" >&2
+    exit 1
+  fi
+
+  if [ -L "$live_path" ]; then
+    resolved_link=$(cd "$(dirname "$live_path")" && realpath "$(readlink "$live_path")")
+    if [ "$resolved_link" != "$resolved_source" ]; then
+      echo "error: refusing unrelated symlink: $live_path -> $(readlink "$live_path")" >&2
+      exit 1
+    fi
+
+    if [ -d "$resolved_source" ]; then
+      replacement_type='regular directory'
+    else
+      replacement_type='regular file'
+    fi
+    echo "replace symlink: $live_path -> $replacement_type"
+    if [ -d "$resolved_source" ]; then
+      print_directory_candidates "$resolved_source" "$live_path"
+    fi
+
+    if [ "$mode" = '--apply' ]; then
+      parent=$(dirname "$live_path")
+      staging_dir=$(mktemp -d "$parent/.mise-migrate.XXXXXX")
+      command cp -pR "$resolved_source" "$staging_dir/value"
+      command rm "$live_path"
+      command mv "$staging_dir/value" "$live_path"
+      command rm -r "$staging_dir"
+    fi
+  elif [ -e "$live_path" ]; then
+    if same_content "$resolved_source" "$live_path"; then
+      echo "already migrated: $live_path"
+    else
+      echo "error: existing regular path differs from source: $live_path" >&2
+      exit 1
+    fi
+  else
+    if [ -d "$resolved_source" ]; then
+      replacement_type='regular directory'
+    else
+      replacement_type='regular file'
+    fi
+    echo "create: $live_path -> $replacement_type"
+    if [ -d "$resolved_source" ]; then
+      print_directory_candidates "$resolved_source" "$live_path"
+    fi
+    if [ "$mode" = '--apply' ]; then
+      parent=$(dirname "$live_path")
+      mkdir -p "$parent"
+      command cp -pR "$resolved_source" "$live_path"
+    fi
+  fi
+done < "$manifest"
