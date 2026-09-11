@@ -49,3 +49,6 @@ builtin = "history-watch"
 "~/.tmux.conf" = { mode = "track" }
 "~/.yabairc" = { mode = "track" }
 "~/.zshrc" = { mode = "track" }
+
+[history]
+exclude = ["~/.config/nvim/.netrwhist", "~/.config/karabiner/automatic_backups/**"]

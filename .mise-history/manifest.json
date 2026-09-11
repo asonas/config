@@ -194,12 +194,14 @@
       "variants": []
     }
   ],
-  "exclude": [],
+  "exclude": [
+    "~/.config/nvim/.netrwhist",
+    "~/.config/karabiner/automatic_backups/**"
+  ],
   "recipients": [],
   "permissions": {
     "home/.claude/settings.json": 384,
     "home/.config/karabiner": 448,
-    "home/.config/karabiner/assets/complex_modifications": 448,
-    "home/.config/karabiner/automatic_backups": 448
+    "home/.config/karabiner/assets/complex_modifications": 448
   }
 }
