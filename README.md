@@ -1,0 +1,183 @@
+# asonas/config
+
+Personal configuration managed as live files with mise.
+
+This repository is intended to replace the symlink-based
+`asonas/dotfiles` setup. The migration has not started yet. Until each path is
+explicitly migrated and verified, the existing dotfiles repository remains the
+authority for that path.
+
+## Goals
+
+- Edit the files used by applications directly in their normal locations.
+- Let mise save revisions automatically and synchronize them between machines.
+- Track only an explicit allowlist of human-authored configuration.
+- Rebuild generated agent configuration from APM sources instead of copying
+  generated files between machines.
+- Bootstrap a new machine from declarations and source files without recreating
+  the old symlink layout.
+
+## Architecture
+
+There are three kinds of state:
+
+| Kind | Examples | Owner |
+| --- | --- | --- |
+| Authored configuration | `~/.zshrc`, `~/.gitconfig`, `~/.apm/apm.yml`, APM instruction sources | mise history |
+| Derived configuration | installed APM skills, compiled agent instructions, dependency checkouts | APM |
+| Runtime state | databases, sessions, logs, caches, credentials | the local application |
+
+The remote Git repository is a transport and history store for mise. Normal
+editing happens at the live path under the home or mise configuration directory,
+not in a cloned source tree.
+
+### Allowlist policy
+
+Track exact files by default. Track a directory only when it is exclusively
+human-authored configuration and applications do not write runtime state into
+it. A tracked directory also includes files added beneath it later.
+
+Do not track broad mixed-state directories such as:
+
+- `~/.config`
+- `~/.claude`
+- `~/.codex`
+- `~/.apm`
+
+Select safe files or narrowly scoped subdirectories within them instead. This
+keeps databases, sessions, logs, caches, generated dependencies, and credentials
+out of history.
+
+The repository may be public only while every tracked path and every saved
+revision is safe to publish. Removing a value from the current file does not
+remove it from earlier history. Configure encryption before the first save of a
+file that requires secrecy.
+
+## mise-owned sources
+
+The global mise configuration declares tools, bootstrap resources, the history
+watcher, and every tracked path. Its target location is:
+
+```text
+~/.config/mise/config.toml
+```
+
+The initial configuration should enumerate individual files. For example:
+
+```toml
+[dotfiles]
+"~/.zshrc" = { mode = "track" }
+"~/.gitconfig" = { mode = "track" }
+"~/.apm/apm.yml" = { mode = "track" }
+"~/.apm/instructions/base.instructions.md" = { mode = "track" }
+
+[bootstrap.services.mise-history]
+builtin = "history-watch"
+```
+
+This is an illustrative subset, not the migration manifest. Add a path only
+after inspecting the live target and the complete candidate set that the entry
+would capture.
+
+## APM ownership
+
+APM sources are authored configuration and belong in mise history:
+
+- `~/.apm/apm.yml`
+- explicitly listed files under `~/.apm/instructions/`
+- any hand-authored local APM package selected during migration
+
+APM outputs are derived and must be regenerated rather than tracked:
+
+- `~/.apm/apm_modules/`
+- `~/.agents/skills/`
+- APM-managed entries under `~/.claude/` and `~/.codex/`
+- compiled `AGENTS.md` and `CLAUDE.md` files
+- generated agents, rules, commands, hooks, and skills
+
+`apm.lock.yaml` is initially treated as machine-generated state, matching the
+current setup. Revisit that decision separately if reproducible dependency pins
+become more important than automatic updates and cross-machine conflict
+avoidance.
+
+Global APM installation and compilation should use the user-scope configuration:
+
+```sh
+apm install --global --target claude,cursor,codex
+apm compile --global --clean
+```
+
+Before adopting this flow, verify in an isolated fixture that the migrated
+instruction sources compile to the expected global outputs. Preserve any
+post-install normalization still required by the existing dotfiles setup as an
+explicit bootstrap step; do not copy generated output as a shortcut.
+
+## Daily operation
+
+Edit a tracked file at its live path. The history watcher records the change.
+
+```sh
+$EDITOR ~/.zshrc
+mise bootstrap dotfiles status
+mise bootstrap dotfiles history --path ~/.zshrc
+```
+
+Preview recovery before changing a live file:
+
+```sh
+mise bootstrap dotfiles rollback ~/.zshrc --dry-run
+mise bootstrap dotfiles rollback ~/.zshrc
+mise bootstrap dotfiles undo
+```
+
+For a newly considered path:
+
+1. Inspect the file or full directory tree, including hidden files.
+2. Confirm that every candidate is authored configuration and safe for the
+   repository's visibility.
+3. Show the exact tracking candidate set before mutation.
+4. Track the smallest stable path.
+5. Confirm `mise bootstrap dotfiles status` and the saved revision.
+6. Use manual synchronization until the remote candidate has been reviewed.
+
+Exclusions are a backstop, not the primary boundary. Prefer a narrow tracking
+entry over tracking a broad directory with a growing denylist.
+
+## Bootstrap operation
+
+The intended new-machine flow is:
+
+1. Install a mise version that supports tracked dotfiles and history services.
+2. Adopt the repository with `mise bootstrap --adopt <repository-url>`.
+3. Review the complete bootstrap dry run.
+4. Apply declared tools, packages, services, and tracked files.
+5. Install and compile APM from the restored source configuration.
+6. Verify the generated Claude, Codex, and shared skill locations.
+
+The exact commands and ordering will be finalized and tested during migration.
+Do not treat this design document as proof that bootstrap is already implemented.
+
+## Migration from asonas/dotfiles
+
+Migrate incrementally. For each path:
+
+1. Resolve the existing symlink and preserve its current content and metadata.
+2. Account for uncommitted changes in the old repository.
+3. Display the exact symlink removals and regular-file replacements as a dry run.
+4. Replace the symlink with an equivalent regular file.
+5. Track the live file with mise and verify its initial revision.
+6. Confirm that the application still reads the expected configuration.
+7. Remove the old installer responsibility only after the new path is verified.
+
+Keep the old repository available as historical evidence until every managed
+path, bootstrap helper, APM workaround, and platform-specific behavior has been
+accounted for. Archive it only after a second-machine restore succeeds.
+
+## Current status
+
+- Repository design documented.
+- No live files migrated.
+- No history watcher configured.
+- No synchronization origin connected.
+- No old symlinks removed.
+- No bootstrap workflow verified.
