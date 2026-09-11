@@ -13,6 +13,9 @@ aws-cli = { version = "latest", symlink_bins = "true" }
 github_attestations = false
 idiomatic_version_file_enable_tools = ["node", "ruby"]
 
+[bootstrap.services.mise-history]
+builtin = "history-watch"
+
 [dotfiles]
 "~/.claude/commands/gemini-search.md" = { mode = "track" }
 "~/.claude/commands/talk-review" = { mode = "track" }
