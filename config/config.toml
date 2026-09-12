@@ -8,6 +8,7 @@ colima = "latest"
 "github:sorah/mairu" = "latest"
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
+codex = "latest"
 
 [settings]
 github_attestations = false
