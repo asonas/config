@@ -25,6 +25,9 @@ end
 
 case ARGV.first
 when '--watch'
+  $stdout.reopen(File.join(source, 'auto-apply.log'), 'a')
+  $stderr.reopen($stdout)
+  $stdout.sync = true
   Dir.chdir(source)
   exec 'watchexec', '--debounce', '2s', '--on-busy-update', 'queue',
        '--no-discover-ignore', '--project-origin', source,
