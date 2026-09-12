@@ -50,6 +50,13 @@ builtin = "history-watch"
 "~/.tmux.conf" = { mode = "track" }
 "~/.yabairc" = { mode = "track" }
 "~/.zshrc" = { mode = "track" }
+"~/bin/check_sip.sh" = { mode = "track" }
+"~/bin/herdr-focus-attention" = { mode = "track" }
+"~/bin/herdr-fork-claude-session" = { mode = "track" }
+"~/bin/herdr-fork-codex-session" = { mode = "track" }
+"~/bin/hw" = { mode = "track" }
+"~/bin/mdroll-in-herdr" = { mode = "track" }
+"~/bin/setup_workspace" = { mode = "track" }
 
 [history]
 exclude = ["~/.config/nvim/.netrwhist", "~/.config/karabiner/automatic_backups/**"]
