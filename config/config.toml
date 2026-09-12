@@ -35,10 +35,6 @@ env = { RUBYOPT = "-EUTF-8" }
 run = "ruby \"$HOME/bin/apm-apply\""
 
 [dotfiles]
-"~/bin/apm-apply" = { mode = "track" }
-"~/bin/install_gist_skills" = { mode = "track" }
-"~/bin/fix_agent_frontmatter" = { mode = "track" }
-"~/bin/fix_codex_agent_description" = { mode = "track" }
 "~/.apm/apm.yml" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track" }
@@ -52,7 +48,7 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.claude/scripts" = { mode = "track" }
 "~/.claude/settings.json" = { mode = "track" }
 "~/.config/ghostty" = { mode = "track" }
-"~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
 "~/.config/htop" = { mode = "track" }
 "~/.config/karabiner" = { mode = "track" }
 "~/.config/mise/config.toml" = { mode = "track" }
@@ -72,11 +68,15 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.tmux.conf" = { mode = "track" }
 "~/.yabairc" = { mode = "track" }
 "~/.zshrc" = { mode = "track" }
+"~/bin/apm-apply" = { mode = "track" }
 "~/bin/check_sip.sh" = { mode = "track" }
+"~/bin/fix_agent_frontmatter" = { mode = "track" }
+"~/bin/fix_codex_agent_description" = { mode = "track" }
 "~/bin/herdr-focus-attention" = { mode = "track" }
 "~/bin/herdr-fork-claude-session" = { mode = "track" }
 "~/bin/herdr-fork-codex-session" = { mode = "track" }
 "~/bin/hw" = { mode = "track" }
+"~/bin/install_gist_skills" = { mode = "track" }
 "~/bin/mdroll-in-herdr" = { mode = "track" }
 "~/bin/setup_workspace" = { mode = "track" }
 
