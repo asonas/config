@@ -280,7 +280,6 @@
   ],
   "recipients": [],
   "permissions": {
-    "home/.claude/settings.json": 384,
     "home/.config/karabiner": 448,
     "home/.config/karabiner/assets/complex_modifications": 448
   }
