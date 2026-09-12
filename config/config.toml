@@ -29,6 +29,7 @@ environment = { RUBYOPT = "-EUTF-8" }
 [tasks."apm:apply"]
 description = "Install APM dependencies and rebuild user instructions"
 dir = "~"
+env = { RUBYOPT = "-EUTF-8" }
 run = "ruby \"$HOME/bin/apm-apply\""
 
 [dotfiles]
