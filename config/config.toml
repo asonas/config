@@ -1,6 +1,7 @@
 [tools]
 "github:cli/cli" = "latest"
 ghq = "latest"
+"github:k1LoW/git-wt" = "latest"
 peco = "latest"
 "github:yusukebe/ax" = "latest"
 rust = "latest"
