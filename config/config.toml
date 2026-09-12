@@ -24,6 +24,7 @@ scope = "user"
 command = "~/.local/bin/mise exec -- ruby bin/apm-apply --watch"
 working_directory = "~"
 requires_tools = true
+environment = { RUBYOPT = "-EUTF-8" }
 
 [tasks."apm:apply"]
 description = "Install APM dependencies and rebuild user instructions"
