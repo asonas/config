@@ -31,6 +31,7 @@ builtin = "history-watch"
 "~/.claude/scripts" = { mode = "track" }
 "~/.claude/settings.json" = { mode = "track" }
 "~/.config/ghostty" = { mode = "track" }
+"~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/htop" = { mode = "track" }
 "~/.config/karabiner" = { mode = "track" }
 "~/.config/mise/config.toml" = { mode = "track" }

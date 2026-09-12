@@ -86,6 +86,20 @@
       "variants": []
     },
     {
+      "path": "home/.config/herdr/config.toml",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/.config/htop",
       "autosave": true,
       "encrypt": false,
