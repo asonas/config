@@ -10,9 +10,9 @@ kitty_graphics = true
 # Match macOS. Ghostty's kitty keyboard protocol keeps Ctrl+J distinct from Enter.
 prefix = "ctrl+j"
 
-# macOS uses Cmd+Shift here. Super is reserved by Hyprland, so use Alt on Linux.
-next_workspace = "alt+shift+j"
-previous_workspace = "alt+shift+k"
+# Move between Spaces with the same Cmd+Shift chords used on macOS.
+next_workspace = "cmd+shift+j"
+previous_workspace = "cmd+shift+k"
 new_workspace = "alt+shift+n"
 
 # Match the macOS prefix-mode mnemonics.
