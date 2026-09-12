@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+require 'json'
+require 'open3'
+require 'tempfile'
+require 'yaml'
+
+abort 'usage: install_gist_skills <user-root> [command args...]' if ARGV.empty?
+user_root = File.expand_path(ARGV.shift)
+sources = {
+  'japanese-tech-writing' => 'fd287c3133457c4fd8f5601d34aa817d',
+  'cognitive-rhythm-writing' => 'eb2929f13ed19c97188393d297be8432'
+}.freeze
+
+def gist(endpoint)
+  stdout, stderr, status = Open3.capture3('gh', 'api', endpoint)
+  abort "Gist fetch failed: #{endpoint}\n#{stderr}" unless status.success?
+  JSON.parse(stdout)
+end
+
+def replace_file(path, content)
+  Tempfile.create('.gist-', File.dirname(path)) do |file|
+    file.write(content)
+    file.chmod(0644)
+    file.close
+    File.rename(file.path, path)
+  end
+end
+
+begin
+  # Fetch both skills before APM can remove its formerly managed copies.
+  skills = sources.map do |name, id|
+    latest = gist("gists/#{id}")
+    revision = latest.fetch('history').first.fetch('version')
+    abort "Invalid Gist revision for #{name}" unless /\A[0-9a-f]{40}\z/.match?(revision)
+    snapshot = gist("gists/#{id}/#{revision}")
+    file = snapshot.fetch('files').fetch('SKILL.md')
+    abort "Truncated Gist content for #{name}" if file.fetch('truncated')
+    content = file.fetch('content')
+    frontmatter = content.match(/\A---\r?\n(.*?)\r?\n---\r?\n/m)
+    metadata = YAML.safe_load(frontmatter[1]) if frontmatter
+    unless metadata.is_a?(Hash) && metadata['name'] == name &&
+           !content[frontmatter.end(0)..].strip.empty?
+      abort "Invalid SKILL.md for #{name}"
+    end
+    [name, revision, content]
+  end
+rescue Errno::ENOENT, JSON::ParserError, KeyError, Psych::Exception => error
+  abort "Gist skill update failed: #{error.message}"
+end
+
+# Preserve the wrapped command's failure status, but still restore the fetched skills.
+status = 0
+unless ARGV.empty?
+  system(*ARGV)
+  status = $?.exitstatus || 1
+end
+
+skills.each do |name, revision, content|
+  %w[.agents/skills .claude/skills].each do |root|
+    directory = File.join(user_root, root, name)
+    abort "Refusing symlink skill directory: #{directory}" if File.symlink?(directory)
+    FileUtils.mkdir_p(directory)
+    replace_file(File.join(directory, 'SKILL.md'), content)
+    replace_file(File.join(directory, '.gist-revision'), "#{revision}\n")
+  end
+  puts "Updated #{name} to Gist revision #{revision}"
+end
+exit status

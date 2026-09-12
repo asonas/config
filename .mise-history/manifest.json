@@ -208,7 +208,25 @@
       "variants": []
     },
     {
+      "path": "home/bin/apm-apply",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/bin/check_sip.sh",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/bin/fix_agent_frontmatter",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/bin/fix_codex_agent_description",
       "autosave": true,
       "encrypt": false,
       "variants": []
@@ -238,6 +256,12 @@
       "variants": []
     },
     {
+      "path": "home/bin/install_gist_skills",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/bin/mdroll-in-herdr",
       "autosave": true,
       "encrypt": false,
@@ -256,7 +280,6 @@
   ],
   "recipients": [],
   "permissions": {
-    "home/.claude/settings.json": 384,
     "home/.config/karabiner": 448,
     "home/.config/karabiner/assets/complex_modifications": 448
   }

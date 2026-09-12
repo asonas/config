@@ -9,6 +9,8 @@ colima = "latest"
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
+apm = "0.30.0"
+watchexec = "2.7.2"
 
 [settings]
 github_attestations = false
@@ -17,7 +19,23 @@ idiomatic_version_file_enable_tools = ["node", "ruby"]
 [bootstrap.services.mise-history]
 builtin = "history-watch"
 
+[bootstrap.services.apm-watch]
+scope = "user"
+command = "~/.local/bin/mise exec -- ruby bin/apm-apply --watch"
+working_directory = "~"
+requires_tools = true
+environment = { RUBYOPT = "-EUTF-8" }
+
+[tasks."apm:apply"]
+description = "Install APM dependencies and rebuild user instructions"
+dir = "~"
+run = "ruby \"$HOME/bin/apm-apply\""
+
 [dotfiles]
+"~/bin/apm-apply" = { mode = "track" }
+"~/bin/install_gist_skills" = { mode = "track" }
+"~/bin/fix_agent_frontmatter" = { mode = "track" }
+"~/bin/fix_codex_agent_description" = { mode = "track" }
 "~/.apm/apm.yml" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track" }
