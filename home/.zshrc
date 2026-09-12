@@ -329,7 +329,6 @@ case ${OSTYPE} in
     zstyle ':completion:*:*:git:*' script ~/.zsh/completions/git-completion.zsh
     autoload -Uz compinit
     compinit -u
-    source /usr/share/mitamae/profile
     # pnpm
     export PNPM_HOME="$HOME/.local/share/pnpm"
     case ":$PATH:" in
@@ -341,9 +340,9 @@ case ${OSTYPE} in
     ;;
 esac
 
-source $HOME/.cargo/env
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
 #source ~/.zsh.d/00-lazyenv.bash
-source ~/.zsh.d/personal
+[[ -f "$HOME/.zsh.d/personal" ]] && source "$HOME/.zsh.d/personal"
 
 
 # starshipの初期化（プロンプトなので即座に必要）
