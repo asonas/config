@@ -1,5 +1,7 @@
 [tools]
 "github:cli/cli" = "latest"
+ghq = "latest"
+peco = "latest"
 node = "lts"
 ruby = "latest"
 yarn = "1.22.19"
