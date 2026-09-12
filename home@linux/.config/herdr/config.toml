@@ -13,7 +13,7 @@ prefix = "ctrl+j"
 # Move between Spaces with the same Cmd+Shift chords used on macOS.
 next_workspace = "cmd+shift+j"
 previous_workspace = "cmd+shift+k"
-new_workspace = "alt+shift+n"
+new_workspace = "cmd+shift+n"
 
 # Match the macOS prefix-mode mnemonics.
 new_tab = "prefix+ctrl+c"
