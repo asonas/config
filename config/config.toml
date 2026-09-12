@@ -46,8 +46,6 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.apm/instructions/installer.instructions.md" = { mode = "track" }
 "~/.apm/instructions/shell.instructions.md" = { mode = "track" }
 "~/.apm/instructions/testing.instructions.md" = { mode = "track" }
-"~/.claude/commands/gemini-search.md" = { mode = "track" }
-"~/.claude/commands/talk-review" = { mode = "track" }
 "~/.claude/scripts" = { mode = "track" }
 "~/.claude/settings.json" = { mode = "track" }
 "~/.config/ghostty" = { mode = "track" }

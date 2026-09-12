@@ -56,18 +56,6 @@
       "variants": []
     },
     {
-      "path": "home/.claude/commands/gemini-search.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
-    },
-    {
-      "path": "home/.claude/commands/talk-review",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
-    },
-    {
       "path": "home/.claude/scripts",
       "autosave": true,
       "encrypt": false,
