@@ -150,7 +150,20 @@
       "path": "home/.config/qmd/index.yml",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "linux"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/rubocop",
