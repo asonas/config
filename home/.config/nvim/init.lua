@@ -87,7 +87,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- lazy.nvimでプラグインを読み込み
-require("lazy").setup("plugins")
+require("config.lazy")
 
 require('telescope').setup {
   defaults = {
