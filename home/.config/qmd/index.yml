@@ -1,6 +1,6 @@
 collections:
   asonas:
-    path: /Users/asonas/Obsidian/asonas
+    path: ~/Obsidian/asonas
     pattern: "**/*.md"
     ignore:
       - wiki/log.md
@@ -9,9 +9,6 @@ collections:
       - wiki/deferred.md
     context:
       "": asonas の個人用 Obsidian vault。wiki は出典付き要約の派生レイヤ、daily・activities・notes・projects は一次ソース、conversations は発言者と時刻を保持した会話原文の抽出、bookmarks・books は外部テキストの取り込み。会話を調べる際はconversationsを優先し、ユーザーの発言とAIの提案・解釈を区別する。
-  ai-cost:
-    path: /Users/asonas/ghq/github.com/ivry-inc/ai-cost-management/docs
-    pattern: "**/*.md"
 models:
   embed: hf:ggml-org/embeddinggemma-300M-GGUF/embeddinggemma-300M-Q8_0.gguf
   generate: hf:tobil/qmd-query-expansion-1.7B-gguf/qmd-query-expansion-1.7B-q4_k_m.gguf
