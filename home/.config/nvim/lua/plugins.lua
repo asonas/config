@@ -1,13 +1,5 @@
 -- lazy.nvim用のプラグイン設定
 return {
-  -- coc.nvim: Language Server Protocol client
-  {
-    'neoclide/coc.nvim',
-    branch = 'release',
-    -- または自動ビルドしたい場合:
-    -- build = 'npm ci'
-  },
-
   -- NERDTree: ファイルエクスプローラー
   'preservim/nerdtree',
 
