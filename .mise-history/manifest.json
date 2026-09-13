@@ -152,11 +152,6 @@
       "encrypt": false,
       "variants": [
         {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
           "os": [
             "linux"
           ],

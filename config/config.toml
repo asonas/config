@@ -59,7 +59,7 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.config/mise/config.toml" = { mode = "track" }
 "~/.config/nvim" = { mode = "track" }
 "~/.config/peco" = { mode = "track" }
-"~/.config/qmd/index.yml" = { mode = "track", variants = [{ default = true }, { os = "linux" }] }
+"~/.config/qmd/index.yml" = { mode = "track", variants = [{ os = "linux" }] }
 "~/.config/rubocop" = { mode = "track" }
 "~/.config/starship.toml" = { mode = "track" }
 "~/.config/wezterm" = { mode = "track" }
