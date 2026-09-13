@@ -101,6 +101,20 @@
       "variants": []
     },
     {
+      "path": "home/.config/hypr/bindings.lua",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "linux"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/.config/karabiner",
       "autosave": true,
       "encrypt": false,

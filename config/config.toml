@@ -51,6 +51,7 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.config/ghostty" = { mode = "track" }
 "~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
 "~/.config/htop" = { mode = "track" }
+"~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ os = "linux" }] }
 "~/.config/karabiner" = { mode = "track" }
 "~/.config/mise/config.toml" = { mode = "track" }
 "~/.config/nvim" = { mode = "track" }
