@@ -68,6 +68,9 @@ function moveControl(control, key) {
     case "f":
       position = start === end ? Math.min(value.length, end + 1) : end;
       break;
+    case "e":
+      position = lineEnd(value, end);
+      break;
     case "n":
       if (control instanceof HTMLInputElement) return false;
       position = moveVertically(value, end, 1);
@@ -84,6 +87,24 @@ function moveControl(control, key) {
   return true;
 }
 
+function killControlLine(control) {
+  const start = control.selectionStart;
+  const end = control.selectionEnd;
+  if (start === null || end === null) return false;
+
+  const killEnd = lineEnd(control.value, end);
+  if (start === killEnd) return false;
+
+  control.setRangeText("", start, killEnd, "end");
+  control.dispatchEvent(
+    new InputEvent("input", {
+      bubbles: true,
+      inputType: "deleteContentForward",
+    }),
+  );
+  return true;
+}
+
 function moveContentEditable(key) {
   const selection = window.getSelection();
   if (!selection || selection.rangeCount === 0) return false;
@@ -91,6 +112,7 @@ function moveContentEditable(key) {
   const moves = {
     a: ["backward", "lineboundary"],
     b: ["backward", "character"],
+    e: ["forward", "lineboundary"],
     f: ["forward", "character"],
     n: ["forward", "line"],
     p: ["backward", "line"],
@@ -100,6 +122,16 @@ function moveContentEditable(key) {
 
   selection.modify("move", move[0], move[1]);
   return true;
+}
+
+function killContentEditableLine() {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return false;
+
+  selection.modify("extend", "forward", "lineboundary");
+  if (selection.isCollapsed) return false;
+
+  return document.execCommand("delete");
 }
 
 document.addEventListener(
@@ -116,14 +148,18 @@ document.addEventListener(
     }
 
     const key = event.key.toLowerCase();
-    if (!["a", "b", "f", "n", "p"].includes(key)) return;
+    if (!["a", "b", "e", "f", "k", "n", "p"].includes(key)) return;
 
     const target = event.composedPath()[0];
     const control = editableControl(target);
     const moved = control
-      ? moveControl(control, key)
+      ? key === "k"
+        ? killControlLine(control)
+        : moveControl(control, key)
       : editableContainer(target)
-        ? moveContentEditable(key)
+        ? key === "k"
+          ? killContentEditableLine()
+          : moveContentEditable(key)
         : false;
 
     if (!moved) return;
