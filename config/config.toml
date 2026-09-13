@@ -17,6 +17,7 @@ codex = "latest"
 apm = "0.30.0"
 watchexec = "2.7.2"
 claude = "latest"
+"npm:@tobilu/qmd" = "latest"
 
 [settings]
 github_attestations = false
