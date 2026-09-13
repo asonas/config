@@ -45,8 +45,8 @@ local function switch_chromium_tab(mods)
   end
 end
 
-o.bind("SUPER + SHIFT + J", "Previous Chromium tab", switch_chromium_tab("CTRL + SHIFT"))
-o.bind("SUPER + SHIFT + K", "Next Chromium tab", switch_chromium_tab("CTRL"))
+o.bind("SUPER + SHIFT + J", "Previous Chromium tab", switch_chromium_tab("CTRL + SHIFT"), { non_consuming = true })
+o.bind("SUPER + SHIFT + K", "Next Chromium tab", switch_chromium_tab("CTRL"), { non_consuming = true })
 
 -- Let Herdr handle Cmd+Shift+N for creating a new workspace.
 hl.unbind("SUPER + SHIFT + N")
