@@ -16,6 +16,8 @@ aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
 apm = "0.30.0"
 watchexec = "2.7.2"
+claude = "latest"
+"npm:@tobilu/qmd" = "latest"
 
 [settings]
 github_attestations = false
@@ -48,14 +50,16 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.apm/instructions/testing.instructions.md" = { mode = "track" }
 "~/.claude/scripts" = { mode = "track" }
 "~/.claude/settings.json" = { mode = "track" }
+"~/.config/chromium-flags.conf" = { mode = "track", variants = [{ os = "linux" }] }
 "~/.config/ghostty" = { mode = "track" }
 "~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
 "~/.config/htop" = { mode = "track" }
+"~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ os = "linux" }] }
 "~/.config/karabiner" = { mode = "track" }
 "~/.config/mise/config.toml" = { mode = "track" }
 "~/.config/nvim" = { mode = "track" }
 "~/.config/peco" = { mode = "track" }
-"~/.config/qmd/index.yml" = { mode = "track" }
+"~/.config/qmd/index.yml" = { mode = "track", variants = [{ os = "linux" }, { os = "macos" }] }
 "~/.config/rubocop" = { mode = "track" }
 "~/.config/starship.toml" = { mode = "track" }
 "~/.config/wezterm" = { mode = "track" }
@@ -63,6 +67,7 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.gitconfig" = { mode = "track" }
 "~/.gitignore" = { mode = "track" }
 "~/.irbrc" = { mode = "track" }
+"~/.local/share/chromium-extensions/emacs-text-navigation" = { mode = "track", variants = [{ os = "linux" }] }
 "~/.psqlrc" = { mode = "track" }
 "~/.skhdrc" = { mode = "track" }
 "~/.tigrc" = { mode = "track" }

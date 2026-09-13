@@ -1,6 +1,6 @@
 onboarding = false
 # Linux/Omarchy counterpart of home@macos/.config/herdr/config.toml.
-# Keep actions and mnemonics aligned; only host-specific modifiers and paths differ.
+# Keep actions and mnemonics aligned; only host-specific paths differ.
 
 [terminal]
 new_cwd = "follow"
@@ -23,10 +23,8 @@ split_vertical = "prefix+ctrl+v"
 split_horizontal = "prefix+ctrl+s"
 cycle_pane_next = "prefix+ctrl+i"
 
-# macOS uses Cmd+Shift+U and /Users/asonas. Alt and $HOME's resolved path are
-# used here because Hyprland reserves Super shortcuts.
 [[keys.command]]
-key = "alt+shift+u"
+key = "cmd+shift+u"
 type = "shell"
 command = "/home/asonas/bin/herdr-focus-attention"
 description = "focus next agent needing attention"
