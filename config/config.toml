@@ -16,6 +16,7 @@ aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
 apm = "0.30.0"
 watchexec = "2.7.2"
+claude = "latest"
 
 [settings]
 github_attestations = false
