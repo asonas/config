@@ -48,6 +48,7 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.apm/instructions/testing.instructions.md" = { mode = "track" }
 "~/.claude/scripts" = { mode = "track" }
 "~/.claude/settings.json" = { mode = "track" }
+"~/.config/chromium-flags.conf" = { mode = "track", variants = [{ os = "linux" }] }
 "~/.config/ghostty" = { mode = "track" }
 "~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
 "~/.config/htop" = { mode = "track" }
@@ -64,6 +65,7 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.gitconfig" = { mode = "track" }
 "~/.gitignore" = { mode = "track" }
 "~/.irbrc" = { mode = "track" }
+"~/.local/share/chromium-extensions/emacs-text-navigation" = { mode = "track", variants = [{ os = "linux" }] }
 "~/.psqlrc" = { mode = "track" }
 "~/.skhdrc" = { mode = "track" }
 "~/.tigrc" = { mode = "track" }

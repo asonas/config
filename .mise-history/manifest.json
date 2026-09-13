@@ -68,6 +68,20 @@
       "variants": []
     },
     {
+      "path": "home/.config/chromium-flags.conf",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "linux"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/.config/ghostty",
       "autosave": true,
       "encrypt": false,
@@ -179,6 +193,20 @@
       "autosave": true,
       "encrypt": false,
       "variants": []
+    },
+    {
+      "path": "home/.local/share/chromium-extensions/emacs-text-navigation",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "linux"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.psqlrc",
