@@ -1,6 +1,6 @@
 collections:
   asonas:
-    path: ~/Obsidian/asonas
+    path: /home/asonas/Obsidian/asonas
     pattern: "**/*.md"
     ignore:
       - wiki/log.md
