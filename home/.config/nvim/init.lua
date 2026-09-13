@@ -28,19 +28,6 @@ vim.api.nvim_set_keymap('i', '<C-k>', '<C-o>"_d$', { noremap = true })
 vim.api.nvim_set_keymap('n', '<Space>p', ':NERDTreeToggle<CR>', { noremap = true, silent = true })
 vim.opt.guifont = 'SourceCodePro-Regular:h12'
 
--- coc.nvim completion settings
--- Tab: 補完候補があれば次の候補、なければTabを挿入
-vim.api.nvim_set_keymap('i', '<TAB>', [[coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"]], { expr = true, silent = true })
--- Shift-Tab: 前の候補
-vim.api.nvim_set_keymap('i', '<S-TAB>', [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]],
-  { expr = true, silent = true })
--- Enter: 補完を確定
-vim.api.nvim_set_keymap('i', '<CR>', [[coc#pum#visible() ? coc#pum#confirm() : "\<CR>"]], { expr = true, silent = true })
--- Ctrl-n: 補完メニューが表示されていれば次の候補、なければ下に移動
-vim.api.nvim_set_keymap('i', '<C-n>', [[coc#pum#visible() ? coc#pum#next(1) : "\<Down>"]], { expr = true, silent = true })
--- Ctrl-p: 補完メニューが表示されていれば前の候補、なければ上に移動
-vim.api.nvim_set_keymap('i', '<C-p>', [[coc#pum#visible() ? coc#pum#prev(1) : "\<Up>"]], { expr = true, silent = true })
-
 vim.cmd([[
 autocmd BufWritePre * :%s/\s\+$//ge
 ]])
