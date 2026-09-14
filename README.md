@@ -149,13 +149,34 @@ Linux desktop machines and headless Linux hosts use different mise profiles.
 Run desktop machines with the `desktop` profile so GUI configuration such as
 Chromium, Ghostty, Herdr, Hyprland, and WezTerm is tracked and restored. Run
 headless machines with the `headless` profile; those entries have no matching
-variant and are skipped. macOS-only configuration continues to use
-`os = "macos"` variants.
+variant during normal history and bootstrap operations and are skipped.
+macOS-only configuration continues to use `os = "macos"` variants.
 
 For a headless host such as the NAS, preview adoption with:
 
 ```sh
 mise -E headless bootstrap --adopt git@github.com:asonas/config.git --dry-run
+```
+
+The initial adoption restores the setup history before profile selectors take
+effect. Back up existing paths first, then remove any GUI files restored by the
+initial adoption from a headless host. Subsequent capture and synchronization
+use the selected profile.
+
+Keep the profile on the history watcher in the machine-local, untracked
+`~/.config/mise/config.local.toml`:
+
+```toml
+[bootstrap.services.mise-history]
+scope = "user"
+builtin = "history-watch"
+environment = { MISE_ENV = "headless" }
+```
+
+Reapply the service after changing this local setting:
+
+```sh
+mise -E headless bootstrap services apply
 ```
 
 For an Omarchy desktop, use `mise -E desktop` for bootstrap and dotfile history
@@ -206,4 +227,6 @@ accounted for. Archive it only after a second-machine restore succeeds.
   installer.
 - GUI dotfiles use the `desktop` profile on Linux and are skipped by the
   `headless` profile used on the NAS. macOS-only files use OS variants.
-- No second-machine bootstrap workflow verified.
+- The headless profile was adopted and verified on the NAS: tracked files were
+  restored as regular files, automatic history sync and APM watch are running,
+  and GUI-only paths are absent after initial-adoption cleanup.

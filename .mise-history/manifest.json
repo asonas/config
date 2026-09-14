@@ -394,5 +394,8 @@
     "~/.config/karabiner/automatic_backups/**"
   ],
   "recipients": [],
-  "permissions": {}
+  "permissions": {
+    "home@macos/.config/karabiner": 448,
+    "home@macos/.config/karabiner/assets/complex_modifications": 448
+  }
 }
