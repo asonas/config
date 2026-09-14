@@ -145,6 +145,22 @@ entry over tracking a broad directory with a growing denylist.
 
 ## Bootstrap operation
 
+Linux desktop machines and headless Linux hosts use different mise profiles.
+Run desktop machines with the `desktop` profile so GUI configuration such as
+Chromium, Ghostty, Herdr, Hyprland, and WezTerm is tracked and restored. Run
+headless machines with the `headless` profile; those entries have no matching
+variant and are skipped. macOS-only configuration continues to use
+`os = "macos"` variants.
+
+For a headless host such as the NAS, preview adoption with:
+
+```sh
+mise -E headless bootstrap --adopt git@github.com:asonas/config.git --dry-run
+```
+
+For an Omarchy desktop, use `mise -E desktop` for bootstrap and dotfile history
+commands so Linux GUI entries remain selected.
+
 The intended new-machine flow is:
 
 1. Install a mise version that supports tracked dotfiles and history services.
@@ -188,4 +204,6 @@ accounted for. Archive it only after a second-machine restore succeeds.
   preview would remove two skills installed by the separate Gist workflow, so
   that workflow must be migrated before APM bootstrap can replace the old
   installer.
+- GUI dotfiles use the `desktop` profile on Linux and are skipped by the
+  `headless` profile used on the NAS. macOS-only files use OS variants.
 - No second-machine bootstrap workflow verified.
