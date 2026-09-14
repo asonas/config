@@ -50,35 +50,35 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/.apm/instructions/testing.instructions.md" = { mode = "track" }
 "~/.claude/scripts" = { mode = "track" }
 "~/.claude/settings.json" = { mode = "track" }
-"~/.config/chromium-flags.conf" = { mode = "track", variants = [{ os = "linux" }] }
-"~/.config/ghostty" = { mode = "track" }
-"~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
+"~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
+"~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
+"~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/.config/htop" = { mode = "track" }
-"~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ os = "linux" }] }
-"~/.config/karabiner" = { mode = "track" }
+"~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ profile = "desktop" }] }
+"~/.config/karabiner" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/mise/config.toml" = { mode = "track" }
 "~/.config/nvim" = { mode = "track" }
 "~/.config/peco" = { mode = "track" }
 "~/.config/qmd/index.yml" = { mode = "track", variants = [{ os = "linux" }, { os = "macos" }] }
 "~/.config/rubocop" = { mode = "track" }
 "~/.config/starship.toml" = { mode = "track" }
-"~/.config/wezterm" = { mode = "track" }
+"~/.config/wezterm" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/.gemrc" = { mode = "track" }
 "~/.gitconfig" = { mode = "track" }
 "~/.gitignore" = { mode = "track" }
 "~/.irbrc" = { mode = "track" }
-"~/.local/share/chromium-extensions/emacs-text-navigation" = { mode = "track", variants = [{ os = "linux" }] }
+"~/.local/share/chromium-extensions/emacs-text-navigation" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.psqlrc" = { mode = "track" }
-"~/.skhdrc" = { mode = "track" }
+"~/.skhdrc" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.tigrc" = { mode = "track" }
 "~/.tmux.conf" = { mode = "track" }
-"~/.yabairc" = { mode = "track" }
+"~/.yabairc" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.zshrc" = { mode = "track" }
 "~/bin/apm-apply" = { mode = "track" }
-"~/bin/check_sip.sh" = { mode = "track" }
+"~/bin/check_sip.sh" = { mode = "track", variants = [{ os = "macos" }] }
 "~/bin/fix_agent_frontmatter" = { mode = "track" }
 "~/bin/fix_codex_agent_description" = { mode = "track" }
-"~/bin/herdr-focus-attention" = { mode = "track" }
+"~/bin/herdr-focus-attention" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/bin/herdr-fork-claude-session" = { mode = "track" }
 "~/bin/herdr-fork-codex-session" = { mode = "track" }
 "~/bin/hw" = { mode = "track" }

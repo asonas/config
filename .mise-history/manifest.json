@@ -73,10 +73,8 @@
       "encrypt": false,
       "variants": [
         {
-          "os": [
-            "linux"
-          ],
-          "profile": null,
+          "os": [],
+          "profile": "desktop",
           "default": false
         }
       ]
@@ -85,7 +83,20 @@
       "path": "home/.config/ghostty",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        },
+        {
+          "os": [],
+          "profile": "desktop",
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/herdr/config.toml",
@@ -100,10 +111,8 @@
           "default": false
         },
         {
-          "os": [
-            "linux"
-          ],
-          "profile": null,
+          "os": [],
+          "profile": "desktop",
           "default": false
         }
       ]
@@ -120,10 +129,8 @@
       "encrypt": false,
       "variants": [
         {
-          "os": [
-            "linux"
-          ],
-          "profile": null,
+          "os": [],
+          "profile": "desktop",
           "default": false
         }
       ]
@@ -132,7 +139,15 @@
       "path": "home/.config/karabiner",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/nvim",
@@ -183,7 +198,20 @@
       "path": "home/.config/wezterm",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        },
+        {
+          "os": [],
+          "profile": "desktop",
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.gemrc",
@@ -215,10 +243,8 @@
       "encrypt": false,
       "variants": [
         {
-          "os": [
-            "linux"
-          ],
-          "profile": null,
+          "os": [],
+          "profile": "desktop",
           "default": false
         }
       ]
@@ -233,7 +259,15 @@
       "path": "home/.skhdrc",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.tigrc",
@@ -251,7 +285,15 @@
       "path": "home/.yabairc",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.zshrc",
@@ -269,7 +311,15 @@
       "path": "home/bin/check_sip.sh",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/fix_agent_frontmatter",
@@ -287,7 +337,20 @@
       "path": "home/bin/herdr-focus-attention",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        },
+        {
+          "os": [],
+          "profile": "desktop",
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/herdr-fork-claude-session",
@@ -331,8 +394,5 @@
     "~/.config/karabiner/automatic_backups/**"
   ],
   "recipients": [],
-  "permissions": {
-    "home/.config/karabiner": 448,
-    "home/.config/karabiner/assets/complex_modifications": 448
-  }
+  "permissions": {}
 }
