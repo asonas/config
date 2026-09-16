@@ -52,7 +52,7 @@ end
 case ARGV.first
 when '--watch-manifest'
   watch!(source, log, script,
-         '--debounce', '2s', '--on-busy-update', 'queue',
+         '--postpone', '--debounce', '2s', '--on-busy-update', 'queue',
          '--no-discover-ignore', '--project-origin', source,
          '--watch-non-recursive', source, '--filter', '/apm.yml') { [] }
 when '--watch-instructions'
