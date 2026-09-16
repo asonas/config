@@ -122,10 +122,10 @@ This split prevents ordinary instruction edits from redeploying
 copying it, so unnecessary installs can otherwise race with an agent reading
 `SKILL.md`.
 
-Before adopting this flow, verify in an isolated fixture that the migrated
-instruction sources compile to the expected global outputs. Preserve any
-post-install normalization still required by the existing dotfiles setup as an
-explicit bootstrap step; do not copy generated output as a shortcut.
+The process-boundary fixture verifies that instruction-only events compile the
+expected global outputs without installing dependencies. Preserve post-install
+normalization as an explicit bootstrap step; do not copy generated output as a
+shortcut.
 
 ## Daily operation
 
