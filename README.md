@@ -170,7 +170,9 @@ file. Declare the desired plugin and its resolved Git commit in
 The `bootstrap` task runs `herdr:plugins` after mise has installed tools. It
 installs or updates `shibayu36/herdr-equalize-panes` only when the installed
 commit differs, and enables an already pinned plugin if needed. The task skips
-the `headless` profile. Run it directly after changing the pinned commit:
+the `headless` profile. Herdr itself remains installed outside mise, so desktop
+bootstrap requires the `herdr` command to exist before the final task runs.
+Run the task directly after changing the pinned commit:
 
 ```sh
 mise run herdr:plugins

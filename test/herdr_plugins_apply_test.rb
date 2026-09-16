@@ -51,11 +51,18 @@ class HerdrPluginsApplyTest < Minitest::Test
   def test_skips_the_headless_profile
     install_fake_herdr([])
 
-    stdout, stderr, status = run_script('MISE_ENV' => 'headless')
+    stdout, stderr, status = run_script({'MISE_ENV' => 'headless'})
 
     assert status.success?, stderr
     assert_includes stdout, 'headless profile'
     refute_path_exists File.join(@root, 'herdr-calls')
+  end
+
+  def test_reports_when_herdr_is_not_installed
+    _stdout, stderr, status = run_script({}, path: @bin)
+
+    refute status.success?
+    assert_includes stderr, 'Herdr must be installed'
   end
 
   private
@@ -74,8 +81,8 @@ class HerdrPluginsApplyTest < Minitest::Test
     FileUtils.chmod(0o755, File.join(@bin, 'herdr'))
   end
 
-  def run_script(environment = {})
-    env = {'HOME' => @root, 'PATH' => "#{@bin}:#{ENV.fetch('PATH')}"}.merge(environment)
+  def run_script(environment = {}, path: "#{@bin}:#{ENV.fetch('PATH')}")
+    env = {'HOME' => @root, 'PATH' => path}.merge(environment)
     Open3.capture3(env, RbConfig.ruby, SCRIPT)
   end
 end

@@ -11,7 +11,11 @@ if ENV['MISE_ENV'] == 'headless'
   exit
 end
 
-output, status = Open3.capture2e('herdr', 'plugin', 'list', '--plugin', PLUGIN_ID, '--json')
+begin
+  output, status = Open3.capture2e('herdr', 'plugin', 'list', '--plugin', PLUGIN_ID, '--json')
+rescue Errno::ENOENT
+  abort 'Herdr must be installed before applying Herdr plugins'
+end
 abort output unless status.success?
 
 plugin = JSON.parse(output).dig('result', 'plugins', 0)
