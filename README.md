@@ -100,17 +100,34 @@ current setup. Revisit that decision separately if reproducible dependency pins
 become more important than automatic updates and cross-machine conflict
 avoidance.
 
-Global APM installation and compilation should use the user-scope configuration:
+Apply the global APM configuration through the wrapper:
 
 ```sh
-apm install --global --target claude,cursor,codex
-apm compile --global --clean
+mise run apm:apply
 ```
 
-Before adopting this flow, verify in an isolated fixture that the migrated
-instruction sources compile to the expected global outputs. Preserve any
-post-install normalization still required by the existing dotfiles setup as an
-explicit bootstrap step; do not copy generated output as a shortcut.
+The wrapper installs user-scope dependencies for Claude, Cursor, and Codex. It
+compiles the handwritten instruction sources in an isolated temporary project,
+then atomically replaces the generated user instruction files.
+
+The bootstrap services separate dependency deployment from instruction
+compilation. `apm-watch` watches `~/.apm/apm.yml`, performs the full install at
+when the manifest changes.
+`apm-instructions-watch` watches `~/.apm/instructions/` and runs compilation
+only. Both watchers start with `--postpone`, so restarting bootstrap services
+does not redeploy skills. Run `mise run apm:apply` explicitly after restoring
+the tracked APM sources and before applying the watcher services. Both paths
+share `~/.apm/.auto-apply.lock`.
+
+This split prevents ordinary instruction edits from redeploying
+`~/.agents/skills/`. APM replaces a retained skill directory by removing and
+copying it, so unnecessary installs can otherwise race with an agent reading
+`SKILL.md`.
+
+The process-boundary fixture verifies that instruction-only events compile the
+expected global outputs without installing dependencies. Preserve post-install
+normalization as an explicit bootstrap step; do not copy generated output as a
+shortcut.
 
 ## Daily operation
 
@@ -142,6 +159,24 @@ For a newly considered path:
 
 Exclusions are a backstop, not the primary boundary. Prefer a narrow tracking
 entry over tracking a broad directory with a growing denylist.
+
+## Herdr plugins
+
+Herdr's `~/.config/herdr/.plugins.lock` is a process lock, and `plugins.json`
+is generated runtime state containing machine-local paths. Do not track either
+file. Declare the desired plugin and its resolved Git commit in
+`~/bin/herdr-plugins-apply` instead.
+
+The `bootstrap` task runs `herdr:plugins` after mise has installed tools. It
+installs or updates `shibayu36/herdr-equalize-panes` only when the installed
+commit differs, and enables an already pinned plugin if needed. The task skips
+the `headless` profile. Herdr itself remains installed outside mise, so desktop
+bootstrap requires the `herdr` command to exist before the final task runs.
+Run the task directly after changing the pinned commit:
+
+```sh
+mise run herdr:plugins
+```
 
 ## Bootstrap operation
 
