@@ -112,10 +112,12 @@ then atomically replaces the generated user instruction files.
 
 The bootstrap services separate dependency deployment from instruction
 compilation. `apm-watch` watches `~/.apm/apm.yml`, performs the full install at
-service startup, and repeats it only when the manifest changes.
+when the manifest changes.
 `apm-instructions-watch` watches `~/.apm/instructions/` and runs compilation
-only. It starts with `--postpone` because the manifest watcher already performs
-the initial full apply. Both paths share `~/.apm/.auto-apply.lock`.
+only. Both watchers start with `--postpone`, so restarting bootstrap services
+does not redeploy skills. Run `mise run apm:apply` explicitly after restoring
+the tracked APM sources and before applying the watcher services. Both paths
+share `~/.apm/.auto-apply.lock`.
 
 This split prevents ordinary instruction edits from redeploying
 `~/.agents/skills/`. APM replaces a retained skill directory by removing and

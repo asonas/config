@@ -49,14 +49,14 @@ class ApmApplyTest < Minitest::Test
     refute_includes arguments, '/apm.yml'
   end
 
-  def test_manifest_watcher_runs_full_apply_at_startup
+  def test_manifest_watcher_is_postponed_and_runs_full_apply_on_changes
     install_fake_watchexec
     _stdout, stderr, status = run_script('--watch-manifest')
 
     assert status.success?, stderr
     arguments = File.read(File.join(@root, 'watchexec-arguments'))
     assert_includes arguments, '/apm.yml'
-    refute_includes arguments, '--postpone'
+    assert_includes arguments, '--postpone'
     refute_includes arguments, '--compile-only'
     refute_includes arguments, '/instructions/**'
   end
