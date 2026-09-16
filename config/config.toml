@@ -46,6 +46,14 @@ dir = "~"
 env = { RUBYOPT = "-EUTF-8" }
 run = "ruby \"$HOME/bin/apm-apply\""
 
+[tasks."herdr:plugins"]
+description = "Install pinned Herdr plugins"
+dir = "~"
+run = "ruby \"$HOME/bin/herdr-plugins-apply\""
+
+[tasks.bootstrap]
+run = [{ task = "herdr:plugins" }]
+
 [dotfiles]
 "~/.apm/apm.yml" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
@@ -88,6 +96,7 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/bin/herdr-focus-attention" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/bin/herdr-fork-claude-session" = { mode = "track" }
 "~/bin/herdr-fork-codex-session" = { mode = "track" }
+"~/bin/herdr-plugins-apply" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/bin/hw" = { mode = "track" }
 "~/bin/install_gist_skills" = { mode = "track" }
 "~/bin/mdroll-in-herdr" = { mode = "track" }

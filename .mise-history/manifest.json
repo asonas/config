@@ -365,6 +365,25 @@
       "variants": []
     },
     {
+      "path": "home/bin/herdr-plugins-apply",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        },
+        {
+          "os": [],
+          "profile": "desktop",
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/bin/hw",
       "autosave": true,
       "encrypt": false,

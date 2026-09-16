@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+require 'json'
+require 'open3'
+
+PLUGIN_ID = 'shibayu36.equalize-panes'
+PLUGIN_SOURCE = 'shibayu36/herdr-equalize-panes'
+PLUGIN_COMMIT = '0c1d940e9af09c632a48a5b179753ef25056ff13'
+
+if ENV['MISE_ENV'] == 'headless'
+  puts "Skipping Herdr plugins for the headless profile"
+  exit
+end
+
+begin
+  output, status = Open3.capture2e('herdr', 'plugin', 'list', '--plugin', PLUGIN_ID, '--json')
+rescue Errno::ENOENT
+  abort 'Herdr must be installed before applying Herdr plugins'
+end
+abort output unless status.success?
+
+plugin = JSON.parse(output).dig('result', 'plugins', 0)
+if plugin&.dig('source', 'resolved_commit') == PLUGIN_COMMIT
+  if plugin['enabled']
+    puts "Herdr plugin #{PLUGIN_ID} is already at #{PLUGIN_COMMIT}"
+  else
+    system('herdr', 'plugin', 'enable', PLUGIN_ID) || abort("Failed to enable #{PLUGIN_ID}")
+  end
+  exit
+end
+
+system('herdr', 'plugin', 'install', PLUGIN_SOURCE, '--ref', PLUGIN_COMMIT, '--yes') ||
+  abort("Failed to install #{PLUGIN_ID}")
