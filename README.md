@@ -100,12 +100,27 @@ current setup. Revisit that decision separately if reproducible dependency pins
 become more important than automatic updates and cross-machine conflict
 avoidance.
 
-Global APM installation and compilation should use the user-scope configuration:
+Apply the global APM configuration through the wrapper:
 
 ```sh
-apm install --global --target claude,cursor,codex
-apm compile --global --clean
+mise run apm:apply
 ```
+
+The wrapper installs user-scope dependencies for Claude, Cursor, and Codex. It
+compiles the handwritten instruction sources in an isolated temporary project,
+then atomically replaces the generated user instruction files.
+
+The bootstrap services separate dependency deployment from instruction
+compilation. `apm-watch` watches `~/.apm/apm.yml`, performs the full install at
+service startup, and repeats it only when the manifest changes.
+`apm-instructions-watch` watches `~/.apm/instructions/` and runs compilation
+only. It starts with `--postpone` because the manifest watcher already performs
+the initial full apply. Both paths share `~/.apm/.auto-apply.lock`.
+
+This split prevents ordinary instruction edits from redeploying
+`~/.agents/skills/`. APM replaces a retained skill directory by removing and
+copying it, so unnecessary installs can otherwise race with an agent reading
+`SKILL.md`.
 
 Before adopting this flow, verify in an isolated fixture that the migrated
 instruction sources compile to the expected global outputs. Preserve any
