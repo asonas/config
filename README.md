@@ -160,6 +160,22 @@ For a newly considered path:
 Exclusions are a backstop, not the primary boundary. Prefer a narrow tracking
 entry over tracking a broad directory with a growing denylist.
 
+## Herdr plugins
+
+Herdr's `~/.config/herdr/.plugins.lock` is a process lock, and `plugins.json`
+is generated runtime state containing machine-local paths. Do not track either
+file. Declare the desired plugin and its resolved Git commit in
+`~/bin/herdr-plugins-apply` instead.
+
+The `bootstrap` task runs `herdr:plugins` after mise has installed tools. It
+installs or updates `shibayu36/herdr-equalize-panes` only when the installed
+commit differs, and enables an already pinned plugin if needed. The task skips
+the `headless` profile. Run it directly after changing the pinned commit:
+
+```sh
+mise run herdr:plugins
+```
+
 ## Bootstrap operation
 
 Linux desktop machines and headless Linux hosts use different mise profiles.
