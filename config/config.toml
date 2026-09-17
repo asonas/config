@@ -14,7 +14,7 @@ colima = "latest"
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
-apm = "0.30.0"
+apm = "latest"
 watchexec = "2.7.2"
 claude = "latest"
 "npm:@tobilu/qmd" = "latest"
