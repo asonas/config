@@ -14,7 +14,7 @@ colima = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
 apm = "latest"
-watchexec = "2.7.2"
+watchexec = "latest"
 claude = "latest"
 "npm:@tobilu/qmd" = "latest"
 
