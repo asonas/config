@@ -410,6 +410,7 @@
   ],
   "exclude": [
     "~/.config/nvim/.netrwhist",
+    "~/.config/nvim/lua/plugins/theme.lua",
     "~/.config/karabiner/automatic_backups/**"
   ],
   "recipients": [],
