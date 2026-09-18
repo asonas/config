@@ -56,6 +56,36 @@
       "variants": []
     },
     {
+      "path": "home/.bashrc",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.claude/commands/gemini-search.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.claude/commands/talk-review",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.claude/hooks/herdr-agent-state.sh",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.claude/rules",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/.claude/scripts",
       "autosave": true,
       "encrypt": false,
@@ -63,6 +93,12 @@
     },
     {
       "path": "home/.claude/settings.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.claude/skills",
       "autosave": true,
       "encrypt": false,
       "variants": []
@@ -296,6 +332,12 @@
       ]
     },
     {
+      "path": "home/.zsh.d",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/.zshrc",
       "autosave": true,
       "encrypt": false,
@@ -396,6 +438,12 @@
       "variants": []
     },
     {
+      "path": "home/bin/loadavg.sh",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/bin/mdroll-in-herdr",
       "autosave": true,
       "encrypt": false,
@@ -403,6 +451,12 @@
     },
     {
       "path": "home/bin/setup_workspace",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/bin/video_rahmen",
       "autosave": true,
       "encrypt": false,
       "variants": []

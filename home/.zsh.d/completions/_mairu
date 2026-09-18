@@ -1,0 +1,194 @@
+#compdef mairu
+# 
+# Zsh completion for mairu command
+#
+# Installation:
+#   There are two ways to install this completion file:
+#
+#   Method 1: Copy to an existing fpath directory
+#     Copy this file to one of the directories in your $fpath.
+#     Common locations:
+#       - /usr/local/share/zsh/site-functions/_mairu (system-wide)
+#       - ~/.zsh/completions/_mairu (user-specific, create directory if needed)
+#
+#     Example:
+#       mkdir -p ~/.zsh/completions
+#       cp _mairu ~/.zsh/completions/
+#       # Add to ~/.zshrc if not already in fpath:
+#       fpath=(~/.zsh/completions $fpath)
+#       autoload -U compinit && compinit
+#
+#   Method 2: Add this file's directory to fpath
+#     Add the directory containing this file to your fpath in ~/.zshrc:
+#       fpath=(/path/to/this/directory $fpath)
+#       autoload -U compinit && compinit
+#
+#     Example (if this file is in ~/src/scripts/completions):
+#       fpath=(~/src/scripts/completions $fpath)
+#       autoload -U compinit && compinit
+#
+# Reloading completions:
+#   After installing or modifying this file, reload completions:
+#     autoload -U compinit && compinit
+#
+#   Or in a new terminal session:
+#     exec zsh
+#
+
+typeset -A opt_args
+
+_mairu() {
+  local context state state_descr line
+  local -a commands
+
+  # Set completion display style
+  zstyle ':completion:*:*:mairu:*' list-grouped false
+  zstyle ':completion:*:*:mairu:*' list-packed false
+  zstyle ':completion:*:*:mairu:*' menu select
+
+  commands=(
+    'exec:Execute command with AWS credentials'
+    'login:Login to your credential server'
+    'credential-process:Use Mairu as a credential process provider'
+    'list-sessions:List active sessions'
+    'list-roles:List available roles'
+    'refresh:Refresh existing session'
+    'show:Show current auto role'
+    'agent:Manually start agent process'
+    'kill-agent:Instruct the agent to shut down'
+    'setup-sso:Setup Mairu for your AWS SSO instance'
+    'help:Print help message'
+  )
+
+  _arguments -C \
+    '(-h --help)'{-h,--help}'[Print help]' \
+    '(-V --version)'{-V,--version}'[Print version]' \
+    '1: :->command' \
+    '*:: :->args'
+
+  case $state in
+    command)
+      _describe -t commands 'mairu command' commands
+      ;;
+    args)
+      case $words[1] in
+        exec)
+          _mairu_exec
+          ;;
+        login)
+          _mairu_login
+          ;;
+        credential-process)
+          _mairu_credential_process
+          ;;
+        setup-sso)
+          _mairu_setup_sso
+          ;;
+        list-roles|refresh)
+           _arguments '1:server:_mairu_servers'
+           ;;
+        *)
+          # Fallback for other commands that might just take generic args
+          ;;
+      esac
+      ;;
+  esac
+}
+
+_mairu_exec() {
+  _arguments \
+    '--server=[Specify credential server ID]:server:_mairu_servers' \
+    '--mode=[Credential provider mode]:mode:(ecs static)' \
+    '1:role:_mairu_roles' \
+    '*:: :->'
+  
+  # After the role, complete as a normal command
+  if [[ $state == "" && $CURRENT -ge 2 ]]; then
+    shift words
+    ((CURRENT--))
+    _normal
+  fi
+}
+
+_mairu_login() {
+  _arguments \
+    '1:server:_mairu_servers'
+}
+
+_mairu_credential_process() {
+  _arguments \
+    '1:server:_mairu_servers' \
+    '2:role:_mairu_roles_remote'
+}
+
+_mairu_setup_sso() {
+  _arguments \
+    '--region=[AWS SSO Region]:region:(us-east-1 us-west-2 ap-northeast-1 eu-west-1)' \
+    '--start-url=[AWS SSO Start URL]:url:_urls' \
+    '1:server_id:'
+}
+
+# Helpers
+
+_mairu_servers() {
+  # Suggest server IDs based on config files in ~/.config/mairu/servers.d/
+  local -a servers
+  local config_dir="$HOME/.config/mairu/servers.d"
+  
+  if [[ -d "$config_dir" ]]; then
+    # Extract filenames without extension
+    servers=(${config_dir}/*.json(:t:r))
+  fi
+  
+  _describe -t servers 'server' servers
+}
+
+_mairu_roles() {
+  local -a roles
+  local server
+  
+  # Extract server from --server option if present
+  for ((i = 1; i <= $#words; i++)); do
+    if [[ "${words[i]}" == --server=* ]]; then
+      server="${words[i]#--server=}"
+      break
+    elif [[ "${words[i]}" == "--server" && $i -lt $#words ]]; then
+      server="${words[i+1]}"
+      break
+    fi
+  done
+  
+  # Always suggest "auto" first
+  roles=('auto:Automatically determine role from .mairu.json')
+  
+  # If server is specified, fetch roles dynamically
+  if [[ -n "$server" ]]; then
+    local in_server=0
+    
+    while IFS= read -r line; do
+      # Check if this is the server name line
+      if [[ "$line" =~ ^[a-z] ]]; then
+        if [[ "$line" == "$server" ]]; then
+          in_server=1
+        else
+          in_server=0
+        fi
+      # Parse role lines (start with whitespace followed by digits)
+      elif [[ $in_server -eq 1 && "$line" =~ ^[[:space:]]+([0-9]+/[A-Za-z]+) ]]; then
+        local role=$(echo "$line" | awk '{print $1}')
+        # Extract account name and email: everything after the role
+        local desc=$(echo "$line" | awk '{$1=""; print $0}' | sed 's/^[[:space:]]*//')
+        roles+=("$role:$desc")
+      fi
+    done < <(mairu list-roles 2>/dev/null)
+  fi
+  
+  _describe -t roles 'role' roles
+}
+
+_mairu_roles_remote() {
+  # Wrapper to suggest roles, could extend to call `mairu list-roles` if needed
+  _message "AWS Role (e.g. 123456789/RoleName)"
+}
+
+_mairu "$@"
