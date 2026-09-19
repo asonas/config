@@ -7,28 +7,35 @@ peco = "latest"
 rust = "latest"
 node = "lts"
 ruby = "latest"
-yarn = "1.22.19"
 colima = "latest"
 "github:hokaccha/givy" = "latest"
 "github:sorah/mairu" = "latest"
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
-apm = "0.30.0"
-watchexec = "2.7.2"
+apm = "latest"
+watchexec = "latest"
 claude = "latest"
 "npm:@tobilu/qmd" = "latest"
 
 [settings]
 github_attestations = false
 idiomatic_version_file_enable_tools = ["node", "ruby", "rust"]
+auto_update = true
 
 [bootstrap.services.mise-history]
 builtin = "history-watch"
 
 [bootstrap.services.apm-watch]
 scope = "user"
-command = "~/.local/bin/mise exec -- ruby bin/apm-apply --watch"
+command = "~/.local/bin/mise exec -- ruby bin/apm-apply --watch-manifest"
+working_directory = "~"
+requires_tools = true
+environment = { RUBYOPT = "-EUTF-8" }
+
+[bootstrap.services.apm-instructions-watch]
+scope = "user"
+command = "~/.local/bin/mise exec -- ruby bin/apm-apply --watch-instructions"
 working_directory = "~"
 requires_tools = true
 environment = { RUBYOPT = "-EUTF-8" }
@@ -39,6 +46,16 @@ dir = "~"
 env = { RUBYOPT = "-EUTF-8" }
 run = "ruby \"$HOME/bin/apm-apply\""
 
+[tasks."herdr:plugins"]
+description = "Install pinned Herdr plugins"
+dir = "~"
+run = "ruby \"$HOME/bin/herdr-plugins-apply\""
+
+[tasks.bootstrap]
+run = [{ task = "herdr:plugins" }]
+
+# Track authored sources only. Generated agent outputs and mixed-state
+# directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
 "~/.apm/apm.yml" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
@@ -81,10 +98,11 @@ run = "ruby \"$HOME/bin/apm-apply\""
 "~/bin/herdr-focus-attention" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/bin/herdr-fork-claude-session" = { mode = "track" }
 "~/bin/herdr-fork-codex-session" = { mode = "track" }
+"~/bin/herdr-plugins-apply" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/bin/hw" = { mode = "track" }
 "~/bin/install_gist_skills" = { mode = "track" }
 "~/bin/mdroll-in-herdr" = { mode = "track" }
 "~/bin/setup_workspace" = { mode = "track" }
 
 [history]
-exclude = ["~/.config/nvim/.netrwhist", "~/.config/karabiner/automatic_backups/**"]
+exclude = ["~/.config/nvim/.netrwhist", "~/.config/nvim/lua/plugins/theme.lua", "~/.config/karabiner/automatic_backups/**"]

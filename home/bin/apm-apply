@@ -8,6 +8,7 @@ require 'tmpdir'
 root = Dir.home
 source = File.join(root, '.apm')
 script = File.expand_path(__FILE__)
+log = File.join(source, 'auto-apply.log')
 
 def run!(*command, **options)
   system(*command, **options) || abort("Command failed: #{command.join(' ')}")
@@ -23,68 +24,85 @@ def replace_file(destination, content)
   end
 end
 
-case ARGV.first
-when '--watch'
-  $stdout.reopen(File.join(source, 'auto-apply.log'), 'a')
+def watch!(source, log, script, *arguments)
+  $stdout.reopen(log, 'a')
   $stderr.reopen($stdout)
   $stdout.sync = true
   Dir.chdir(source)
-  exec 'watchexec', '--debounce', '2s', '--on-busy-update', 'queue',
-       '--no-discover-ignore', '--project-origin', source,
-       '--watch-non-recursive', source, '--watch', File.join(source, 'instructions'),
-       '--filter', '/apm.yml', '--filter', '/instructions/**',
-       '--shell=none', '--', RbConfig.ruby, script
-when nil
-  File.open(File.join(source, '.auto-apply.lock'), File::RDWR | File::CREAT, 0600) do |lock|
-    lock.flock(File::LOCK_EX)
-    run! RbConfig.ruby, File.join(root, 'bin/install_gist_skills'), root,
-         RbConfig.ruby, script, '--apply'
-  end
-when '--apply'
-  # Global compilation only reads dependency modules, not these authored sources.
+  exec 'watchexec', *arguments, '--shell=none', '--', RbConfig.ruby, script,
+       *yield
+end
+
+def compile_instructions!(root, source)
   Dir.mktmpdir('apm-instructions-') do |directory|
     FileUtils.mkdir_p(File.join(directory, '.apm'))
     FileUtils.cp_r(File.join(source, 'instructions'), File.join(directory, '.apm/instructions'))
     File.write(File.join(directory, 'apm.yml'), "name: asonas-global-instructions\nversion: 1.0.0\ndependencies:\n  apm: []\n")
     run! 'apm', 'compile', '--local-only', '--single-agents', '--force-instructions',
          '--target', 'claude,codex', chdir: directory
+
     outputs = {'CLAUDE.md' => '.claude/CLAUDE.md', 'AGENTS.md' => '.codex/AGENTS.md'}
     outputs.each_key { |name| abort("Missing compiled #{name}") unless File.size?(File.join(directory, name)) }
-
-    begin
-      run! 'apm', 'install', '--global', '--only', 'apm', '--target', 'claude,cursor,codex', chdir: source
-    ensure
-      # APM injects Claude-only bootstrap hooks; retain the user's Herdr-only policy.
-      settings_path = File.join(root, '.claude/settings.json')
-      if File.file?(settings_path)
-        settings = JSON.parse(File.read(settings_path))
-        hooks = settings['hooks'] ||= {}
-        hooks.delete('sessionStart')
-        sessions = hooks.fetch('SessionStart', []).filter_map do |entry|
-          kept = entry.fetch('hooks', []).reject do |hook|
-            hook.fetch('command', '').match?(%r{superpowers/|herdr-agent-state\.sh})
-          end
-          entry.merge('hooks' => kept) unless kept.empty?
-        end
-        hooks['SessionStart'] = sessions
-        if File.file?(File.join(root, '.claude/hooks/herdr-agent-state.sh'))
-          hooks['SessionStart'] << {'matcher' => 'startup|resume|clear|compact', 'hooks' => [
-            {'type' => 'command', 'command' => '"$HOME/.claude/hooks/herdr-agent-state.sh" session'}
-          ]}
-        end
-        replace_file(settings_path, JSON.pretty_generate(settings) + "\n")
-      end
-      run! RbConfig.ruby, File.join(root, 'bin/fix_agent_frontmatter'), File.join(root, '.claude/agents/security-reviewer.md')
-      run! 'sh', File.join(root, 'bin/fix_codex_agent_description'), File.join(root, '.codex/agents/security-reviewer.toml')
-    end
-
     outputs.each do |name, relative|
-      destination = File.join(root, relative)
-      # Rename replaces the old dotfiles symlink without changing its target.
-      replace_file(destination, File.read(File.join(directory, name)))
+      replace_file(File.join(root, relative), File.read(File.join(directory, name)))
     end
-    puts "APM configuration applied at #{Time.now.utc}"
   end
+end
+
+case ARGV.first
+when '--watch-manifest'
+  watch!(source, log, script,
+         '--postpone', '--debounce', '2s', '--on-busy-update', 'queue',
+         '--no-discover-ignore', '--project-origin', source,
+         '--watch-non-recursive', source, '--filter', '/apm.yml') { [] }
+when '--watch-instructions'
+  watch!(source, log, script,
+         '--postpone', '--debounce', '2s', '--on-busy-update', 'queue',
+         '--no-discover-ignore', '--project-origin', source,
+         '--watch', File.join(source, 'instructions'), '--filter', '/instructions/**') do
+    ['--compile-only']
+  end
+when nil
+  File.open(File.join(source, '.auto-apply.lock'), File::RDWR | File::CREAT, 0600) do |lock|
+    lock.flock(File::LOCK_EX)
+    run! RbConfig.ruby, File.join(root, 'bin/install_gist_skills'), root,
+         RbConfig.ruby, script, '--apply'
+  end
+when '--compile-only'
+  File.open(File.join(source, '.auto-apply.lock'), File::RDWR | File::CREAT, 0600) do |lock|
+    lock.flock(File::LOCK_EX)
+    compile_instructions!(root, source)
+    puts "APM instructions compiled at #{Time.now.utc}"
+  end
+when '--apply'
+  begin
+    run! 'apm', 'install', '--global', '--only', 'apm', '--target', 'claude,cursor,codex', chdir: source
+  ensure
+    # APM injects Claude-only bootstrap hooks; retain the user's Herdr-only policy.
+    settings_path = File.join(root, '.claude/settings.json')
+    if File.file?(settings_path)
+      settings = JSON.parse(File.read(settings_path))
+      hooks = settings['hooks'] ||= {}
+      hooks.delete('sessionStart')
+      sessions = hooks.fetch('SessionStart', []).filter_map do |entry|
+        kept = entry.fetch('hooks', []).reject do |hook|
+          hook.fetch('command', '').match?(%r{superpowers/|herdr-agent-state\.sh})
+        end
+        entry.merge('hooks' => kept) unless kept.empty?
+      end
+      hooks['SessionStart'] = sessions
+      if File.file?(File.join(root, '.claude/hooks/herdr-agent-state.sh'))
+        hooks['SessionStart'] << {'matcher' => 'startup|resume|clear|compact', 'hooks' => [
+          {'type' => 'command', 'command' => '"$HOME/.claude/hooks/herdr-agent-state.sh" session'}
+        ]}
+      end
+      replace_file(settings_path, JSON.pretty_generate(settings) + "\n")
+    end
+    run! RbConfig.ruby, File.join(root, 'bin/fix_agent_frontmatter'), File.join(root, '.claude/agents/security-reviewer.md')
+    run! 'sh', File.join(root, 'bin/fix_codex_agent_description'), File.join(root, '.codex/agents/security-reviewer.toml')
+  end
+  compile_instructions!(root, source)
+  puts "APM configuration applied at #{Time.now.utc}"
 else
-  abort 'usage: apm-apply [--watch]'
+  abort 'usage: apm-apply [--watch-manifest|--watch-instructions|--compile-only]'
 end
