@@ -1,0 +1,43 @@
+onboarding = false
+# Linux/Omarchy counterpart of home@macos/.config/herdr/config.toml.
+# Keep actions and mnemonics aligned; only host-specific paths differ.
+
+[terminal]
+new_cwd = "follow"
+kitty_graphics = true
+
+[keys]
+# Match macOS. Ghostty's kitty keyboard protocol keeps Ctrl+J distinct from Enter.
+prefix = "ctrl+j"
+
+# Move between Spaces with the same Cmd+Shift chords used on macOS.
+next_workspace = "cmd+shift+j"
+previous_workspace = "cmd+shift+k"
+new_workspace = "cmd+shift+n"
+
+# Match the macOS prefix-mode mnemonics.
+new_tab = "prefix+ctrl+c"
+next_tab = "prefix+ctrl+n"
+previous_tab = "prefix+ctrl+p"
+split_vertical = "prefix+ctrl+v"
+split_horizontal = "prefix+ctrl+s"
+cycle_pane_next = "prefix+ctrl+i"
+
+[[keys.command]]
+key = "cmd+shift+u"
+type = "shell"
+command = "/home/asonas/bin/herdr-focus-attention"
+description = "focus next agent needing attention"
+
+[ui]
+prompt_new_tab_name = false
+
+[ui.toast]
+delivery = "herdr"
+
+[session]
+resume_agents_on_restore = true
+
+[theme]
+name = "tokyo-night"
+auto_switch = false
