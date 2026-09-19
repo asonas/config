@@ -7,21 +7,21 @@ peco = "latest"
 rust = "latest"
 node = "lts"
 ruby = "latest"
-yarn = "1.22.19"
 colima = "latest"
 "github:hokaccha/givy" = "latest"
 "github:sorah/mairu" = "latest"
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
-apm = "0.30.0"
-watchexec = "2.7.2"
+apm = "latest"
+watchexec = "latest"
 claude = "latest"
 "npm:@tobilu/qmd" = "latest"
 
 [settings]
 github_attestations = false
 idiomatic_version_file_enable_tools = ["node", "ruby", "rust"]
+auto_update = true
 
 [bootstrap.services.mise-history]
 builtin = "history-watch"
