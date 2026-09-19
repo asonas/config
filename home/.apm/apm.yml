@@ -320,9 +320,7 @@ dependencies:
     - git: kotek-7/dotfiles
       path: dot_agents/skills/sanitize-artifacts
       targets: [codex]
-    - git: asonas/skills
-      path: jev-qmd
-      targets: [claude, codex]
+    - asonas/skills/jev-qmd
   mcp: []
 includes: auto
 scripts: {}
