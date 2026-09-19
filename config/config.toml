@@ -54,6 +54,8 @@ run = "ruby \"$HOME/bin/herdr-plugins-apply\""
 [tasks.bootstrap]
 run = [{ task = "herdr:plugins" }]
 
+# Track authored sources only. Generated agent outputs and mixed-state
+# directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
 "~/.apm/apm.yml" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
