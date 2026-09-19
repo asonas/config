@@ -54,6 +54,8 @@ run = "ruby \"$HOME/bin/herdr-plugins-apply\""
 [tasks.bootstrap]
 run = [{ task = "herdr:plugins" }]
 
+# Track authored sources only. Generated agent outputs and mixed-state
+# directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
 "~/.apm/apm.yml" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
@@ -63,14 +65,8 @@ run = [{ task = "herdr:plugins" }]
 "~/.apm/instructions/installer.instructions.md" = { mode = "track" }
 "~/.apm/instructions/shell.instructions.md" = { mode = "track" }
 "~/.apm/instructions/testing.instructions.md" = { mode = "track" }
-"~/.bashrc" = { mode = "track" }
-"~/.claude/commands/gemini-search.md" = { mode = "track" }
-"~/.claude/commands/talk-review" = { mode = "track" }
-"~/.claude/hooks/herdr-agent-state.sh" = { mode = "track" }
-"~/.claude/rules" = { mode = "track" }
 "~/.claude/scripts" = { mode = "track" }
 "~/.claude/settings.json" = { mode = "track" }
-"~/.claude/skills" = { mode = "track" }
 "~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
@@ -94,7 +90,6 @@ run = [{ task = "herdr:plugins" }]
 "~/.tigrc" = { mode = "track" }
 "~/.tmux.conf" = { mode = "track" }
 "~/.yabairc" = { mode = "track", variants = [{ os = "macos" }] }
-"~/.zsh.d" = { mode = "track" }
 "~/.zshrc" = { mode = "track" }
 "~/bin/apm-apply" = { mode = "track" }
 "~/bin/check_sip.sh" = { mode = "track", variants = [{ os = "macos" }] }
@@ -106,10 +101,8 @@ run = [{ task = "herdr:plugins" }]
 "~/bin/herdr-plugins-apply" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/bin/hw" = { mode = "track" }
 "~/bin/install_gist_skills" = { mode = "track" }
-"~/bin/loadavg.sh" = { mode = "track" }
 "~/bin/mdroll-in-herdr" = { mode = "track" }
 "~/bin/setup_workspace" = { mode = "track" }
-"~/bin/video_rahmen" = { mode = "track" }
 
 [history]
-exclude = ["~/.config/nvim/.netrwhist", "~/.config/karabiner/automatic_backups/**"]
+exclude = ["~/.config/nvim/.netrwhist", "~/.config/nvim/lua/plugins/theme.lua", "~/.config/karabiner/automatic_backups/**"]

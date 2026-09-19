@@ -357,7 +357,6 @@ export PATH="$WASMTIME_HOME/bin:$PATH"
 # trusted_config_paths は global config でのみ有効。dotfiles 内のシンボリックリンク先
 # (ghq 配下) は non-global 扱いされ無視されるため、環境変数で渡す
 export MISE_TRUSTED_CONFIG_PATHS="$HOME/ghq/github.com/ivry-inc:$HOME/ghq/github.com/asonas"
-eval "$(mise activate zsh)"
 
 # Dart補完の遅延読み込み
 _setup_dart_completion() {
@@ -383,6 +382,8 @@ eval "$(git wt --init zsh)"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+eval "$(mise activate zsh)"
 
 # herdr: 新規 pane を開いたとき（=ログインシェル起動時）に入力ソースを英数(ABC)へ切り替える。
 # herdr に on-create hook は無いが、pane ごとに login shell が起動し HERDR_ENV=1 が入るので

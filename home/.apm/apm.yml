@@ -1,6 +1,7 @@
 name: asonas-dotfiles
 version: 1.0.0
-description: Personal global agent rules and skills, shared across Claude Code, Cursor, and Codex
+description: Personal global agent rules and skills, shared across Claude Code, 
+  Cursor, and Codex
 author: Yuya Fujiwara
 # Resolution order: --target flag > this field > auto-detect from filesystem.
 # Accepted values: copilot, claude, cursor, opencode, codex, gemini, windsurf, all
@@ -212,6 +213,9 @@ dependencies:
     # CLAUDE.md に混入する。サブパス指定なら skill だけを取り込める。バイナリ本体は
     # 別途 `curl -fsSL https://ax.yusuke.run/install | sh` が必要（apm は SKILL.md のみ配布）。
     - yusukebe/ax/skills/ax
+    - git: typesafe-ai/skills
+      path: skills/typesafe-ai
+      targets: [codex]
     # sorah/config is a monorepo-style marketplace; pin the specific plugin paths.
     # sorah-spec is retired; its rails/ruby/spec-conventions skills and commands
     # are intentionally no longer deployed.
@@ -313,6 +317,7 @@ dependencies:
     - git: dietrichgebert/ponytail
       path: skills/ponytail
       targets: [codex]
+    - asonas/skills/jev-qmd
   mcp: []
 includes: auto
 scripts: {}
