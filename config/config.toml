@@ -52,7 +52,7 @@ dir = "~"
 run = "ruby \"$HOME/bin/herdr-plugins-apply\""
 
 [tasks.bootstrap]
-run = [{ task = "herdr:plugins" }]
+run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
 
 # Track authored sources only. Generated agent outputs and mixed-state
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
