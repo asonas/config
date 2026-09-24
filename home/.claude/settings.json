@@ -101,7 +101,6 @@
   },
   "enabledPlugins": {
     "cafleet@cafleet": false,
-    "cctop@cctop": true,
     "clangd-lsp@claude-plugins-official": false,
     "cman@cman": true,
     "crit@crit": true,
