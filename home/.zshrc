@@ -394,3 +394,11 @@ eval "$(mise activate zsh)"
 if [[ "$HERDR_ENV" == "1" && -o login ]] && (( $+commands[macism] )); then
   macism com.apple.keylayout.ABC >/dev/null 2>&1
 fi
+
+# pnpm
+export PNPM_HOME="/Users/asonas/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
