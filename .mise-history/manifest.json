@@ -415,6 +415,7 @@
   ],
   "recipients": [],
   "permissions": {
+    "home/.apm": 448,
     "home@macos/.config/karabiner": 448,
     "home@macos/.config/karabiner/assets/complex_modifications": 448
   }
