@@ -23,6 +23,7 @@ claude = "latest"
 github_attestations = false
 idiomatic_version_file_enable_tools = ["node", "ruby", "rust"]
 auto_update = true
+minimum_release_age_excludes = ['["codex"]']
 
 [bootstrap.services.mise-history]
 builtin = "history-watch"
