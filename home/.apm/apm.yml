@@ -27,58 +27,6 @@ dependencies:
     # ガイドラインは apply-apple-interface-guidelines を使っている。必要になったら
     # ここに名前を足せば戻る。エントリは `skills/` 配下にネストしているので
     # frontend-design と同じサブパス指定にする。
-    # APM dependency targets keep Claude's Superpowers workflow and Codex's Matt
-    # Pocock workflow separate while install.sh can continue to run one command.
-    # obra/superpowers: スキルを1本ずつサブパス指定する。リポジトリ丸ごとの指定に
-    # すると、apm compile が生成する root CLAUDE.md に
-    # `@apm_modules/obra/superpowers/CLAUDE.md` が入り、superpowers 本体への
-    # コントリビュートガイドライン 8,852 バイトが全セッションに注入される。
-    # サブパス指定の依存は @ 行を出さない。丸ごと指定をやめると superpowers が
-    # 宣言している SessionStart フックの統合も止まるが、あのフックは
-    # using-superpowers の全文 3.5KB を毎セッション注入するもので、
-    # settings.json 側でも外している。
-    - git: obra/superpowers
-      path: skills/brainstorming
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/dispatching-parallel-agents
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/executing-plans
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/finishing-a-development-branch
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/receiving-code-review
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/requesting-code-review
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/subagent-driven-development
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/systematic-debugging
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/test-driven-development
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/using-git-worktrees
-      targets: [claude, codex]
-    - git: obra/superpowers
-      path: skills/using-superpowers
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/verification-before-completion
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/writing-plans
-      targets: [claude]
-    - git: obra/superpowers
-      path: skills/writing-skills
-      targets: [claude]
     # mattpocock/skills: install every skill published under skills/ for Codex.
     - git: mattpocock/skills
       path: skills/engineering/ask-matt
