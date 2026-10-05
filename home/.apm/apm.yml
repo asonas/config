@@ -96,9 +96,6 @@ dependencies:
       path: skills/engineering/research
       targets: [codex]
     - git: mattpocock/skills
-      path: skills/engineering/resolving-merge-conflicts
-      targets: [codex]
-    - git: mattpocock/skills
       path: skills/engineering/setup-matt-pocock-skills
       targets: [codex]
     - git: mattpocock/skills
@@ -144,13 +141,13 @@ dependencies:
       path: skills/in-progress/claude-handoff
       targets: [codex]
     - git: mattpocock/skills
-      path: skills/in-progress/implement-spec
+      path: skills/engineering/implement-spec
       targets: [codex]
     - git: mattpocock/skills
       path: skills/in-progress/loop-me
       targets: [codex]
     - git: mattpocock/skills
-      path: skills/in-progress/retro
+      path: skills/engineering/retro
       targets: [codex]
     - git: mattpocock/skills
       path: skills/in-progress/setup-ts-deep-modules
