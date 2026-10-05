@@ -42,6 +42,12 @@ working_directory = "~"
 requires_tools = true
 environment = { RUBYOPT = "-EUTF-8" }
 
+[tasks."apm:update"]
+description = "Update APM skills and rebuild user instructions"
+dir = "~"
+raw = true
+run = ["apm update --global --target claude,cursor,codex", { task = "apm:apply" }]
+
 [tasks."apm:apply"]
 description = "Install APM dependencies and rebuild user instructions"
 dir = "~"
