@@ -72,6 +72,7 @@ run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
 "~/.apm/apm.yml" = { mode = "track" }
+"~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track" }
 "~/.apm/instructions/git-workflow.instructions.md" = { mode = "track" }
