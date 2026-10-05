@@ -42,6 +42,12 @@ working_directory = "~"
 requires_tools = true
 environment = { RUBYOPT = "-EUTF-8" }
 
+[tasks.update]
+description = "Upgrade mise tools and update APM skills"
+dir = "~"
+raw = true
+run = ["mise upgrade", { task = "apm:update" }]
+
 [tasks."apm:update"]
 description = "Update APM skills and rebuild user instructions"
 dir = "~"
