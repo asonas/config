@@ -8,7 +8,6 @@ rust = "latest"
 node = "lts"
 ruby = "latest"
 colima = "latest"
-"github:hokaccha/givy" = "latest"
 "github:sorah/mairu" = "latest"
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
