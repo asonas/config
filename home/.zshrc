@@ -372,7 +372,7 @@ dart() {
   command dart "$@"
 }
 
-eval "$(git wt --init zsh)"
+eval "$(mise exec -- git wt --init zsh)"
 
 #zprof
 
