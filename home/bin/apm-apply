@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 require 'fileutils'
+require 'digest'
 require 'json'
 require 'rbconfig'
 require 'tempfile'
 require 'tmpdir'
+require 'yaml'
 
 root = Dir.home
 source = File.join(root, '.apm')
@@ -49,6 +51,85 @@ def compile_instructions!(root, source)
   end
 end
 
+SKILL_PATHS = %w[.agents/skills .claude/skills .cursor/skills .apm/.claude/skills .apm/.agents/skills].freeze
+
+def skill_fingerprint(path)
+  return nil if File.symlink?(path) || !File.directory?(path)
+
+  entries = Dir.glob('**/*', File::FNM_DOTMATCH, base: path).reject do |entry|
+    entry.split('/').include?('.apm-pin')
+  end.sort
+  return nil unless entries.include?('SKILL.md')
+
+  Digest::SHA256.hexdigest(entries.map do |entry|
+    full = File.join(path, entry)
+    if File.symlink?(full)
+      [entry, 'link', File.readlink(full)]
+    elsif File.file?(full)
+      [entry, 'file', Digest::SHA256.file(full).hexdigest]
+    else
+      [entry, 'directory']
+    end
+  end.to_json)
+end
+
+def skill_locations(root, name)
+  (SKILL_PATHS.map { |base| File.join(base, name) } +
+    [File.join('.apm/apm_modules/asonas/skills', name)]).to_h do |relative|
+    [relative, skill_fingerprint(File.join(root, relative))]
+  end.compact
+end
+
+def prune_retired_skills!(root, source)
+  manifest = YAML.safe_load_file(File.join(source, 'apm.yml'))
+  entries = manifest.fetch('dependencies').fetch('apm')
+  active = entries.filter_map do |entry|
+    if entry.is_a?(Hash) && entry['git'] == 'asonas/skills'
+      entry['path']
+    elsif entry.is_a?(String) && entry.start_with?('asonas/skills/')
+      entry.delete_prefix('asonas/skills/')
+    end
+  end
+  declared = entries.filter_map do |entry|
+    entry['path'] if entry.is_a?(Hash)
+  end + entries.filter_map do |entry|
+    entry.split('/').last if entry.is_a?(String)
+  end
+  state_path = File.join(source, 'managed-asonas-skills.json')
+  previous = if File.file?(state_path)
+               JSON.parse(File.read(state_path))
+             else
+               cache = File.join(source, 'apm_modules/asonas/skills')
+               Dir.children(cache).to_h do |name|
+                 cached = skill_fingerprint(File.join(cache, name))
+                 locations = cached ? skill_locations(root, name).select { |_, hash| hash == cached } : {}
+                 [name, locations]
+               end.reject { |_, locations| locations.empty? } if File.directory?(cache)
+             end || {}
+
+  remaining = {}
+  previous.each do |name, locations|
+    next if active.include?(name)
+    next remaining[name] = locations if declared.include?(name)
+    next unless /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/.match?(name)
+
+    locations.each do |relative, fingerprint|
+      next unless (SKILL_PATHS + ['.apm/apm_modules/asonas/skills']).any? { |base| relative == File.join(base, name) }
+      path = File.join(root, relative)
+      next unless File.exist?(path) || File.symlink?(path)
+      if skill_fingerprint(path) == fingerprint
+        FileUtils.rm_rf(path)
+        puts "Removed retired APM skill: #{path}"
+      else
+        warn "Keeping modified retired APM skill: #{path}"
+        (remaining[name] ||= {})[relative] = fingerprint
+      end
+    end
+  end
+  active.each { |name| remaining[name] = skill_locations(root, name) }
+  replace_file(state_path, JSON.pretty_generate(remaining) + "\n")
+end
+
 def deploy_local_skills!(root, source)
   skill = File.join(source, 'local-skills/herdr-agent-launch/SKILL.md')
   return unless File.file?(skill)
@@ -88,6 +169,7 @@ when '--compile-only'
 when '--apply'
   begin
     run! 'apm', 'install', '--global', '--only', 'apm', '--target', 'claude,cursor,codex', chdir: source
+    prune_retired_skills!(root, source)
   ensure
     # APM injects Claude-only bootstrap hooks; retain the user's Herdr-only policy.
     settings_path = File.join(root, '.claude/settings.json')
