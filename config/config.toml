@@ -4,7 +4,7 @@ ghq = "latest"
 "github:k1LoW/git-wt" = "latest"
 peco = "latest"
 "github:yusukebe/ax" = "latest"
-rust = "latest"
+rust = { version = "latest", mr_boxington = true }
 node = "lts"
 ruby = "latest"
 colima = "latest"
@@ -17,6 +17,7 @@ watchexec = "latest"
 claude = "latest"
 "npm:@tobilu/qmd" = "latest"
 "npm:pnpm" = "12.9.1"
+mr-boxington = "latest"
 
 [settings]
 github_attestations = false
