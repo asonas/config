@@ -130,6 +130,17 @@ def prune_retired_skills!(root, source)
   replace_file(state_path, JSON.pretty_generate(remaining) + "\n")
 end
 
+def deploy_local_skills!(root, source)
+  skill = File.join(source, 'local-skills/herdr-agent-launch/SKILL.md')
+  return unless File.file?(skill)
+
+  %w[.agents/skills .claude/skills].each do |relative|
+    destination = File.join(root, relative, 'herdr-agent-launch')
+    abort("Refusing symlink skill directory: #{destination}") if File.symlink?(destination)
+    replace_file(File.join(destination, 'SKILL.md'), File.read(skill))
+  end
+end
+
 case ARGV.first
 when '--watch-manifest'
   watch!(source, log, script,
@@ -183,6 +194,7 @@ when '--apply'
     run! RbConfig.ruby, File.join(root, 'bin/fix_agent_frontmatter'), File.join(root, '.claude/agents/security-reviewer.md')
     run! 'sh', File.join(root, 'bin/fix_codex_agent_description'), File.join(root, '.codex/agents/security-reviewer.toml')
   end
+  deploy_local_skills!(root, source)
   compile_instructions!(root, source)
   puts "APM configuration applied at #{Time.now.utc}"
 else
