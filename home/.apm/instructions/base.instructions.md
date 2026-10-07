@@ -20,7 +20,7 @@ description: Baseline communication, commit, and review rules that apply to ever
 
 ## 知識・事実の確認
 
-- 事実や知識を問う質問（聞き覚えのない単語・固有名詞だけでなく、記憶で答えられそうな一般的な質問も含む）には、憶測や記憶だけで即答せず、回答前に少なくとも1回は Web検索・Web取得機能で裏取りする。検索結果を回答の根拠として扱い、情報の鮮度や一次情報の有無も確認する。
+- 最新の仕様・価格・法律など変わり得る情報は、現在の一次情報で確認する。不確かな事実、専門性の高い話、医療・法律・お金に関わる判断は裏取りする。ユーザーが検索・検証を求めた場合は行う。安定した基礎知識、渡された文章の要約、手元のコードから判断できることは検索必須にしない。検証できない点は確認済みの事実と区別して伝える。検索回数ではなく根拠の十分さを判断し、1回検索しただけで検証が十分としない
 - 検索しても自信の持てる結果に辿り着けない場合、最初に想定したジャンルへ検索語を狭めたまま再検索し続けない。まずジャンルの決め打ち自体を疑い、固有名詞そのものだけで検索する、複数ジャンルにまたがる中立的な語を使うなど、検索語を広げて調べ直す。それでも裏取りできない内容は、確定した事実として答えず不確実性を明示する。
 
 ## 医療情報の確認
@@ -37,18 +37,6 @@ description: Baseline communication, commit, and review rules that apply to ever
 - 要求を満たし、関連する検証が通った時点で作業を終了する
 - 改善候補が現在の要求に不要なら実装せず、ユーザーの判断に必要な場合だけ報告する
 
-# Testing Scope
-
-- 変更された振る舞いを実証する最小のテストだけを追加する
-- 明示された要件、既存の再現ケース、確認された不具合から直接導けないテストは追加しない
-- 既存テストで変更を十分に検証できる場合は、新しいテストを追加しない
-- Red-Green中は対象に近いテストを実行する。全テストは、影響範囲が広い場合、またはリポジトリやCIが要求する場合に実行する
-- ドキュメントや振る舞いを変えない設定変更のために、意味のないテストを作成しない
-
-## Codex CLIでのVisual Companion
-
-- Codex CLIでbrainstormingのVisual Companionサーバーを起動するときは、`scripts/start-server.sh` を `on-request` の権限昇格付きで実行する。`exec_command` の `sandbox_permissions` に `require_escalated` を指定し、localhostポートのbindと `--open` によるブラウザ起動が必要な理由を説明する
-
 ## Codex CLIでの実行環境
 
 - `bash -lc` や `zsh -lc` のようなネストしたログインシェルを使わず、`exec_command` からコマンドを直接実行する。ネストした非対話シェルではmacOSの`/usr/bin`がPATHの先頭に入り、mise管理のランタイムが隠れることがある
@@ -57,9 +45,4 @@ description: Baseline communication, commit, and review rules that apply to ever
 
 ## Herdrでの新しいエージェント起動
 
-- `HERDR_ENV=1` のときは、Herdrの現在のworkspaceを使って新しいエージェントを起動する。新しいworkspaceは作成しない
-- 起動前に現在のtabのpane数を確認する
-- paneが1つなら、`herdr pane split --current --direction right --no-focus` で横方向に分割し、作成されたpaneで起動する
-- paneが2つ以上なら、現在のworkspaceに `herdr tab create --workspace <workspace-id>` で新しいtabを作り、そのroot paneで起動する
-- pane splitやtab createの結果から新しいpane IDを取得してから、`herdr pane run <pane-id> "<agent-command>"` でエージェントを起動する
-- Herdr管理下でない場合は、通常の現在のターミナルで起動する
+- 許可済みの新しいエージェントを起動するときは `/herdr-agent-launch` スキルを参照する。Herdr管理下では現在のworkspaceを使い、新しいworkspaceを作成しない。この指示は追加のエージェント起動を許可しない
