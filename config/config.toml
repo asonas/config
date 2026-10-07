@@ -8,7 +8,6 @@ rust = "latest"
 node = "lts"
 ruby = "latest"
 colima = "latest"
-"github:hokaccha/givy" = "latest"
 "github:sorah/mairu" = "latest"
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
@@ -23,6 +22,7 @@ claude = "latest"
 github_attestations = false
 idiomatic_version_file_enable_tools = ["node", "ruby", "rust"]
 auto_update = true
+minimum_release_age_excludes = ["codex"]
 
 [bootstrap.services.mise-history]
 builtin = "history-watch"
@@ -40,6 +40,18 @@ command = "~/.local/bin/mise exec -- ruby bin/apm-apply --watch-instructions"
 working_directory = "~"
 requires_tools = true
 environment = { RUBYOPT = "-EUTF-8" }
+
+[tasks.update]
+description = "Upgrade mise tools and update APM skills"
+dir = "~"
+raw = true
+run = ["mise upgrade", { task = "apm:update" }]
+
+[tasks."apm:update"]
+description = "Update APM skills and rebuild user instructions"
+dir = "~"
+raw = true
+run = ["apm update --global --target claude,cursor,codex", { task = "apm:apply" }]
 
 [tasks."apm:apply"]
 description = "Install APM dependencies and rebuild user instructions"
@@ -59,6 +71,7 @@ run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
 "~/.apm/apm.yml" = { mode = "track" }
+"~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track" }
 "~/.apm/instructions/git-workflow.instructions.md" = { mode = "track" }

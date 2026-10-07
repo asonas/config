@@ -56,6 +56,12 @@
       "variants": []
     },
     {
+      "path": "home/.apm/local-skills/herdr-agent-launch/SKILL.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/.claude/scripts",
       "autosave": true,
       "encrypt": false,
