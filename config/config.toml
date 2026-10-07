@@ -17,7 +17,7 @@ apm = "latest"
 watchexec = "latest"
 claude = "latest"
 "npm:@tobilu/qmd" = "latest"
-"npm:pnpm" = "11.15.1"
+"npm:pnpm" = "12.9.1"
 
 [settings]
 github_attestations = false
