@@ -78,6 +78,7 @@ run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
 "~/.apm/instructions/git-workflow.instructions.md" = { mode = "track" }
 "~/.apm/instructions/github-cli.instructions.md" = { mode = "track" }
 "~/.apm/instructions/installer.instructions.md" = { mode = "track" }
+"~/.apm/instructions/macos-containers.instructions.md" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.apm/instructions/shell.instructions.md" = { mode = "track" }
 "~/.apm/instructions/testing.instructions.md" = { mode = "track" }
 "~/.claude/scripts" = { mode = "track" }
