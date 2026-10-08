@@ -11,6 +11,8 @@ prefix = "ctrl+j"
 next_workspace = "cmd+shift+j"
 previous_workspace = "cmd+shift+k"
 new_workspace = "cmd+shift+n"
+# 接続中の machine をまたいで、Agents view の次の候補へ移動する。
+next_agent = "cmd+shift+u"
 
 # Use ctrl-modified second keys so bindings survive the Japanese IME (karukan).
 # A bare letter after the prefix gets absorbed as romaji; a ctrl+letter passes
@@ -30,16 +32,6 @@ key = "prefix+ctrl+f"
 type = "plugin_action"
 command = "hotchpotch.herdr-tiny-fingers.open"
 description = "fingers mode"
-
-# 対応待ち（blocked を優先、次に done）の agent へフォーカスを移す。
-# 連打すると候補を巡回する。cmd+shift+j/k/n と同じく prefix なしの直接チョード。
-# type = "shell" は一時ペインを開かず検出でバックグラウンド実行するので、
-# 巡回の起点となる「現在フォーカス中ペイン」が temp pane に奪われない。
-[[keys.command]]
-key = "cmd+shift+u"
-type = "shell"
-command = "/Users/asonas/bin/herdr-focus-attention"
-description = "focus next agent needing attention"
 
 [ui]
 # 新規タブは名前を聞かず、生成名で即作成する
