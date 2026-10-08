@@ -44,6 +44,20 @@
       "variants": []
     },
     {
+      "path": "home/.apm/instructions/macos-containers.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/.apm/instructions/shell.instructions.md",
       "autosave": true,
       "encrypt": false,
