@@ -402,3 +402,6 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
+
+# herdrdev/herdr#4649: keep session hooks in their originating pane.
+alias codex='codex --no-daemon'
