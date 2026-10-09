@@ -18,6 +18,7 @@ claude = "latest"
 "npm:@tobilu/qmd" = "latest"
 "npm:pnpm" = "12.9.1"
 mr-boxington = "latest"
+"npm:defuddle" = "latest"
 
 [settings]
 github_attestations = false
