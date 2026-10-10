@@ -19,12 +19,16 @@ claude = "latest"
 "npm:pnpm" = "12.9.1"
 mr-boxington = "latest"
 "npm:defuddle" = "latest"
+"github:moznion/cccc" = "latest"
 
 [settings]
 github_attestations = false
 idiomatic_version_file_enable_tools = ["node", "ruby", "rust"]
 auto_update = true
 minimum_release_age_excludes = ["codex"]
+
+[settings.tool_update]
+global_auto = true
 
 [bootstrap.services.mise-history]
 builtin = "history-watch"
