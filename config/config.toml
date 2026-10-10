@@ -27,6 +27,9 @@ idiomatic_version_file_enable_tools = ["node", "ruby", "rust"]
 auto_update = true
 minimum_release_age_excludes = ["codex"]
 
+[settings.tool_update]
+global_auto = true
+
 [bootstrap.services.mise-history]
 builtin = "history-watch"
 
