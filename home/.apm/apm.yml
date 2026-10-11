@@ -260,6 +260,7 @@ dependencies:
       path: skills/ponytail
       targets: [codex]
     - asonas/skills/jev-qmd
+    - wheresryan22/anatomy
   mcp: []
 includes: auto
 scripts: {}
