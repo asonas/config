@@ -261,6 +261,7 @@ dependencies:
       targets: [codex]
     - asonas/skills/jev-qmd
     - wheresryan22/anatomy
+    - shibayu36/agent-skills/skills/core-message-writing
   mcp: []
 includes: auto
 scripts: {}
