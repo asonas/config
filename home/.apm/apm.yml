@@ -262,6 +262,7 @@ dependencies:
     - asonas/skills/jev-qmd
     - wheresryan22/anatomy
     - shibayu36/agent-skills/skills/core-message-writing
+    - emilkowalski/skills
   mcp: []
 includes: auto
 scripts: {}
