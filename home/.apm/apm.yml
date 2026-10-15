@@ -19,14 +19,6 @@ dependencies:
     # Note: anthropics/skills nests entries under `skills/`, so the subpath
     # is `skills/frontend-design`, not `frontend-design`.
     - anthropics/skills/skills/frontend-design
-    # emilkowalski/skills: Emil Kowalski (ex-Vercel/Linear) のデザインエンジニア
-    # 向けスキル集（animation-vocabulary / emil-design-eng / improve-animations /
-    # review-animations）。2026-05-01〜07-25 の 188 セッションで 1 回も起動されず、
-    # description 1,026 文字を毎セッション消費していたため除外した（review-animations
-    # は disable-model-invocation なのでスキル一覧には出ていなかった）。UI の
-    # ガイドラインは apply-apple-interface-guidelines を使っている。必要になったら
-    # ここに名前を足せば戻る。エントリは `skills/` 配下にネストしているので
-    # frontend-design と同じサブパス指定にする。
     # mattpocock/skills: install every skill published under skills/ for Codex.
     - git: mattpocock/skills
       path: skills/engineering/ask-matt
@@ -262,7 +254,9 @@ dependencies:
     - asonas/skills/jev-qmd
     - wheresryan22/anatomy
     - shibayu36/agent-skills/skills/core-message-writing
-    - emilkowalski/skills
+    # Keep mattpocock's existing prototype skill; omit the same-name bundle entry.
+    - git: emilkowalski/skills
+      skills: [animate, animate-expo, animation-performance, animation-vocabulary, apple-design, ask-sonner, break-ui, emil-design-eng, find-animation-opportunities, improve-animations, mobile-native, pick-ui-library, review-animations, write-swift]
   mcp: []
 includes: auto
 scripts: {}
