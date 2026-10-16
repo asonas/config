@@ -193,6 +193,13 @@ headless machines with the `headless` profile; those entries have no matching
 variant during normal history and bootstrap operations and are skipped.
 macOS-only configuration continues to use `os = "macos"` variants.
 
+WSL terminals use the `wsl` profile. It restores only the Herdr configuration
+from `home@wsl/.config/herdr/config.toml`, with `Ctrl+J` and Ctrl-modified
+workspace bindings matching Windows WezTerm; Linux desktop GUI entries remain
+excluded. The shared `.zshrc` selects `wsl` when `WSL_DISTRO_NAME` is set and
+`MISE_ENV` is unset. For initial setup, use `mise -E wsl bootstrap` and set the
+machine-local history watcher's `MISE_ENV` to `wsl` as described below.
+
 For a headless host such as the NAS, preview adoption with:
 
 ```sh
