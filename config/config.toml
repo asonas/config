@@ -119,7 +119,7 @@ run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
 "~/bin/herdr-focus-attention" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/bin/herdr-fork-claude-session" = { mode = "track" }
 "~/bin/herdr-fork-codex-session" = { mode = "track" }
-"~/bin/herdr-plugins-apply" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
+"~/bin/herdr-plugins-apply" = { mode = "track" }
 "~/bin/hw" = { mode = "track" }
 "~/bin/install_gist_skills" = { mode = "track" }
 "~/bin/mdroll-in-herdr" = { mode = "track" }
