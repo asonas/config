@@ -91,7 +91,7 @@ run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
 "~/.claude/settings.json" = { mode = "track" }
 "~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
-"~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
+"~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }, { profile = "wsl" }] }
 "~/.config/htop" = { mode = "track" }
 "~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/karabiner" = { mode = "track", variants = [{ os = "macos" }] }
