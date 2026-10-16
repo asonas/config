@@ -20,6 +20,7 @@ claude = "latest"
 mr-boxington = "latest"
 "npm:defuddle" = "latest"
 "github:moznion/cccc" = "latest"
+uv = "latest"
 
 [settings]
 github_attestations = false
