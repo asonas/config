@@ -1,0 +1,17 @@
+onboarding = false
+
+[keys]
+prefix = "ctrl+j"
+
+# Windows WezTerm sends Ctrl+J followed by these Ctrl-modified keys.
+new_workspace = "prefix+ctrl+t"
+next_workspace = "prefix+ctrl+o"
+previous_workspace = "prefix+ctrl+u"
+next_agent = "prefix+ctrl+g"
+
+new_tab = "prefix+ctrl+c"
+next_tab = "prefix+ctrl+n"
+previous_tab = "prefix+ctrl+p"
+split_vertical = "prefix+ctrl+v"
+split_horizontal = "prefix+ctrl+s"
+cycle_pane_next = "prefix+ctrl+i"

@@ -1,5 +1,9 @@
 # zmodload zsh/zprof && zprof
 
+if [[ -n "${WSL_DISTRO_NAME:-}" && -z "${MISE_ENV:-}" ]]; then
+  export MISE_ENV=wsl
+fi
+
 # see also
 # https://gist.github.com/mollifier/4979906
 
