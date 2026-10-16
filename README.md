@@ -100,6 +100,10 @@ current setup. Revisit that decision separately if reproducible dependency pins
 become more important than automatic updates and cross-machine conflict
 avoidance.
 
+The `sorah-guides` dependency is pinned to `a68cd621cedb78dd6ba4ea1229556c2ee9c07d2b`.
+Its subsequent Sorbet skill additions contain invalid YAML frontmatter, which
+APM validates even when those skills are outside the selected set.
+
 Apply the global APM configuration through the wrapper:
 
 ```sh
