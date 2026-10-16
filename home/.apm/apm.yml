@@ -154,6 +154,7 @@ dependencies:
     # sorah-spec is retired; its rails/ruby/spec-conventions skills and commands
     # are intentionally no longer deployed.
     - git: sorah/config/claude/marketplace/plugins/sorah-guides
+      ref: a68cd621cedb78dd6ba4ea1229556c2ee9c07d2b
       # rails と ruby はこのグローバルセットに含めない。
       skills:
         - coding
