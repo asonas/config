@@ -134,6 +134,11 @@
           "os": [],
           "profile": "desktop",
           "default": false
+        },
+        {
+          "os": [],
+          "profile": "wsl",
+          "default": false
         }
       ]
     },
