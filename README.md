@@ -100,6 +100,10 @@ current setup. Revisit that decision separately if reproducible dependency pins
 become more important than automatic updates and cross-machine conflict
 avoidance.
 
+The `sorah-guides` dependency is pinned to `a68cd621cedb78dd6ba4ea1229556c2ee9c07d2b`.
+Its subsequent Sorbet skill additions contain invalid YAML frontmatter, which
+APM validates even when those skills are outside the selected set.
+
 Apply the global APM configuration through the wrapper:
 
 ```sh
@@ -170,7 +174,9 @@ file. Declare the desired plugin and its resolved Git commit in
 The `bootstrap` task runs `herdr:plugins` after mise has installed tools. It
 installs or updates `shibayu36/herdr-equalize-panes` only when the installed
 commit differs, and enables an already pinned plugin if needed. The task skips
-the `headless` profile. Herdr itself remains installed outside mise, so desktop
+the `headless` profile. The helper is restored from `home/bin/herdr-plugins-apply`
+on every platform, including headless hosts, so it can perform that check.
+Herdr itself remains installed outside mise, so desktop
 bootstrap requires the `herdr` command to exist before the final task runs.
 Run the task directly after changing the pinned commit:
 
