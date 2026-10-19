@@ -441,6 +441,7 @@
   "permissions": {
     "home/.apm": 448,
     "home/.config": 488,
+    "home/.config/herdr/attention-view": 509,
     "home@macos/.config/karabiner": 448,
     "home@macos/.config/karabiner/assets/complex_modifications": 448
   }
