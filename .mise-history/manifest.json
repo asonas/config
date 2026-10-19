@@ -119,6 +119,18 @@
       ]
     },
     {
+      "path": "home/.config/herdr/attention-view/apply.py",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.config/herdr/attention-view/herdr-plugin.toml",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/.config/herdr/config.toml",
       "autosave": true,
       "encrypt": false,

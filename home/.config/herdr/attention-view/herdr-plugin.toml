@@ -1,0 +1,14 @@
+id = "asonas.attention-view"
+name = "Attention View"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Keep agent navigation limited to blocked and unread agents."
+platforms = ["linux", "macos"]
+
+[[startup]]
+command = ["python3", "apply.py"]
+
+[[actions]]
+id = "apply"
+title = "Restore attention view"
+command = ["python3", "apply.py"]
