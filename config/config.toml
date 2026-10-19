@@ -78,7 +78,6 @@ run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
 "~/.apm/apm.yml" = { mode = "track" }
-"~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track" }
 "~/.apm/instructions/base.instructions.md" = { mode = "track" }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track" }
 "~/.apm/instructions/git-workflow.instructions.md" = { mode = "track" }
@@ -87,10 +86,13 @@ run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
 "~/.apm/instructions/macos-containers.instructions.md" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.apm/instructions/shell.instructions.md" = { mode = "track" }
 "~/.apm/instructions/testing.instructions.md" = { mode = "track" }
+"~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track" }
 "~/.claude/scripts" = { mode = "track" }
 "~/.claude/settings.json" = { mode = "track" }
 "~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
+"~/.config/herdr/attention-view/apply.py" = { mode = "track" }
+"~/.config/herdr/attention-view/herdr-plugin.toml" = { mode = "track" }
 "~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }, { profile = "wsl" }] }
 "~/.config/htop" = { mode = "track" }
 "~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ profile = "desktop" }] }
