@@ -119,6 +119,18 @@
       ]
     },
     {
+      "path": "home/.config/herdr/attention-view/apply.py",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.config/herdr/attention-view/herdr-plugin.toml",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/.config/herdr/config.toml",
       "autosave": true,
       "encrypt": false,
@@ -429,6 +441,7 @@
   "permissions": {
     "home/.apm": 448,
     "home/.config": 488,
+    "home/.config/herdr/attention-view": 509,
     "home@macos/.config/karabiner": 448,
     "home@macos/.config/karabiner/assets/complex_modifications": 448
   }
