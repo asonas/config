@@ -14,3 +14,5 @@ function e {
         Set-Location -LiteralPath $selected
     }
 }
+
+# mise automatic sync verification ad7f8051300049b48020b04d13fae369
