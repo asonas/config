@@ -7,8 +7,8 @@ peco = "latest"
 rust = { version = "latest", mr_boxington = true }
 node = "lts"
 ruby = "latest"
-colima = "latest"
-"github:sorah/mairu" = "latest"
+colima = { version = "latest", os = ["linux", "macos"] }
+"github:sorah/mairu" = { version = "latest", os = ["linux", "macos"] }
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
@@ -65,6 +65,7 @@ description = "Install APM dependencies and rebuild user instructions"
 dir = "~"
 env = { RUBYOPT = "-EUTF-8" }
 run = "ruby \"$HOME/bin/apm-apply\""
+run_windows = 'ruby bin/apm-apply'
 
 [tasks."herdr:plugins"]
 description = "Install pinned Herdr plugins"
@@ -73,60 +74,63 @@ run = "ruby \"$HOME/bin/herdr-plugins-apply\""
 
 [tasks.bootstrap]
 run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
+run_windows = [{ task = "apm:apply" }]
 
 # Track authored sources only. Generated agent outputs and mixed-state
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
-"~/.apm/apm.yml" = { mode = "track" }
-"~/.apm/instructions/base.instructions.md" = { mode = "track" }
-"~/.apm/instructions/debugging.instructions.md" = { mode = "track" }
-"~/.apm/instructions/git-workflow.instructions.md" = { mode = "track" }
-"~/.apm/instructions/github-cli.instructions.md" = { mode = "track" }
-"~/.apm/instructions/installer.instructions.md" = { mode = "track" }
+"~/Documents/PowerShell/profile.ps1" = { mode = "track", variants = [{ os = "windows" }] }
+"~/.wezterm.lua" = { mode = "track", variants = [{ os = "windows" }] }
+"~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/instructions/base.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/instructions/debugging.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/instructions/git-workflow.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/instructions/github-cli.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/instructions/installer.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/macos-containers.instructions.md" = { mode = "track", variants = [{ os = "macos" }] }
-"~/.apm/instructions/shell.instructions.md" = { mode = "track" }
-"~/.apm/instructions/testing.instructions.md" = { mode = "track" }
-"~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track" }
-"~/.claude/scripts" = { mode = "track" }
-"~/.claude/settings.json" = { mode = "track" }
+"~/.apm/instructions/shell.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/instructions/testing.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.claude/scripts" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.claude/settings.json" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
-"~/.config/herdr/attention-view/apply.py" = { mode = "track" }
-"~/.config/herdr/attention-view/herdr-plugin.toml" = { mode = "track" }
+"~/.config/herdr/attention-view/apply.py" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.config/herdr/attention-view/herdr-plugin.toml" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }, { profile = "wsl" }] }
-"~/.config/htop" = { mode = "track" }
+"~/.config/htop" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/karabiner" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/mise/config.toml" = { mode = "track" }
-"~/.config/nvim" = { mode = "track" }
-"~/.config/peco" = { mode = "track" }
+"~/.config/nvim" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.config/peco" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/qmd/index.yml" = { mode = "track", variants = [{ os = "linux" }, { os = "macos" }] }
-"~/.config/rubocop" = { mode = "track" }
-"~/.config/starship.toml" = { mode = "track" }
+"~/.config/rubocop" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.config/starship.toml" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/wezterm" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
-"~/.gemrc" = { mode = "track" }
-"~/.gitconfig" = { mode = "track" }
-"~/.gitignore" = { mode = "track" }
-"~/.irbrc" = { mode = "track" }
+"~/.gemrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.gitconfig" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.gitignore" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.irbrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.local/share/chromium-extensions/emacs-text-navigation" = { mode = "track", variants = [{ profile = "desktop" }] }
-"~/.psqlrc" = { mode = "track" }
+"~/.psqlrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.skhdrc" = { mode = "track", variants = [{ os = "macos" }] }
-"~/.tigrc" = { mode = "track" }
-"~/.tmux.conf" = { mode = "track" }
+"~/.tigrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.tmux.conf" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.yabairc" = { mode = "track", variants = [{ os = "macos" }] }
-"~/.zshrc" = { mode = "track" }
-"~/bin/apm-apply" = { mode = "track" }
+"~/.zshrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/apm-apply" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/check_sip.sh" = { mode = "track", variants = [{ os = "macos" }] }
-"~/bin/fix_agent_frontmatter" = { mode = "track" }
-"~/bin/fix_codex_agent_description" = { mode = "track" }
+"~/bin/fix_agent_frontmatter" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/fix_codex_agent_description" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/herdr-focus-attention" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
-"~/bin/herdr-fork-claude-session" = { mode = "track" }
-"~/bin/herdr-fork-codex-session" = { mode = "track" }
-"~/bin/herdr-plugins-apply" = { mode = "track" }
-"~/bin/hw" = { mode = "track" }
-"~/bin/install_gist_skills" = { mode = "track" }
-"~/bin/mdroll-in-herdr" = { mode = "track" }
-"~/bin/setup_workspace" = { mode = "track" }
+"~/bin/herdr-fork-claude-session" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/herdr-fork-codex-session" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/herdr-plugins-apply" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/hw" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/install_gist_skills" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/mdroll-in-herdr" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/setup_workspace" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 
 [history]
 exclude = ["~/.config/nvim/.netrwhist", "~/.config/nvim/lua/plugins/theme.lua", "~/.config/karabiner/automatic_backups/**"]

@@ -11,37 +11,115 @@
       "path": "home/.apm/apm.yml",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.apm/instructions/base.instructions.md",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.apm/instructions/debugging.instructions.md",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.apm/instructions/git-workflow.instructions.md",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.apm/instructions/github-cli.instructions.md",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.apm/instructions/installer.instructions.md",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.apm/instructions/macos-containers.instructions.md",
@@ -61,31 +139,96 @@
       "path": "home/.apm/instructions/shell.instructions.md",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.apm/instructions/testing.instructions.md",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.apm/local-skills/herdr-agent-launch/SKILL.md",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.claude/scripts",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.claude/settings.json",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/chromium-flags.conf",
@@ -122,13 +265,39 @@
       "path": "home/.config/herdr/attention-view/apply.py",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/herdr/attention-view/herdr-plugin.toml",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/herdr/config.toml",
@@ -158,7 +327,20 @@
       "path": "home/.config/htop",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/hypr/bindings.lua",
@@ -190,13 +372,39 @@
       "path": "home/.config/nvim",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/peco",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/qmd/index.yml",
@@ -223,13 +431,39 @@
       "path": "home/.config/rubocop",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/starship.toml",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.config/wezterm",
@@ -254,25 +488,77 @@
       "path": "home/.gemrc",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.gitconfig",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.gitignore",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.irbrc",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.local/share/chromium-extensions/emacs-text-navigation",
@@ -290,7 +576,20 @@
       "path": "home/.psqlrc",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.skhdrc",
@@ -310,13 +609,53 @@
       "path": "home/.tigrc",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.tmux.conf",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.wezterm.lua",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/.yabairc",
@@ -336,13 +675,53 @@
       "path": "home/.zshrc",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/Documents/PowerShell/profile.ps1",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/apm-apply",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/check_sip.sh",
@@ -362,13 +741,39 @@
       "path": "home/bin/fix_agent_frontmatter",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/fix_codex_agent_description",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/herdr-focus-attention",
@@ -393,43 +798,134 @@
       "path": "home/bin/herdr-fork-claude-session",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/herdr-fork-codex-session",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/herdr-plugins-apply",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/hw",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/install_gist_skills",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/mdroll-in-herdr",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     },
     {
       "path": "home/bin/setup_workspace",
       "autosave": true,
       "encrypt": false,
-      "variants": []
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        },
+        {
+          "os": [
+            "windows"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
     }
   ],
   "exclude": [
@@ -440,8 +936,6 @@
   "recipients": [],
   "permissions": {
     "home/.apm": 448,
-    "home/.config": 488,
-    "home/.config/herdr/attention-view": 509,
     "home@macos/.config/karabiner": 448,
     "home@macos/.config/karabiner/assets/complex_modifications": 448
   }

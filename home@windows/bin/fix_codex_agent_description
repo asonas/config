@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require 'tempfile'
+
+path = ARGV.fetch(0)
+exit unless File.file?(path)
+
+content = File.binread(path)
+exit unless content.match?(/^name = "security-reviewer"\r?$/)
+exit unless content.match?(/^description = ""\r?$/)
+
+replacement = 'description = "Reviews code changes for security vulnerabilities and reports findings."'
+content = content.gsub(/^description = ""(?=\r?$)/, replacement)
+Tempfile.create('.agent-', File.dirname(path)) do |file|
+  file.binmode
+  file.write(content)
+  file.chmod(File.stat(path).mode & 0o777)
+  file.close
+  File.rename(file.path, path)
+end
