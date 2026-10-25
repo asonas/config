@@ -187,7 +187,7 @@ mise run herdr:plugins
 ## Windows configuration
 
 Windows-specific snapshots are stored under `home@windows/`. Entries with a
-Windows variant retain their existing `home/` source as the default for other
+Windows variant retain their existing source under `home@default/` as the default for other
 platforms; an absent Windows file does not remove that default source.
 
 The PowerShell project selector `e` is tracked in
