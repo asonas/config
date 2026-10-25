@@ -184,6 +184,21 @@ Run the task directly after changing the pinned commit:
 mise run herdr:plugins
 ```
 
+## Windows configuration
+
+Windows-specific snapshots are stored under `home@windows/`. Entries with a
+Windows variant retain their existing source under `home@default/` as the default for other
+platforms; an absent Windows file does not remove that default source.
+
+The PowerShell project selector `e` is tracked in
+`~/Documents/PowerShell/profile.ps1`. The host-specific profile keeps the
+coreutils-generated integration outside the tracked file.
+
+Native Windows bootstrap skips Colima, the prebuilt mairu package, and Herdr
+plugins. Its APM helpers use Ruby and separate watcher logs. Put the absolute
+mise executable paths needed by Windows Scheduled Tasks in untracked
+`~/.config/mise/config.local.toml` service overrides.
+
 ## Bootstrap operation
 
 Linux desktop machines and headless Linux hosts use different mise profiles.
