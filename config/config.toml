@@ -21,6 +21,7 @@ mr-boxington = "latest"
 "npm:defuddle" = "latest"
 "github:moznion/cccc" = "latest"
 uv = "latest"
+cloudflare-cf = "latest"
 
 [settings]
 github_attestations = false
