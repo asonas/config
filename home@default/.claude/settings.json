@@ -83,7 +83,17 @@
         ]
       }
     ],
-    "SessionStart": []
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/hooks/herdr-agent-state.sh\" session"
+          }
+        ]
+      }
+    ]
   },
   "statusLine": {
     "type": "command",
