@@ -24,17 +24,19 @@ class RunnerTest(unittest.TestCase):
         self.metadata = self.root / 'metadata.json'
         self.metadata.write_text(json.dumps(dict(url='https://linear.app/example/issue/EX-1/test',
             project_id='project', title='Test issue', labels=['ready-for-agent'], eligible=True, reason='Ready')))
+        self.result = self.root / 'worker-result.json'
+        self.result.write_text(json.dumps(dict(outcome='completed', summary='検証済み', report='実施内容と証拠')))
         self.fake = self.root / 'codex'
         self.fake.write_text(f'''#!{sys.executable}
 import json, pathlib, sys
 args=sys.argv
 output=pathlib.Path(args[args.index('-o')+1])
 sys.stdin.read()
-if '--output-schema' in args:
+if output.name == 'issue.json':
     output.write_text(pathlib.Path({str(self.metadata)!r}).read_text())
 else:
     pathlib.Path('result.txt').write_text('work')
-    output.write_text('一部完了')
+    output.write_text(pathlib.Path({str(self.result)!r}).read_text())
 print(json.dumps({{'type':'thread.started','thread_id':'test-session'}}))
 ''')
         self.fake.chmod(0o755)
@@ -58,7 +60,8 @@ print(json.dumps({{'type':'thread.started','thread_id':'test-session'}}))
         self.assertEqual(record['phase'], 'agent-exited')
         self.assertTrue((Path(record['worktree']) / 'result.txt').exists())
         self.assertFalse((self.repo / 'result.txt').exists())
-        self.assertEqual(next(self.state.glob('EX-1-*/result.md')).read_text(), '一部完了')
+        self.assertEqual(record['outcome'], 'completed')
+        self.assertIn('実施内容と証拠', next(self.state.glob('EX-1-*/result.md')).read_text())
 
     def test_same_issue_is_locked_and_released(self):
         self.state.mkdir()
@@ -96,6 +99,24 @@ print(json.dumps({{'type':'thread.started','thread_id':'test-session'}}))
         self.assertIn('9', record['error'])
         self.fake.write_text(original)
         self.assertEqual(self.invoke('--check').returncode, 0)
+
+    def test_partial_and_blocked_have_distinct_exit_status(self):
+        for outcome, code, label in [('partial', 2, '一部完了'), ('blocked', 3, 'ブロック')]:
+            with self.subTest(outcome=outcome):
+                self.result.write_text(json.dumps(dict(outcome=outcome, summary='前提不足', report='対象ホストが未指定')))
+                result = self.invoke()
+                self.assertEqual(result.returncode, code, result.stderr)
+                self.assertIn(f'結果: {label}', result.stdout)
+                records = [json.loads(p.read_text()) for p in self.state.glob('EX-1-*/run.json')]
+                self.assertTrue(any(r.get('outcome') == outcome and r['phase'] == 'agent-exited' for r in records))
+
+    def test_invalid_report_is_failure_not_completion(self):
+        self.result.write_text('{"outcome":"completed"}')
+        result = self.invoke()
+        self.assertEqual(result.returncode, 1)
+        record = json.loads(next(self.state.glob('EX-1-*/run.json')).read_text())
+        self.assertEqual(record['phase'], 'failed')
+        self.assertNotIn('outcome', record)
 
 
 if __name__ == '__main__':
