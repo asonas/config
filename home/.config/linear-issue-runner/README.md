@@ -30,9 +30,21 @@ OS labels are `os:macos`, `os:linux`, and `os:windows`. No label allows any supp
 
 ## Execution boundary
 
-Each run creates `.worktrees/agent/<issue>-<run>` from local `main`. It does not fetch or update main. The worker uses `--approve-for-me`, so approval review can block required operations. It follows the shared prompt, selecting investigation or implement as appropriate.
+The first run creates `.worktrees/agent/<issue>-<run>` from local `main`. Later runs automatically reuse the latest recorded worktree and Codex session for the same workspace/issue. `--resume-run <directory-name>` selects an earlier run explicitly. The runner validates the repository and branch before continuing and preserves uncommitted work. A missing or changed worktree is an error, not a reason to silently start over. Without an available session ID it starts a fresh session in the existing worktree and points it to the previous report.
 
-The prompt prohibits push, PR creation, main integration, deployment, and Linear writes. This is an instruction boundary, not a technical restriction on external API credentials. Worktrees remain available for review.
+It does not fetch or update main. The worker uses `--approve-for-me`, so approval review can block required operations. It follows the shared prompt, selecting investigation or implement as appropriate. Use `--note 'additional context'` to supply follow-up instructions.
+
+The implementation worker does not publish. A separate Codex delivery session reviews the existing diff and evidence, creates signed commits, pushes the issue branch without force, and creates or updates its PR. Partial/blocked work uses a draft PR without closing keywords. No-change results skip PR creation. Every delivery creates or updates a Linear progress comment identified by a stable branch marker, including results, verification, gaps, and a PR link. PR/comment lookup and readback are required before reporting delivery success. The runner additionally verifies local signatures, a clean worktree, and matching PR branch, head commit, state, and draft requirement.
+
+Main integration, deployment, production data changes, closing issues, and status/label changes remain prohibited. These are instruction boundaries, not technical restrictions on external API credentials. Worktrees remain available for review. Local locks do not prevent another machine or person from publishing concurrently.
+
+If publishing fails, the result and worktree remain intact. Retry only delivery with:
+
+```sh
+linear-issue-runner --publish-only 'https://linear.app/example/issue/EX-1/example'
+```
+
+Delivery retries search for the existing branch PR and marked Linear comment. They stop on a closed/merged PR rather than create a replacement. If a retry is interrupted, inspect the external resources before retrying again. `--publish-only` does not implement changes; it can commit and publish existing verified changes.
 
 ## Locks and results
 
@@ -40,9 +52,9 @@ All invocations on a machine must share `state_dir`. A workspace/issue-specific 
 
 Normal interruption terminates the child process group before releasing the lock. After forced termination or a machine failure, check remaining processes and worktrees before retrying.
 
-Each run saves `run.json`, `issue.json`, and `preflight.jsonl`. Worker runs also save `prompt.md`, `events.jsonl`, structured `result.json`, and rendered `result.md`. Keep logs private. The Codex session ID appears in the JSONL `thread.started` event.
+Each run saves `run.json`, `issue.json`, and `preflight.jsonl`. Worker runs also save `prompt.md`, `events.jsonl`, structured `result.json`, and rendered `result.md`. Delivery saves `delivery.jsonl` and a `delivery.json` receipt with the PR URL and Linear comment ID. Keep logs private. The Codex session ID appears in the JSONL `thread.started` event and is copied into `run.json` for resume.
 
-Worker results distinguish `completed` (exit 0), `partial` (exit 2), and `blocked` (exit 3). A successful check also exits 0. Execution or malformed-result failures exit 1. The terminal prints a Japanese outcome and summary; `run.json` records `outcome` and `summary` separately from process phase `agent-exited`. These are the agent's reported conclusions, not an independent verification of acceptance criteria. Read the evidence in `result.md`. Older runs retain their original records and are not reclassified. There is no automatic retry, scheduler, webhook, or distributed queue.
+After successful delivery, worker results distinguish `completed` (exit 0), `partial` (exit 2), and `blocked` (exit 3). A successful check also exits 0. Execution, malformed-result, or delivery failures exit 1. The terminal prints a Japanese outcome and summary; `run.json` records `outcome` and `summary` separately from process phases `agent-exited`, `publishing`, and `delivered`. A failure preserves the worker outcome if available. These are the agent's reported conclusions, not an independent verification of acceptance criteria. Read the evidence in `result.md`. Older runs retain their original records and are not reclassified. There is no automatic retry, scheduler, webhook, or distributed queue.
 
 Workers may use documented local builds, fictional fixtures, temporary stores, and test servers even when production deployment is prohibited. They must distinguish fixture verification from real-data acceptance and report missing authorization or data without inventing substitutes for the required evidence.
 
@@ -52,4 +64,4 @@ Workers may use documented local builds, fictional fixtures, temporary stores, a
 python3 -m unittest discover -s "$HOME/.config/linear-issue-runner" -v
 ```
 
-Tests use real Git repositories and replace Codex only at the external process boundary. They cover routing rejection, worktree isolation, per-issue locks, and failure recovery.
+Tests use real Git repositories and replace Codex, Git signature verification, and GitHub at external process boundaries. They cover routing rejection, worktree isolation, per-issue locks, resume, delivery retry, and failure recovery. Real signed delivery must also be checked with an actual issue before relying on the automation.
