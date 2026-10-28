@@ -16,13 +16,6 @@
           "os": [],
           "profile": null,
           "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
         }
       ]
     },
