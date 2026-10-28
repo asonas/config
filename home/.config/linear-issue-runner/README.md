@@ -40,9 +40,11 @@ All invocations on a machine must share `state_dir`. A workspace/issue-specific 
 
 Normal interruption terminates the child process group before releasing the lock. After forced termination or a machine failure, check remaining processes and worktrees before retrying.
 
-Each run saves `run.json`, `issue.json`, and `preflight.jsonl`. Worker runs also save `prompt.md`, `events.jsonl`, and `result.md`. Keep logs private. The Codex session ID appears in the JSONL `thread.started` event.
+Each run saves `run.json`, `issue.json`, and `preflight.jsonl`. Worker runs also save `prompt.md`, `events.jsonl`, structured `result.json`, and rendered `result.md`. Keep logs private. The Codex session ID appears in the JSONL `thread.started` event.
 
-Exit code zero and `agent-exited` mean the process exited successfully, not that the issue is complete. Read `result.md` for completed, partial, or blocked outcomes. Failures record `failed` and the reason. There is no automatic retry, scheduler, webhook, or distributed queue.
+Worker results distinguish `completed` (exit 0), `partial` (exit 2), and `blocked` (exit 3). A successful check also exits 0. Execution or malformed-result failures exit 1. The terminal prints a Japanese outcome and summary; `run.json` records `outcome` and `summary` separately from process phase `agent-exited`. These are the agent's reported conclusions, not an independent verification of acceptance criteria. Read the evidence in `result.md`. Older runs retain their original records and are not reclassified. There is no automatic retry, scheduler, webhook, or distributed queue.
+
+Workers may use documented local builds, fictional fixtures, temporary stores, and test servers even when production deployment is prohibited. They must distinguish fixture verification from real-data acceptance and report missing authorization or data without inventing substitutes for the required evidence.
 
 ## Verification
 
