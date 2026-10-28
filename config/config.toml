@@ -80,8 +80,6 @@ run_windows = [{ task = "apm:apply" }]
 # Track authored sources only. Generated agent outputs and mixed-state
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
-"~/Documents/PowerShell/profile.ps1" = { mode = "track", variants = [{ os = "windows" }] }
-"~/.wezterm.lua" = { mode = "track", variants = [{ os = "windows" }] }
 "~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/instructions/base.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
@@ -102,6 +100,11 @@ run_windows = [{ task = "apm:apply" }]
 "~/.config/htop" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/karabiner" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/linear-issue-runner/README.md" = { mode = "track" }
+"~/.config/linear-issue-runner/config.example.toml" = { mode = "track" }
+"~/.config/linear-issue-runner/prompt.md" = { mode = "track" }
+"~/.config/linear-issue-runner/runner.py" = { mode = "track" }
+"~/.config/linear-issue-runner/test_runner.py" = { mode = "track" }
 "~/.config/mise/config.toml" = { mode = "track" }
 "~/.config/nvim" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/peco" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
@@ -118,8 +121,10 @@ run_windows = [{ task = "apm:apply" }]
 "~/.skhdrc" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.tigrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.tmux.conf" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.wezterm.lua" = { mode = "track", variants = [{ os = "windows" }] }
 "~/.yabairc" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.zshrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/Documents/PowerShell/profile.ps1" = { mode = "track", variants = [{ os = "windows" }] }
 "~/bin/apm-apply" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/check_sip.sh" = { mode = "track", variants = [{ os = "macos" }] }
 "~/bin/fix_agent_frontmatter" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
@@ -130,6 +135,7 @@ run_windows = [{ task = "apm:apply" }]
 "~/bin/herdr-plugins-apply" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/hw" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/install_gist_skills" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/linear-issue-runner" = { mode = "track" }
 "~/bin/mdroll-in-herdr" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/setup_workspace" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 
