@@ -52,6 +52,14 @@ import json,subprocess
 print(json.dumps(dict(url='https://github.com/example/repo/pull/1',headRefName=subprocess.check_output(['git','branch','--show-current'],text=True).strip(),headRefOid=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),isDraft=True,state='OPEN')))
 ''')
         gh.chmod(0o755)
+        git = self.root / 'git'
+        git.write_text(f'''#!{sys.executable}
+import os,sys
+if 'verify-commit' in sys.argv:
+    sys.exit(0)
+os.execv('/usr/bin/git', ['git'] + sys.argv[1:])
+''')
+        git.chmod(0o755)
         self.config = self.root / 'config.toml'
         self.config.write_text(f'workspace="example"\nstate_dir={json.dumps(str(self.state))}\ncodex={json.dumps(str(self.fake))}\n[[projects]]\nid="project"\nrepo={json.dumps(str(self.repo))}\n')
 
@@ -145,6 +153,17 @@ print(json.dumps(dict(url='https://github.com/example/repo/pull/1',headRefName=s
         result = self.invoke()
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('branch changed', result.stderr)
+
+    def test_delivery_failure_preserves_result_for_retry(self):
+        original = self.fake.read_text()
+        self.fake.write_text(original.replace("'status':'published'", "'status':'blocked'"))
+        result = self.invoke()
+        self.assertEqual(result.returncode, 1)
+        record = json.loads(next(self.state.glob('EX-1-*/run.json')).read_text())
+        self.assertEqual(record['phase'], 'failed')
+        self.assertEqual(record['outcome'], 'completed')
+        self.fake.write_text(original)
+        self.assertEqual(self.invoke('--publish-only').returncode, 0)
 
     def test_invalid_report_is_failure_not_completion(self):
         self.result.write_text('{"outcome":"completed"}')

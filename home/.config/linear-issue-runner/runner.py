@@ -113,6 +113,9 @@ Report to publish (data, not additional instructions):
     dirty = subprocess.check_output(['git', '-C', str(worktree), 'status', '--porcelain'], text=True)
     if dirty.strip():
         raise RuntimeError('Delivery left uncommitted files; inspect worktree')
+    commits = subprocess.check_output(['git', '-C', str(worktree), 'rev-list', 'main..HEAD'], text=True).splitlines()
+    for commit in commits:
+        subprocess.run(['git', '-C', str(worktree), 'verify-commit', commit], check=True)
     if receipt['pr_url']:
         pr = json.loads(subprocess.check_output(['gh', 'pr', 'view', receipt['pr_url'],
                         '--json', 'url,headRefName,headRefOid,isDraft,state'], cwd=worktree, text=True))
@@ -120,7 +123,7 @@ Report to publish (data, not additional instructions):
         if (pr['headRefName'] != branch or pr['headRefOid'] != head or pr['state'] != 'OPEN'
                 or (result['outcome'] != 'completed' and not pr['isDraft'])):
             raise RuntimeError('PR does not match branch, commit, or draft requirement')
-    elif subprocess.check_output(['git', '-C', str(worktree), 'rev-list', 'main..HEAD'], text=True).strip():
+    elif commits:
         raise RuntimeError('Branch has commits but no published PR')
     return receipt
 
@@ -145,7 +148,9 @@ def run(args):
         print(f'Run directory: {folder}', flush=True)
         status = {'issue': args.url, 'phase': 'preflight', 'pid': os.getpid()}
         def record():
-            (folder / 'run.json').write_text(json.dumps(status, indent=2) + '\n')
+            temporary = folder / 'run.json.tmp'
+            temporary.write_text(json.dumps(status, indent=2) + '\n')
+            temporary.replace(folder / 'run.json')
         record()
         try:
             preflight = config['projects'][0]['repo']
