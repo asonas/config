@@ -259,7 +259,7 @@
                 },
                 "to": [
                   {
-                    "key_code": "down_arrow",
+                    "key_code": "close_bracket",
                     "modifiers": [
                       "left_command",
                       "left_option"
@@ -288,7 +288,7 @@
                 },
                 "to": [
                   {
-                    "key_code": "up_arrow",
+                    "key_code": "open_bracket",
                     "modifiers": [
                       "left_command",
                       "left_option"
