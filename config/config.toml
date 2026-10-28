@@ -82,7 +82,7 @@ run_windows = [{ task = "apm:apply" }]
 [dotfiles]
 "~/Documents/PowerShell/profile.ps1" = { mode = "track", variants = [{ os = "windows" }] }
 "~/.wezterm.lua" = { mode = "track", variants = [{ os = "windows" }] }
-"~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/instructions/base.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/git-workflow.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
