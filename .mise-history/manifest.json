@@ -362,6 +362,36 @@
       ]
     },
     {
+      "path": "home/.config/linear-issue-runner/README.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.config/linear-issue-runner/config.example.toml",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.config/linear-issue-runner/prompt.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.config/linear-issue-runner/runner.py",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
+      "path": "home/.config/linear-issue-runner/test_runner.py",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/.config/nvim",
       "autosave": true,
       "encrypt": false,
@@ -881,6 +911,12 @@
           "default": false
         }
       ]
+    },
+    {
+      "path": "home/bin/linear-issue-runner",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
     },
     {
       "path": "home/bin/mdroll-in-herdr",
