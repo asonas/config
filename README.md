@@ -184,6 +184,11 @@ Run the task directly after changing the pinned commit:
 mise run herdr:plugins
 ```
 
+The APM skill manifest is shared across platforms: `~/.apm/apm.yml` is
+tracked only in `home@default/.apm/apm.yml`. Windows uses the same dependency
+list; do not create a Windows variant for this file. Platform-specific helper
+commands and service overrides remain separate.
+
 ## Windows configuration
 
 Windows-specific snapshots are stored under `home@windows/`. Entries with a
