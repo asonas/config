@@ -220,9 +220,12 @@ it does not access authentication APIs or display stored secrets.
 
 An isolated mise bootstrap fixture verified repository cloning, first-time
 configuration and link creation, and idempotent reruns. This Mac also passed
-the GitHub configuration/key check. Linear App registration remains pending,
-so the check currently exits non-zero and reports that gap. Generic PR/Issue
-skills and personal gh/Linear MCP authentication are unchanged.
+the GitHub configuration/key check. Linear App registration and Keychain
+setup were completed on 2026-10-30, with Bot-authored Issue/comment/Attachment
+creation and reuse verified on ASO-15. Both local checks now pass. Verified
+Linear identity IDs are in the tracked template; the client secret remains
+in envchain. Generic PR/Issue skills and personal gh/Linear MCP authentication
+are unchanged.
 
 See `asonas/nastack/docs/bootstrap.md` for restoration and credential setup.
 

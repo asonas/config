@@ -15,3 +15,8 @@ repo = "~/ghq/github.com/asonas/syncstr"
 [[projects]]
 id = "69e305ea-0813-4994-8706-9b911c9c103e"
 repo = "~/ghq/github.com/asonas/weblog.ason.as"
+
+[linear_app]
+client_id = "f2bbc7fc3ca6c5c4aefa0dbe35bcb5d8"
+actor_id = "edc9d57a-6ab8-4d91-924c-67068b90b8e0"
+workspace_id = "5d3383ad-0d37-418f-b5d8-f4345f6108a8"
