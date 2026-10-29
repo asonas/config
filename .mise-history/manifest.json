@@ -362,6 +362,27 @@
       ]
     },
     {
+      "path": "home/.config/nastack/bootstrap.toml",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        },
+        {
+          "os": [
+            "linux"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/.config/nvim",
       "autosave": true,
       "encrypt": false,
