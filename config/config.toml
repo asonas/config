@@ -73,13 +73,27 @@ description = "Install pinned Herdr plugins"
 dir = "~"
 run = "ruby \"$HOME/bin/herdr-plugins-apply\""
 
+[bootstrap.repos]
+"~/ghq/github.com/asonas/nastack" = { url = "https://github.com/asonas/nastack.git" }
+
+[tasks."nastack:setup"]
+description = "Deploy nastack entry points and report missing Bot credentials"
+dir = "~"
+run = 'uv run --no-project --python 3.13 python "$HOME/ghq/github.com/asonas/nastack/bootstrap.py"'
+
+[tasks."nastack:check"]
+description = "Check local nastack Bot configuration without accessing APIs"
+dir = "~"
+run = 'uv run --no-project --python 3.13 python "$HOME/ghq/github.com/asonas/nastack/bootstrap.py" --check'
+
 [tasks.bootstrap]
-run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
+run = [{ task = "apm:apply" }, { task = "herdr:plugins" }, { task = "nastack:setup" }]
 run_windows = [{ task = "apm:apply" }]
 
 # Track authored sources only. Generated agent outputs and mixed-state
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
+"~/.config/nastack/bootstrap.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
 "~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/instructions/base.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
