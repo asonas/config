@@ -44,18 +44,6 @@ dependencies:
     - git: typesafe-ai/skills
       path: skills/typesafe-ai
       targets: [codex]
-    # sorah/config is a monorepo-style marketplace; pin the specific plugin paths.
-    # sorah-spec is retired; its rails/ruby/spec-conventions skills and commands
-    # are intentionally no longer deployed.
-    - git: sorah/config/claude/marketplace/plugins/sorah-guides
-      ref: a68cd621cedb78dd6ba4ea1229556c2ee9c07d2b
-      # rails と ruby はこのグローバルセットに含めない。
-      skills:
-        - coding
-        - rust
-        - security
-        - terraform
-        - typescript
     # Self-authored skills published from asonas/skills.
     - git: asonas/skills
       path: apply-apple-interface-guidelines
