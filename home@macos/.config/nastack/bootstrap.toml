@@ -20,3 +20,7 @@ repo = "~/ghq/github.com/asonas/weblog.ason.as"
 client_id = "f2bbc7fc3ca6c5c4aefa0dbe35bcb5d8"
 actor_id = "edc9d57a-6ab8-4d91-924c-67068b90b8e0"
 workspace_id = "5d3383ad-0d37-418f-b5d8-f4345f6108a8"
+
+[model_routing]
+standard_model = "gpt-6.1-sol"
+advanced_model = "gpt-6-astra"
