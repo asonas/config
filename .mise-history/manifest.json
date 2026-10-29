@@ -362,36 +362,6 @@
       ]
     },
     {
-      "path": "home/.config/linear-issue-runner/README.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
-    },
-    {
-      "path": "home/.config/linear-issue-runner/config.example.toml",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
-    },
-    {
-      "path": "home/.config/linear-issue-runner/prompt.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
-    },
-    {
-      "path": "home/.config/linear-issue-runner/runner.py",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
-    },
-    {
-      "path": "home/.config/linear-issue-runner/test_runner.py",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
-    },
-    {
       "path": "home/.config/nvim",
       "autosave": true,
       "encrypt": false,
@@ -913,12 +883,6 @@
       ]
     },
     {
-      "path": "home/bin/linear-issue-runner",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
-    },
-    {
       "path": "home/bin/mdroll-in-herdr",
       "autosave": true,
       "encrypt": false,
@@ -965,7 +929,6 @@
   "recipients": [],
   "permissions": {
     "home/.apm": 448,
-    "home/.config/linear-issue-runner": 509,
     "home@macos/.config/karabiner": 448,
     "home@macos/.config/karabiner/assets/complex_modifications": 448
   }

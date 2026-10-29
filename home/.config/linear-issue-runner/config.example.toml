@@ -1,7 +1,0 @@
-workspace = "example"
-state_dir = "~/.local/state/linear-issue-runner"
-codex = "codex"
-
-[[projects]]
-id = "project-uuid-from-linear"
-repo = "~/ghq/github.com/example/repository"
