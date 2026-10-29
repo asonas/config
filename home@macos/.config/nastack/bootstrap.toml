@@ -1,0 +1,17 @@
+# Shared settings only. Never add keys, secrets, or tokens.
+workspace = "asonas"
+state_dir = "~/ghq/github.com/asonas/nastack/.local/runs"
+codex = "codex"
+
+[github_app]
+app_id = 5526984
+slug = "nastack-agent"
+private_key_path = "~/ghq/github.com/asonas/nastack/.local/github-app/private-key.pem"
+
+[[projects]]
+id = "7596bdcc-8697-44a6-973a-d04f4ed7e9cc"
+repo = "~/ghq/github.com/asonas/syncstr"
+
+[[projects]]
+id = "69e305ea-0813-4994-8706-9b911c9c103e"
+repo = "~/ghq/github.com/asonas/weblog.ason.as"
