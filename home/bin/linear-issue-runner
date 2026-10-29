@@ -1,4 +1,0 @@
-#!/bin/sh
-set -eu
-exec python3 "$HOME/.config/linear-issue-runner/runner.py" \
-  --config "$HOME/.config/linear-issue-runner/config.local.toml" "$@"
