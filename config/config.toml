@@ -93,7 +93,6 @@ run_windows = [{ task = "apm:apply" }]
 # Track authored sources only. Generated agent outputs and mixed-state
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
-"~/.config/nastack/bootstrap.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
 "~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/instructions/base.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/debugging.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
@@ -108,6 +107,11 @@ run_windows = [{ task = "apm:apply" }]
 "~/.claude/settings.json" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
+"~/.config/herdr-app/keys.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/legacy-prefix/main.js" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/legacy-prefix/mod.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/settings.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/themes/tokyo-night.json" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr/attention-view/apply.py" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/herdr/attention-view/herdr-plugin.toml" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }, { profile = "wsl" }] }
@@ -115,6 +119,7 @@ run_windows = [{ task = "apm:apply" }]
 "~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/karabiner" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/mise/config.toml" = { mode = "track" }
+"~/.config/nastack/bootstrap.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
 "~/.config/nvim" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/peco" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/qmd/index.yml" = { mode = "track", variants = [{ os = "linux" }, { os = "macos" }] }
