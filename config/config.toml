@@ -50,10 +50,17 @@ requires_tools = true
 environment = { RUBYOPT = "-EUTF-8" }
 
 [tasks.update]
-description = "Upgrade mise tools and update APM skills"
+description = "Upgrade mise tools, APM skills, and TokenEconomizer"
 dir = "~"
 raw = true
-run = ["mise upgrade", { task = "apm:update" }]
+run = ["mise upgrade", { task = "apm:update" }, { task = "tokeneconomizer:update" }]
+
+[tasks."tokeneconomizer:update"]
+description = "Update TokenEconomizer for Codex"
+run = [
+  'git -C "$HOME/ghq/github.com/microsoft/TokenEconomizer" pull --ff-only',
+  'codex plugin add tokeneconomizer@tokeneconomizer',
+]
 
 [tasks."apm:update"]
 description = "Update APM skills and rebuild user instructions"
