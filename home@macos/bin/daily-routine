@@ -9,6 +9,7 @@ require 'open3'
 require 'timeout'
 require 'time'
 require 'cgi'
+Encoding.default_external = Encoding::UTF_8
 
 # Authored source: ~/bin/daily-routine (mise history). Runtime state stays local.
 class DailyRoutine
@@ -156,7 +157,7 @@ class DailyRoutine
     save(ledger, state)
   end
 
-  def run(at = now)
+  def run(at = now, force: false)
     raise 'Run setup first' if config.empty?
     FileUtils.mkdir_p(root)
     File.open(File.join(root, 'lock'), File::RDWR | File::CREAT, 0o600) do |lock|
@@ -166,7 +167,7 @@ class DailyRoutine
       kind, date = job
       ledger = job_path(kind, date)
       state = read(ledger)
-      return "Retry deferred: #{kind} #{date}" if state.fetch('retry_after', 0) > at.to_i
+      return "Retry deferred: #{kind} #{date}" if !force && state.fetch('retry_after', 0) > at.to_i
       path = File.join(resolve_vault, 'daily', "#{date}.md")
       begin
         publish(path, state, ledger) if state['pending']
@@ -242,6 +243,7 @@ class DailyRoutine
       <key>RunAtLoad</key><true/>
       <key>StartCalendarInterval</key><array>#{intervals}</array>
       <key>ProcessType</key><string>Background</string>
+      <key>EnvironmentVariables</key><dict><key>LANG</key><string>en_US.UTF-8</string><key>RUBYOPT</key><string>-EUTF-8</string></dict>
       <key>StandardOutPath</key><string>#{CGI.escapeHTML(root)}/launchd.log</string>
       <key>StandardErrorPath</key><string>#{CGI.escapeHTML(root)}/launchd.log</string>
       </dict></plist>
@@ -268,7 +270,8 @@ if $PROGRAM_NAME == __FILE__
     when 'setup' then runner.setup
     when 'status', 'plan' then runner.status
     when 'run' then puts runner.run
-    else abort 'Usage: daily-routine setup|status|plan|run'
+    when 'retry' then puts runner.run(force: true)
+    else abort 'Usage: daily-routine setup|status|plan|run|retry'
     end
   rescue StandardError => e
     warn "#{Time.now.iso8601}: #{e.message}"
