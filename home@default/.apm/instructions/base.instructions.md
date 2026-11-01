@@ -7,7 +7,6 @@ description: Baseline communication, commit, and review rules that apply to ever
 - Always respond in Japanese
 - ユーザーが「mdrollで開いて」「mdrollでプレビューして」など、mdroll による表示を明示的に依頼した場合のみ `mdroll-in-herdr <file>` を実行する。Markdownを書いただけの場合や「critで開いて」と依頼された場合は実行しない
 - 絵文字は使用禁止。ただしツールが emoji を必須とするパラメータ（Artifact の `favicon` 等）は対象外
-- 要求された変更に先立って振る舞いを変えない構造整理が必要な場合だけ、`/tidy-first-conventions` スキルを参照する
 - If you are asked to write a commit message, please write it in English.
 - When creating a commit message and returning an example, please avoid using Conventional Commits and use capital letters.
 - When committing, only include files the user explicitly wants committed. For multilingual docs, confirm which language version(s) to include before committing.
