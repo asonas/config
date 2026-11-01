@@ -24,3 +24,7 @@ workspace_id = "5d3383ad-0d37-418f-b5d8-f4345f6108a8"
 [model_routing]
 standard_model = "gpt-6.1-sol"
 advanced_model = "gpt-6-astra"
+
+[[projects]]
+id = "0ca84d82-dd2d-471b-9161-defcf19609c2"
+repo = "~/ghq/github.com/asonas/nastack"
