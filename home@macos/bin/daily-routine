@@ -1,0 +1,277 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'date'
+require 'digest'
+require 'fileutils'
+require 'json'
+require 'open3'
+require 'timeout'
+require 'time'
+require 'cgi'
+
+# Authored source: ~/bin/daily-routine (mise history). Runtime state stays local.
+class DailyRoutine
+  LABEL = 'as.ason.daily-routine'
+  attr_reader :root
+
+  def initialize(root: File.expand_path('~/.local/state/daily-routine'), vault: nil, engine: nil)
+    @root, @vault, @engine = root, vault, engine
+  end
+
+  def now = Time.now.getlocal('+09:00')
+  def read(path) = File.exist?(path) ? JSON.parse(File.read(path)) : {}
+  def atomic(path, content)
+    FileUtils.mkdir_p(File.dirname(path))
+    tmp = "#{path}.#{Process.pid}.tmp"
+    File.open(tmp, 'w', 0o600) { |f| f.write(content); f.flush; f.fsync }
+    File.rename(tmp, path)
+  ensure
+    File.unlink(tmp) if tmp && File.exist?(tmp)
+  end
+  def save(path, value) = atomic(path, JSON.pretty_generate(value) + "\n")
+  def config = read(File.join(root, 'config.json'))
+  def fingerprint(path) = File.exist?(path) ? Digest::SHA256.file(path).hexdigest : nil
+  def job_path(kind, date) = File.join(root, 'jobs', "#{date}-#{kind}.json")
+
+  def due(at = now)
+    cfg = config
+    return [] unless cfg['start_date']
+    today = at.getlocal('+09:00').to_date
+    start = Date.iso8601(cfg.fetch('start_date'))
+    jobs = (start...today).map { |d| ['wrapup', d.to_s] }
+    jobs << ['today', today.to_s] if at.getlocal('+09:00').hour >= 8 && today >= start
+    Dir.glob(File.join(root, 'jobs', '*-today.json')).each do |path|
+      date = File.basename(path).delete_suffix('-today.json')
+      jobs << ['today', date] if Date.iso8601(date) <= today
+    end
+    jobs = jobs.uniq.sort_by { |kind, date| [date, kind == 'wrapup' ? 0 : 1] }
+    jobs.reject { |kind, date| read(job_path(kind, date))['wiki'] == 'done' }
+  end
+
+  def resolve_vault
+    return @vault if @vault
+    script = File.expand_path('~/.agents/skills/obsidian-vault/scripts/resolve-vault.rb')
+    result, status = Open3.capture2(RbConfig.ruby, script, 'asonas')
+    raise 'Vault resolution failed' unless status.success? && File.directory?(result.strip)
+    @vault = result.strip
+  end
+
+  def prompt(kind, date, phase, existing)
+    prior = (Date.iso8601(date) - 1).to_s
+    <<~PROMPT
+      ユーザーが承認済みの日次自動化です。対象: #{kind} #{date} (Asia/Tokyo)。
+      obsidian-vault と #{kind} の ~/.agents/skills/<name>/SKILL.md を読み、品質・出典の規範を守ってください。
+      Vault登録先は親プロセスが共通resolverで検証済み: #{resolve_vault}。
+      今回の明示的なユーザー指示: 定期実行では候補提示後の承認待ちを省略し、対象日のdailyを作成・追記してよい。
+      この指示はスキル内の承認ゲートと欠落dailyの質問より優先します。質問で停止しないこと。
+      対象日は上記の絶対日付です。todayも実行時の相対日付へ読み替えないでください。
+      ノート移動・削除、MOC、分割、独立notesの作成、実験、コミット、公開、メールやメッセージ送信は範囲外です。
+      提案・ユーザー発言・合意・実施済みを区別し、成功には元JSONLのツール結果など直接証拠を確認すること。
+      対象日の全記録を読めない場合は取得範囲を明記。定期処理自体、subagent、同じ成果を重複計上しないこと。
+
+      今回の段階は #{phase} だけです。
+      #{phase == 'daily' ? <<~DAILY : <<~WIKI}
+        読み取り専用の準備段階。Vaultへの保存、save-conversation、activities収集、Wiki、Raindrop、qmdは実行しない。
+        保存済みconversationsと未保存のCodex sessions/archived_sessionsを各発言のJST時刻で調べる。
+        todayでは #{prior} のdailyと会話から引き継ぎと昨日やったことを作る。仕事の計画・相談を新dailyの入力に含めない。
+        wrapupでは既存dailyのログと照合し未記録の事実だけを抽出する。
+        最終JSONの note に #{kind == 'wrapup' ? '追加するログの箇条書きだけ' : '新規dailyのMarkdown全文'} を入れる。
+        wrapupの各行は '- HH:MM カテゴリ: 内容'、時刻不明ならHH:MMを省略可。重複しかなければ空文字。
+        todayは ## 前日からの引き継ぎ / ## 昨日やったこと / ## ログ。h1は使わない。
+        既存daily (JSON文字列): #{existing.to_json}
+        外部ソースが欠けても元のローカル履歴が読めれば制約をwarningsに記録して続ける。
+        ローカル履歴も読めず事実を判断できなければ status=blocked とし、空の成功扱いにしない。
+      DAILY
+        daily保存は完了済みです。dailyを再編集しないでください。
+        save-conversationの承認済みbaselineがあればpending回収を実行。原文を削除・統合しない。
+        activitiesはblueskyとscrapboxを個別に対象日指定で取得。失敗源はwarningsに残し、もう一方を続ける。
+        todayならRaindrop同期後、wiki-update ingest #{prior}。wrapupならwiki-update ingest #{date}。
+        wiki-updateスキルを読み、出典検証と必要なindex更新まで実行する。途中失敗後の再実行では既存更新を確認し重複を避ける。
+        todayなら前回から7日以上のWiki lintを報告のみ実施（自動修正なし）。
+        qmdは登録rootとVaultの一致を検証しupdate/embedを同期実行して結果をwarningsに残す。失敗はWiki完了を妨げない。
+        miseがsandbox内で失敗する場合はインストール済みruntimeの絶対パスを使う。設定変更・ツール更新は行わない。
+        Wiki ingestに失敗したらstatus=blocked。任意ソースとqmdの失敗はwarningsに記録して続行可。
+        noteは空文字、evidenceには検証したVault相対パス（dailyとWikiページまたはwiki/log.md）を入れる。
+      WIKI
+      実行環境に指定モデルのsubagentがなければ同じ調査を自分で行ってください。
+      完了した場合のみstatus=done。それ以外はblocked。warningsに未完了理由を具体的に残す。
+    PROMPT
+  end
+
+  def invoke(kind, date, phase, existing)
+    return @engine.call(kind, date, phase, existing) if @engine
+    vault = resolve_vault
+    run = File.join(root, 'runs', "#{date}-#{kind}-#{phase}-#{Time.now.to_i}")
+    FileUtils.mkdir_p(run, mode: 0o700)
+    schema = {type: 'object', additionalProperties: false,
+      required: %w[status note warnings evidence], properties: {
+        status: {type: 'string', enum: %w[done blocked]}, note: {type: 'string'},
+        warnings: {type: 'array', items: {type: 'string'}}, evidence: {type: 'array', items: {type: 'string'}}}}
+    save(File.join(run, 'schema.json'), schema)
+    atomic(File.join(run, 'prompt.txt'), prompt(kind, date, phase, existing))
+    args = ['codex', 'exec', '--ephemeral', '--skip-git-repo-check', '--color', 'never',
+      '-C', vault, '-s', phase == 'daily' ? 'read-only' : 'workspace-write',
+      '-c', 'approval_policy="never"', '-c', 'sandbox_workspace_write.network_access=true',
+      '--output-schema', File.join(run, 'schema.json'), '-o', File.join(run, 'result.json'), '-']
+    if phase == 'wiki'
+      %w[~/.cache/qmd ~/ghq/github.com/asonas/activities/.state ~/ghq/github.com/asonas/activities/data].each do |path|
+        path = File.expand_path(path)
+        FileUtils.mkdir_p(path)
+        args += ['--add-dir', path]
+      end
+    end
+    File.open(File.join(run, 'prompt.txt')) do |input|
+      File.open(File.join(run, 'execution.log'), 'w', 0o600) do |log|
+        pid = Process.spawn(*args, in: input, out: log, err: log, pgroup: true)
+        begin
+          _, status = Timeout.timeout(45 * 60) { Process.wait2(pid) }
+          raise "Codex failed; see #{run}" unless status.success?
+        rescue Timeout::Error
+          Process.kill('TERM', -pid) rescue nil
+          sleep 3
+          Process.kill('KILL', -pid) rescue nil
+          Process.wait(pid) rescue nil
+          raise "Codex timed out; see #{run}"
+        end
+      end
+    end
+    read(File.join(run, 'result.json'))
+  end
+
+  def publish(path, state, ledger)
+    pending = state.fetch('pending')
+    hash = fingerprint(path)
+    if hash == pending['before']
+      atomic(path, pending.fetch('content'))
+    elsif hash != Digest::SHA256.hexdigest(pending.fetch('content'))
+      # The user edited the note: discard the stale draft and regenerate next run.
+      state.delete('pending')
+      save(ledger, state)
+      raise 'Daily changed concurrently; preserving it and regenerating next time'
+    end
+    state.delete('pending')
+    state['daily'] = 'done'
+    state['daily_sha256'] = fingerprint(path)
+    save(ledger, state)
+  end
+
+  def run(at = now)
+    raise 'Run setup first' if config.empty?
+    FileUtils.mkdir_p(root)
+    File.open(File.join(root, 'lock'), File::RDWR | File::CREAT, 0o600) do |lock|
+      return 'Another run is active' unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+      job = due(at).first
+      return 'Nothing due' unless job
+      kind, date = job
+      ledger = job_path(kind, date)
+      state = read(ledger)
+      return "Retry deferred: #{kind} #{date}" if state.fetch('retry_after', 0) > at.to_i
+      path = File.join(resolve_vault, 'daily', "#{date}.md")
+      begin
+        publish(path, state, ledger) if state['pending']
+        unless state['daily'] == 'done'
+          before = fingerprint(path)
+          existing = File.exist?(path) ? File.read(path) : ''
+          if kind == 'today' && before
+            state['daily'] = 'done'
+            state['daily_sha256'] = before
+          else
+            result = invoke(kind, date, 'daily', existing)
+            raise "Daily blocked: #{result['warnings']}" unless result['status'] == 'done' && result['note'].is_a?(String)
+            note = result.fetch('note').strip
+            raise 'Invalid daily content' if note.match?(/^# /) || (kind == 'today' && !note.include?('## ログ'))
+            if kind == 'wrapup'
+              raise 'Invalid log entries' unless note.lines.all? { |line| line.strip.empty? || line.start_with?('- ') }
+              content = existing.empty? ? +"## ログ\n\n" : existing.dup
+              content += "\n\n## ログ\n\n" unless content.match?(/^## ログ\s*$/)
+              unless note.empty?
+                # Insert at the end of the log section, preserving subsequent sections.
+                start = content.match(/^## ログ\s*$/).end(0)
+                boundary = content.index(/^## /, start) || content.length
+                content.insert(boundary, "\n#{note}\n\n")
+              end
+            else
+              content = note + "\n"
+            end
+            raise 'Daily changed during preparation' unless fingerprint(path) == before
+            state['warnings'] = result['warnings']
+            state['pending'] = {'before' => before, 'content' => content}
+            save(ledger, state)
+            publish(path, state, ledger)
+          end
+          save(ledger, state)
+        end
+        result = invoke(kind, date, 'wiki', '')
+        raise "Wiki blocked: #{result['warnings']}" unless result['status'] == 'done'
+        evidence = result.fetch('evidence', [])
+        raise 'No Wiki evidence' unless evidence.any? { |p| p.start_with?('wiki/') && !p.split('/').include?('..') && File.file?(File.join(resolve_vault, p)) }
+        state['wiki'] = 'done'
+        state['warnings'] = Array(state['warnings']) + Array(result['warnings'])
+        state['finished_at'] = at.iso8601
+        state.delete('error')
+        state.delete('retry_after')
+        save(ledger, state)
+        "Completed #{kind} #{date} (warnings: #{state['warnings'].size})"
+      rescue StandardError => e
+        state['attempts'] = state.fetch('attempts', 0) + 1
+        state['error'] = e.message
+        state['retry_after'] = at.to_i + [900 * (2**[state['attempts'] - 1, 5].min), 21600].min
+        save(ledger, state)
+        raise
+      end
+    end
+  end
+
+  def setup
+    raise 'Automatic installation currently supports macOS only' unless RUBY_PLATFORM.include?('darwin')
+    resolve_vault
+    FileUtils.mkdir_p(root, mode: 0o700)
+    save(File.join(root, 'config.json'), {'start_date' => (now.to_date - 1).to_s}) if config.empty?
+    mise = File.expand_path('~/.local/bin/mise')
+    script = File.expand_path('~/bin/daily-routine')
+    arguments = [mise, 'exec', '--', 'ruby', script, 'run'].map { |s| "<string>#{CGI.escapeHTML(s)}</string>" }.join
+    intervals = [0, 15, 30, 45].map { |m| "<dict><key>Minute</key><integer>#{m}</integer></dict>" }.join
+    plist = <<~XML
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0"><dict>
+      <key>Label</key><string>#{LABEL}</string>
+      <key>ProgramArguments</key><array>#{arguments}</array>
+      <key>WorkingDirectory</key><string>#{CGI.escapeHTML(Dir.home)}</string>
+      <key>RunAtLoad</key><true/>
+      <key>StartCalendarInterval</key><array>#{intervals}</array>
+      <key>ProcessType</key><string>Background</string>
+      <key>StandardOutPath</key><string>#{CGI.escapeHTML(root)}/launchd.log</string>
+      <key>StandardErrorPath</key><string>#{CGI.escapeHTML(root)}/launchd.log</string>
+      </dict></plist>
+    XML
+    target = File.expand_path("~/Library/LaunchAgents/#{LABEL}.plist")
+    atomic(target, plist)
+    raise 'Invalid plist' unless system('/usr/bin/plutil', '-lint', target)
+    system('/bin/launchctl', 'bootout', "gui/#{Process.uid}/#{LABEL}", out: File::NULL, err: File::NULL)
+    raise 'Could not load LaunchAgent' unless system('/bin/launchctl', 'bootstrap', "gui/#{Process.uid}", target)
+    puts "Enabled from #{config['start_date']}; state: #{root}"
+  end
+
+  def status
+    puts JSON.pretty_generate({'config' => config, 'due' => due, 'jobs' => Dir.glob(File.join(root, 'jobs', '*.json')).sort.to_h { |p| [File.basename(p), read(p).reject { |k, _| k == 'pending' }] }})
+  end
+end
+
+if $PROGRAM_NAME == __FILE__
+  require 'time'
+  File.umask(0o077)
+  runner = DailyRoutine.new
+  begin
+    case ARGV.first
+    when 'setup' then runner.setup
+    when 'status', 'plan' then runner.status
+    when 'run' then puts runner.run
+    else abort 'Usage: daily-routine setup|status|plan|run'
+    end
+  rescue StandardError => e
+    warn "#{Time.now.iso8601}: #{e.message}"
+    exit 1
+  end
+end

@@ -100,6 +100,7 @@ run_windows = [{ task = "apm:apply" }]
 # Track authored sources only. Generated agent outputs and mixed-state
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
+"~/bin/daily-routine" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/instructions/base.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/git-workflow.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
@@ -159,3 +160,19 @@ run_windows = [{ task = "apm:apply" }]
 
 [history]
 exclude = ["~/.config/nvim/.netrwhist", "~/.config/nvim/lua/plugins/theme.lua", "~/.config/karabiner/automatic_backups/**"]
+
+# The scheduler is opt-in per machine; setup is deliberately not a bootstrap dependency.
+[tasks."daily:setup"]
+description = "Enable daily automation on this Mac (one writer per Vault)"
+dir = "~"
+run = 'ruby "$HOME/bin/daily-routine" setup'
+
+[tasks."daily:status"]
+description = "Show pending daily work, warnings, and retry status"
+dir = "~"
+run = 'ruby "$HOME/bin/daily-routine" status'
+
+[tasks."daily:run"]
+description = "Process one pending daily routine with locking and retry backoff"
+dir = "~"
+run = 'ruby "$HOME/bin/daily-routine" run'
