@@ -39,25 +39,6 @@
       ]
     },
     {
-      "path": "home/.apm/instructions/debugging.instructions.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
       "path": "home/.apm/instructions/git-workflow.instructions.md",
       "autosave": true,
       "encrypt": false,
@@ -78,25 +59,6 @@
     },
     {
       "path": "home/.apm/instructions/github-cli.instructions.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
-      "path": "home/.apm/instructions/installer.instructions.md",
       "autosave": true,
       "encrypt": false,
       "variants": [
