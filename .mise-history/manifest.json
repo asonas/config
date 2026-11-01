@@ -784,6 +784,20 @@
       ]
     },
     {
+      "path": "home/bin/daily-routine",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/bin/fix_agent_frontmatter",
       "autosave": true,
       "encrypt": false,
@@ -983,6 +997,7 @@
   "permissions": {
     "home/.apm": 448,
     "home@macos/.config/karabiner": 448,
-    "home@macos/.config/karabiner/assets/complex_modifications": 448
+    "home@macos/.config/karabiner/assets/complex_modifications": 448,
+    "home@macos/bin/daily-routine": 448
   }
 }
