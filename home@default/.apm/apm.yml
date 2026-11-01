@@ -106,9 +106,6 @@ dependencies:
       path: tempest909-draft
       targets: [claude, codex]
     - git: asonas/skills
-      path: tidy-first-conventions
-      targets: [claude, codex]
-    - git: asonas/skills
       path: today
       targets: [claude, codex]
     - git: asonas/skills
