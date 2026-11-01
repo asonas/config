@@ -187,6 +187,8 @@ class DailyRoutine
               content = existing.empty? ? +"## ログ\n\n" : existing.dup
               content += "\n\n## ログ\n\n" unless content.match?(/^## ログ\s*$/)
               unless note.empty?
+                known = existing.lines.map(&:strip)
+                note = note.lines.reject { |line| known.include?(line.strip) }.join.strip
                 # Insert at the end of the log section, preserving subsequent sections.
                 start = content.match(/^## ログ\s*$/).end(0)
                 boundary = content.index(/^## /, start) || content.length
@@ -249,6 +251,13 @@ class DailyRoutine
       </dict></plist>
     XML
     target = File.expand_path("~/Library/LaunchAgents/#{LABEL}.plist")
+    if File.exist?(target) && File.read(target) == plist && system('/bin/launchctl', 'print', "gui/#{Process.uid}/#{LABEL}", out: File::NULL, err: File::NULL)
+      puts 'Already enabled; existing job preserved'
+      return
+    end
+    File.open(File.join(root, 'lock'), File::RDWR | File::CREAT, 0o600) do |lock|
+      raise 'A routine is running; retry setup after it finishes' unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+    end
     atomic(target, plist)
     raise 'Invalid plist' unless system('/usr/bin/plutil', '-lint', target)
     system('/bin/launchctl', 'bootout', "gui/#{Process.uid}/#{LABEL}", out: File::NULL, err: File::NULL)
@@ -257,7 +266,20 @@ class DailyRoutine
   end
 
   def status
-    puts JSON.pretty_generate({'config' => config, 'due' => due, 'jobs' => Dir.glob(File.join(root, 'jobs', '*.json')).sort.to_h { |p| [File.basename(p), read(p).reject { |k, _| k == 'pending' }] }})
+    active = false
+    lock_path = File.join(root, 'lock')
+    File.open(lock_path) { |f| active = !f.flock(File::LOCK_EX | File::LOCK_NB) } if File.exist?(lock_path)
+    puts JSON.pretty_generate({'config' => config, 'running' => active, 'due' => due,
+      'latest_run' => Dir.glob(File.join(root, 'runs', '*')).max_by { |p| File.mtime(p) },
+      'jobs' => Dir.glob(File.join(root, 'jobs', '*.json')).sort.to_h { |p| [File.basename(p), read(p).reject { |k, _| k == 'pending' }] }})
+  end
+
+  def stop
+    raise 'macOS only' unless RUBY_PLATFORM.include?('darwin')
+    system('/bin/launchctl', 'bootout', "gui/#{Process.uid}/#{LABEL}")
+    path = File.expand_path("~/Library/LaunchAgents/#{LABEL}.plist")
+    File.unlink(path) if File.exist?(path)
+    puts 'Scheduler stopped; completion history preserved'
   end
 end
 
@@ -271,7 +293,8 @@ if $PROGRAM_NAME == __FILE__
     when 'status', 'plan' then runner.status
     when 'run' then puts runner.run
     when 'retry' then puts runner.run(force: true)
-    else abort 'Usage: daily-routine setup|status|plan|run|retry'
+    when 'stop' then runner.stop
+    else abort 'Usage: daily-routine setup|status|plan|run|retry|stop'
     end
   rescue StandardError => e
     warn "#{Time.now.iso8601}: #{e.message}"
