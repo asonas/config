@@ -5,5 +5,6 @@
   },
   "font": "SauceCodePro Nerd Font Mono",
   "minimum_contrast": 1,
-  "theme": "tokyo-night"
+  "theme": "tokyo-night",
+  "ui_font": "SauceCodePro Nerd Font Mono"
 }
