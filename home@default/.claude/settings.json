@@ -1,6 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "includeCoAuthoredBy": false,
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
   "permissions": {
     "allow": [
       "Bash(npm run build)",
@@ -55,10 +59,6 @@
           {
             "type": "command",
             "command": "echo \"[$(date)] $USER: $(jq -r '.tool_input.command')\" >> ~/.claude/command_history.log"
-          },
-          {
-            "type": "command",
-            "command": "jq -r 'if .tool_input.command | test(\"rm -rf|dd if=|:(){ :|:& };:\") then {\"decision\": \"block\", \"reason\": \"This command is blocked as potentially destructive. Consider a safer approach.\"} else empty end'"
           }
         ]
       }
@@ -100,23 +100,14 @@
     "command": "~/.claude/scripts/statusline-usage.py"
   },
   "enabledPlugins": {
-    "cafleet@cafleet": false,
     "clangd-lsp@claude-plugins-official": false,
     "cman@cman": true,
     "crit@crit": true,
-    "obsidian@obsidian-skills": false,
     "ruby-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "sorah-guides@sorah-marketplace": false,
     "swift-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
-    "cafleet": {
-      "source": {
-        "source": "directory",
-        "path": "/Users/asonas/ghq/github.com/asonas/cafleet"
-      }
-    },
     "cman": {
       "source": {
         "source": "github",
@@ -127,12 +118,6 @@
       "source": {
         "source": "github",
         "repo": "tomasz-tomczyk/crit"
-      }
-    },
-    "obsidian-skills": {
-      "source": {
-        "source": "github",
-        "repo": "kepano/obsidian-skills"
       }
     },
     "cursor-plugins": {
