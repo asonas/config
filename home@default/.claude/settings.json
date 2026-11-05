@@ -102,8 +102,7 @@
       }
     }
   },
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "advisorModel": "opus",
   "tui": "fullscreen",
   "theme": "auto",

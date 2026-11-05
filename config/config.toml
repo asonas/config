@@ -108,6 +108,7 @@ run_windows = [{ task = "apm:apply" }]
 "~/.apm/instructions/macos-containers.instructions.md" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.apm/instructions/shell.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/testing.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.apm/codex-instructions/codex-cli.instructions.md" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.claude/scripts" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.claude/settings.json" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
