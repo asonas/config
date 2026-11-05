@@ -140,5 +140,6 @@
   "effortLevel": "high",
   "advisorModel": "opus",
   "tui": "fullscreen",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "theme": "auto"
 }
