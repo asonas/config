@@ -20,6 +20,18 @@
       ]
     },
     {
+      "path": "home/.apm/codex-instructions/codex-cli.instructions.md",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [],
+          "profile": null,
+          "default": true
+        }
+      ]
+    },
+    {
       "path": "home/.apm/instructions/base.instructions.md",
       "autosave": true,
       "encrypt": false,
