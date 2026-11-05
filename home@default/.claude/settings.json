@@ -1,6 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "includeCoAuthoredBy": false,
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
   "permissions": {
     "allow": [
       "Bash(npm run build)",
@@ -13,11 +17,7 @@
       "Bash(mkdir:*)",
       "Bash(mv:*)",
       "Bash(grep:*)",
-      "Bash(bundle:*)",
-      "Bash(gemini:*)",
-      "Bash(twiggy:*)",
-      "Bash(wasm-snip:*)",
-      "Bash(iris:*)"
+      "Bash(bundle:*)"
     ],
     "deny": [
       "Bash(gh pr create*)",
@@ -26,18 +26,6 @@
     "defaultMode": "auto"
   },
   "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/ghostty-attention.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit|MultiEdit",
@@ -45,20 +33,7 @@
           {
             "type": "command",
             "command": "~/.claude/scripts/lint-on-edit.sh",
-            "async": true
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"[$(date)] $USER: $(jq -r '.tool_input.command')\" >> ~/.claude/command_history.log"
-          },
-          {
-            "type": "command",
-            "command": "jq -r 'if .tool_input.command | test(\"rm -rf|dd if=|:(){ :|:& };:\") then {\"decision\": \"block\", \"reason\": \"This command is blocked as potentially destructive. Consider a safer approach.\"} else empty end'"
+            "timeout": 60
           }
         ]
       }
@@ -100,23 +75,14 @@
     "command": "~/.claude/scripts/statusline-usage.py"
   },
   "enabledPlugins": {
-    "cafleet@cafleet": false,
     "clangd-lsp@claude-plugins-official": false,
     "cman@cman": true,
     "crit@crit": true,
-    "obsidian@obsidian-skills": false,
     "ruby-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "sorah-guides@sorah-marketplace": false,
     "swift-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
-    "cafleet": {
-      "source": {
-        "source": "directory",
-        "path": "/Users/asonas/ghq/github.com/asonas/cafleet"
-      }
-    },
     "cman": {
       "source": {
         "source": "github",
@@ -129,10 +95,10 @@
         "repo": "tomasz-tomczyk/crit"
       }
     },
-    "obsidian-skills": {
+    "cursor-plugins": {
       "source": {
         "source": "github",
-        "repo": "kepano/obsidian-skills"
+        "repo": "cursor/plugins"
       }
     }
   },
@@ -140,6 +106,6 @@
   "effortLevel": "high",
   "advisorModel": "opus",
   "tui": "fullscreen",
-  "skipAutoPermissionPrompt": true,
-  "theme": "auto"
+  "theme": "auto",
+  "skipAutoPermissionPrompt": true
 }
