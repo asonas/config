@@ -80,7 +80,8 @@
     "crit@crit": true,
     "ruby-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "pstack@cursor-plugins": true
   },
   "extraKnownMarketplaces": {
     "cman": {
