@@ -39,6 +39,11 @@ def compile_instructions!(root, source)
   Dir.mktmpdir('apm-instructions-') do |directory|
     FileUtils.mkdir_p(File.join(directory, '.apm'))
     FileUtils.cp_r(File.join(source, 'instructions'), File.join(directory, '.apm/instructions'))
+    # Codex-only instructions live outside ~/.apm/instructions so that
+    # `apm install` does not deploy them to ~/.claude/rules/.
+    Dir.glob(File.join(source, 'codex-instructions', '*.instructions.md')).each do |path|
+      FileUtils.cp(path, File.join(directory, '.apm/instructions'))
+    end
     File.write(File.join(directory, 'apm.yml'), "name: asonas-global-instructions\nversion: 1.0.0\ndependencies:\n  apm: []\n")
     # Claude reads these instructions from ~/.claude/rules/, which `apm install`
     # deploys. Compiling CLAUDE.md as well would load them twice.
@@ -161,7 +166,8 @@ when '--watch-instructions'
   watch!(source, log, script,
          '--postpone', '--debounce', '2s', '--on-busy-update', 'queue',
          '--no-discover-ignore', '--project-origin', source,
-         '--watch', File.join(source, 'instructions'), '--filter', '/instructions/**') do
+         '--watch', File.join(source, 'instructions'), '--filter', '/instructions/**',
+         '--watch', File.join(source, 'codex-instructions'), '--filter', '/codex-instructions/**') do
     ['--compile-only']
   end
 when nil
