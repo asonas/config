@@ -134,12 +134,18 @@
         "source": "github",
         "repo": "kepano/obsidian-skills"
       }
+    },
+    "cursor-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "cursor/plugins"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "advisorModel": "opus",
   "tui": "fullscreen",
-  "skipAutoPermissionPrompt": true,
-  "theme": "auto"
+  "theme": "auto",
+  "skipAutoPermissionPrompt": true
 }
