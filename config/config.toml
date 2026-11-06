@@ -126,6 +126,8 @@ run_windows = [{ task = "apm:apply" }]
 "~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/.config/herdr-app/keys.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/focus-attention/main.js" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/focus-attention/mod.json" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr-app/mods/legacy-prefix/main.js" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr-app/mods/legacy-prefix/mod.json" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr-app/settings.json" = { mode = "track", variants = [{ os = "macos" }] }
