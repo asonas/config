@@ -164,7 +164,7 @@ end
 # Rebind a receipt only when everything but st_dev still matches and no
 # recorded file was modified. Remove this once an APM release includes
 # microsoft/apm#3439 and a reboot no longer breaks the binding.
-def rebind_deployment_receipts!(home, source)
+def rebind_deployment_receipts!(source)
   Dir.glob(File.join(source, 'deployment-receipts', '*.json')).sort.each do |path|
     next if File.symlink?(path) || !File.file?(path)
 
@@ -259,11 +259,11 @@ when '--compile-only'
 when '--rebind-receipts'
   File.open(File.join(source, '.auto-apply.lock'), File::RDWR | File::CREAT, 0600) do |lock|
     lock.flock(File::LOCK_EX)
-    rebind_deployment_receipts!(root, source)
+    rebind_deployment_receipts!(source)
   end
 when '--apply'
   # The caller already holds .auto-apply.lock; taking it again would deadlock.
-  rebind_deployment_receipts!(root, source)
+  rebind_deployment_receipts!(source)
   begin
     run! 'apm', 'install', '--global', '--only', 'apm', '--target', 'claude,cursor,codex', chdir: source
     prune_retired_skills!(root, source)
@@ -295,5 +295,5 @@ when '--apply'
   compile_instructions!(root, source)
   puts "APM configuration applied at #{Time.now.utc}"
 else
-  abort 'usage: apm-apply [--watch-manifest|--watch-instructions|--compile-only]'
+  abort 'usage: apm-apply [--watch-manifest|--watch-instructions|--compile-only|--rebind-receipts]'
 end
