@@ -50,10 +50,10 @@ requires_tools = true
 environment = { RUBYOPT = "-EUTF-8" }
 
 [tasks.update]
-description = "Upgrade mise tools, APM skills, and TokenEconomizer"
+description = "Upgrade mise tools and APM skills"
 dir = "~"
 raw = true
-run = ["mise upgrade", { task = "apm:update" }, { task = "tokeneconomizer:update" }]
+run = ["mise upgrade", { task = "apm:update" }]
 
 [tasks."tokeneconomizer:update"]
 description = "Update TokenEconomizer for Codex"
