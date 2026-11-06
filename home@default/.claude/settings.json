@@ -20,7 +20,6 @@
       "Bash(bundle:*)"
     ],
     "deny": [
-      "Bash(gh pr create*)",
       "Bash(gh repo create*)"
     ],
     "defaultMode": "auto"
