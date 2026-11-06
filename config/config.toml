@@ -77,7 +77,10 @@ fi
 description = "Update APM skills and rebuild user instructions"
 dir = "~"
 raw = true
-run = ["apm update --global --target claude,cursor,codex", { task = "apm:apply" }]
+# Rebind deployment receipts first: their st_dev drifts across reboots (microsoft/apm#3421).
+run = ["ruby \"$HOME/bin/apm-apply\" --rebind-receipts", "apm update --global --target claude,cursor,codex", { task = "apm:apply" }]
+# The Windows apm-apply variant has no --rebind-receipts.
+run_windows = ["apm update --global --target claude,cursor,codex", { task = "apm:apply" }]
 
 [tasks."apm:apply"]
 description = "Install APM dependencies and rebuild user instructions"
