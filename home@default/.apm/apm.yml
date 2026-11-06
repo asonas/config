@@ -21,7 +21,7 @@ dependencies:
     - anthropics/skills/skills/frontend-design
     # Follow all skills published in the upstream plugin; exclude unpublished experiments.
     - git: mattpocock/skills
-      targets: [codex]
+      targets: [claude, codex]
     # laiso/cman: manage via Claude Code plugin (`/plugin install cman@cman`),
     # not APM. APM only places sources; it does not register the plugin with
     # Claude Code, so APM-only management leaves cman non-functional.
