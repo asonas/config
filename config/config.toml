@@ -57,10 +57,21 @@ run = ["mise upgrade", { task = "apm:update" }, { task = "tokeneconomizer:update
 
 [tasks."tokeneconomizer:update"]
 description = "Update TokenEconomizer for Codex"
-run = [
-  'git -C "$HOME/ghq/github.com/microsoft/TokenEconomizer" pull --ff-only',
-  'codex plugin add tokeneconomizer@tokeneconomizer',
-]
+# Reinstall the Codex plugin only when its Codex-facing files change: reinstalling replaces the
+# plugin cache and breaks hooks in running sessions (openai/codex#31383). The core Python package
+# is loaded from this checkout, so `git pull` alone updates it.
+run = '''
+set -e
+repo="$HOME/ghq/github.com/microsoft/TokenEconomizer"
+before=$(git -C "$repo" rev-parse HEAD)
+git -C "$repo" pull --ff-only
+if git -C "$repo" diff --quiet "$before" HEAD -- plugin/.codex-plugin plugin/hooks/codex-hooks.json plugin/scripts plugin/codex-skills; then
+  echo "TokenEconomizer: Codex plugin files unchanged, skipping codex plugin add"
+else
+  codex plugin add tokeneconomizer@tokeneconomizer
+  echo "TokenEconomizer: plugin reinstalled. Restart running Codex sessions."
+fi
+'''
 
 [tasks."apm:update"]
 description = "Update APM skills and rebuild user instructions"
