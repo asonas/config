@@ -243,6 +243,34 @@
       ]
     },
     {
+      "path": "home/.config/herdr-app/mods/focus-attention/main.js",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/mods/focus-attention/mod.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/.config/herdr-app/mods/legacy-prefix/main.js",
       "autosave": true,
       "encrypt": false,
