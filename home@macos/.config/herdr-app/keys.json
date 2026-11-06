@@ -60,7 +60,7 @@
     "cmd-shift-j": "space.next",
     "cmd-shift-k": "space.prev",
     "cmd-shift-n": "space.new",
-    "cmd-shift-u": "agent.next",
+    "cmd-shift-u": "mod.open:focus-attention",
     "ctrl-j": "mod.open:legacy-prefix"
   },
   "terminal": {
