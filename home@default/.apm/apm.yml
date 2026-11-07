@@ -91,6 +91,9 @@ dependencies:
       path: herdr-pair-coding
       targets: [claude, codex]
     - git: asonas/skills
+      path: herdr-lead
+      targets: [claude]
+    - git: asonas/skills
       path: linear-issue
       targets: [claude, codex]
     - git: asonas/skills
