@@ -1043,6 +1043,8 @@
   "permissions": {
     "home/.apm": 448,
     "home/.apm/codex-instructions": 509,
+    "home/.codex-platform": 509,
+    "home@default/.claude/scripts/codex-platform": 509,
     "home@macos/.config/karabiner": 448,
     "home@macos/.config/karabiner/assets/complex_modifications": 448,
     "home@macos/bin/daily-routine": 448
