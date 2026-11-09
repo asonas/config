@@ -114,18 +114,18 @@ run_windows = [{ task = "apm:apply" }]
 # Track authored sources only. Generated agent outputs and mixed-state
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
-"~/bin/daily-routine" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }] }
+"~/.apm/codex-instructions/codex-cli.instructions.md" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/instructions/base.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/git-workflow.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/github-cli.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/macos-containers.instructions.md" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.apm/instructions/shell.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/testing.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
-"~/.apm/codex-instructions/codex-cli.instructions.md" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.claude/scripts" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.claude/settings.json" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.codex-platform/config.toml" = { mode = "track" }
 "~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/.config/herdr-app/keys.json" = { mode = "track", variants = [{ os = "macos" }] }
@@ -164,6 +164,7 @@ run_windows = [{ task = "apm:apply" }]
 "~/Documents/PowerShell/profile.ps1" = { mode = "track", variants = [{ os = "windows" }] }
 "~/bin/apm-apply" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/check_sip.sh" = { mode = "track", variants = [{ os = "macos" }] }
+"~/bin/daily-routine" = { mode = "track", variants = [{ os = "macos" }] }
 "~/bin/fix_agent_frontmatter" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/fix_codex_agent_description" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/herdr-focus-attention" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }

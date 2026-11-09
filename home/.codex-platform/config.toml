@@ -1,0 +1,11 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+# Codex home for PR reviews billed to platform.openai.com API credits.
+# Model settings mirror ~/.codex/config.toml; MCP servers and plugins are omitted.
+
+sandbox_mode = "workspace-write"
+model_verbosity = "low"
+model = "gpt-6-astra"
+model_reasoning_effort = "medium"
+
+[sandbox_workspace_write]
+network_access = true
