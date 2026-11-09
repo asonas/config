@@ -1,0 +1,38 @@
+#!/bin/sh
+# Claude Code puts this directory first on PATH (see ../codex-platform-path.sh).
+# `codex exec` runs with the platform.openai.com API key from envchain and the
+# isolated ~/.codex-platform home, so non-interactive Codex calls made by agent
+# skills are billed to API credits. Every other invocation goes to the real
+# codex unchanged.
+
+self_dir=$(cd "$(dirname "$0")" && pwd -P)
+
+real=""
+old_ifs=$IFS
+IFS=:
+for dir in $PATH; do
+  [ -n "$dir" ] || continue
+  [ "$(cd "$dir" 2>/dev/null && pwd -P)" = "$self_dir" ] && continue
+  if [ -x "$dir/codex" ]; then
+    real="$dir/codex"
+    break
+  fi
+done
+IFS=$old_ifs
+
+if [ -z "$real" ]; then
+  echo "codex-platform: no codex found on PATH" >&2
+  exit 127
+fi
+
+if [ "${1:-}" = exec ] && [ -d "$HOME/.codex-platform" ] && command -v envchain >/dev/null 2>&1; then
+  exec envchain nastack-code-review sh -c '
+    if [ -z "$NASTACK_CODE_REVIEW_OPEN_API_KEY" ]; then
+      echo "codex-platform: envchain nastack-code-review has no NASTACK_CODE_REVIEW_OPEN_API_KEY" >&2
+      exit 78
+    fi
+    CODEX_API_KEY="$NASTACK_CODE_REVIEW_OPEN_API_KEY" CODEX_HOME="$HOME/.codex-platform" exec "$0" "$@"
+  ' "$real" "$@"
+fi
+
+exec "$real" "$@"
