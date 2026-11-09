@@ -64,11 +64,16 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$HOME/.claude/hooks/herdr-agent-state.sh\" session"
-          },
+            "command": "\"$HOME/.claude/scripts/codex-platform-path.sh\""
+          }
+        ]
+      },
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
           {
             "type": "command",
-            "command": "\"$HOME/.claude/scripts/codex-platform-path.sh\""
+            "command": "\"$HOME/.claude/hooks/herdr-agent-state.sh\" session"
           }
         ]
       }
