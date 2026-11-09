@@ -65,6 +65,10 @@
           {
             "type": "command",
             "command": "\"$HOME/.claude/hooks/herdr-agent-state.sh\" session"
+          },
+          {
+            "type": "command",
+            "command": "\"$HOME/.claude/scripts/codex-platform-path.sh\""
           }
         ]
       }
