@@ -198,6 +198,12 @@
       ]
     },
     {
+      "path": "home/.codex-platform/config.toml",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/.config/chromium-flags.conf",
       "autosave": true,
       "encrypt": false,
