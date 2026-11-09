@@ -105,6 +105,11 @@ dependencies:
     - git: asonas/skills
       path: pull-request-description
       targets: [claude, codex]
+    # pr-autofix calls the sanity-review and codex-consultation skills from
+    # the shokai-agent-skills Claude Code plugins, so it is Claude-only.
+    - git: asonas/skills
+      path: pr-autofix
+      targets: [claude]
     - git: asonas/skills
       path: raindrop-sync
       targets: [claude, codex]
