@@ -27,7 +27,7 @@ cloudflare-cf = "latest"
 github_attestations = false
 idiomatic_version_file_enable_tools = ["node", "ruby", "rust"]
 self_update.auto = true
-minimum_release_age_excludes = ["codex"]
+minimum_release_age_excludes = ["codex", "claude"]
 
 [settings.tool_update]
 global_auto = true
