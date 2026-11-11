@@ -25,6 +25,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -158,6 +159,5 @@
       "**Org-specific CLIs**: None configured — project uses mise, apm, launchctl, ruby as routine tooling in this repo",
       "routine under /Users/asonas/ghq/github.com/asonas/nastack/ prefix: Linear issue automation, PR creation, mise-managed toolchain invocations"
     ]
-  },
-  "model": "fable"
+  }
 }
