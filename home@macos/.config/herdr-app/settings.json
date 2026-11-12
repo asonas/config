@@ -1,12 +1,12 @@
 {
-  "zoom": 1.0,
+  "zoom": 1,
   "sounds": {
-    "enabled": true
+    "enabled": false
   },
   "font": "SauceCodePro Nerd Font Mono",
   "font_ligatures": false,
   "ui_font": "SauceCodePro Nerd Font Mono",
-  "minimum_contrast": 1.0,
+  "minimum_contrast": 1,
   "appearance": "dark",
   "theme": "tokyo-night"
 }
