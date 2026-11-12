@@ -101,7 +101,9 @@
     "skill-usability-test@shokai-agent-skills": true,
     "codepatrol@shokai-agent-skills": true,
     "dependency-update@shokai-agent-skills": true,
-    "library-update-review@shokai-agent-skills": true
+    "library-update-review@shokai-agent-skills": true,
+    "remote-claude-session@shokai-agent-skills": true,
+    "unconventional-simplification@shokai-agent-skills": true
   },
   "extraKnownMarketplaces": {
     "cman": {
