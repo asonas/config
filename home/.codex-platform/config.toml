@@ -9,3 +9,6 @@ model_reasoning_effort = "medium"
 
 [sandbox_workspace_write]
 network_access = true
+
+[projects."/Users/asonas/ghq/github.com/asonas/syncstr"]
+trust_level = "trusted"
