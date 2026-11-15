@@ -25,7 +25,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "fable",
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -94,7 +94,8 @@
     "dependency-update@shokai-agent-skills": true,
     "library-update-review@shokai-agent-skills": true,
     "remote-claude-session@shokai-agent-skills": true,
-    "unconventional-simplification@shokai-agent-skills": true
+    "unconventional-simplification@shokai-agent-skills": true,
+    "modern-web-guidance@googlechrome": true
   },
   "extraKnownMarketplaces": {
     "cman": {
@@ -121,6 +122,12 @@
         "repo": "shokai/agent-skills"
       },
       "autoUpdate": true
+    },
+    "googlechrome": {
+      "source": {
+        "source": "github",
+        "repo": "GoogleChrome/modern-web-guidance"
+      }
     }
   },
   "effortLevel": "medium",
