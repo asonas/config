@@ -70,9 +70,6 @@ dependencies:
       path: herdr-lead
       targets: [claude]
     - git: asonas/skills
-      path: mairu
-      targets: [claude, codex]
-    - git: asonas/skills
       path: obsidian-vault
       targets: [claude, codex]
     # pr-autofix calls the sanity-review and codex-consultation skills from
