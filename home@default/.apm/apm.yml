@@ -58,16 +58,7 @@ dependencies:
       path: daily-log
       targets: [claude, codex]
     - git: asonas/skills
-      path: digger
-      targets: [claude, codex]
-    - git: asonas/skills
       path: disk-scout
-      targets: [claude, codex]
-    - git: asonas/skills
-      path: gmail-digest
-      targets: [claude, codex]
-    - git: asonas/skills
-      path: gmail-triage
       targets: [claude, codex]
     - git: asonas/skills
       path: herdr-fork-session
@@ -84,9 +75,6 @@ dependencies:
     - git: asonas/skills
       path: obsidian-vault
       targets: [claude, codex]
-    - git: asonas/skills
-      path: pull-request-description
-      targets: [claude, codex]
     # pr-autofix calls the sanity-review and codex-consultation skills from
     # the shokai-agent-skills Claude Code plugins, so it is Claude-only.
     - git: asonas/skills
@@ -97,9 +85,6 @@ dependencies:
       targets: [claude, codex]
     - git: asonas/skills
       path: save-conversation
-      targets: [claude, codex]
-    - git: asonas/skills
-      path: setup-digger
       targets: [claude, codex]
     - git: asonas/skills
       path: tempest909-draft
