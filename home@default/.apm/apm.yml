@@ -58,16 +58,7 @@ dependencies:
       path: daily-log
       targets: [claude, codex]
     - git: asonas/skills
-      path: digger
-      targets: [claude, codex]
-    - git: asonas/skills
       path: disk-scout
-      targets: [claude, codex]
-    - git: asonas/skills
-      path: gmail-digest
-      targets: [claude, codex]
-    - git: asonas/skills
-      path: gmail-triage
       targets: [claude, codex]
     - git: asonas/skills
       path: herdr-fork-session
@@ -97,9 +88,6 @@ dependencies:
       targets: [claude, codex]
     - git: asonas/skills
       path: save-conversation
-      targets: [claude, codex]
-    - git: asonas/skills
-      path: setup-digger
       targets: [claude, codex]
     - git: asonas/skills
       path: tempest909-draft
