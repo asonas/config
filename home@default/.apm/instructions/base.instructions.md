@@ -8,7 +8,7 @@ description: Baseline communication, commit, and review rules that apply to ever
 - ユーザーが「mdrollで開いて」「mdrollでプレビューして」など、mdroll による表示を明示的に依頼した場合のみ `mdroll-in-herdr <file>` を実行する。Markdownを書いただけの場合や「critで開いて」と依頼された場合は実行しない
 - 応答、ファイル、コミットメッセージでは、強調や状態を言葉とASCII・通常の和文記号で表す。絵文字はターミナルや他のツールで表示が崩れたり、意味が読み手によってぶれたりするため使わない。ツールのパラメータが絵文字を必須とする場合だけ例外とする
 - If you are asked to write a commit message, please write it in English.
-- Obsidian（vault の読み書き、保存先、文章スタイル、vault 組織ルール）は `/obsidian-vault` スキルを参照。Obsidianへの保存はユーザーが明示的に指示した場合のみ行う
+- Obsidian（vault の読み書き、保存先、文章スタイル、vault 組織ルール）は `asonas:obsidian-vault` スキルを参照。Obsidianへの保存はユーザーが明示的に指示した場合のみ行う
 - mairu CLI を実行するときは `--no-login` を付ける（`mairu exec --no-login -- <command>`）。ログインが必要な場面で対話的プロンプトに入らず即座にエラー終了させ、エージェントが止まるのを防ぐため
 - URL の取得には、実行環境で利用可能な Web 取得機能または `ax` CLI を使い、目的に合うものを選ぶ。`curl` や使い捨ての HTML 解析スクリプトは使わない。ページの探索、構造化抽出、未知の Web ページや API の調査には `/ax` スキルを使う。User-Agent を手動指定しない
 
@@ -30,7 +30,7 @@ description: Baseline communication, commit, and review rules that apply to ever
 
 ## Herdrでの新しいエージェント起動
 
-- 許可済みの新しいエージェントを起動するときは `/herdr-agent-launch` スキルを参照する。Herdr管理下では現在のworkspaceを使い、新しいworkspaceを作成しない。この指示は追加のエージェント起動を許可しない
+- 許可済みの新しいエージェントを起動するときは `asonas:herdr-agent-launch` スキルを参照する。Herdr管理下では現在のworkspaceを使い、新しいworkspaceを作成しない。この指示は追加のエージェント起動を許可しない
 
 ## 外部Codexレビューの利用方針
 
