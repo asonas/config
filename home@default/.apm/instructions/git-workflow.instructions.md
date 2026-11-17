@@ -4,7 +4,7 @@ description: Git workflow rules (worktree-first development, safe path handling)
 
 # Git Workflow
 
-- Before creating or amending commits, rebasing (including continue), cherry-picking, or integrating a branch into main, read `/commit-style` and follow its signing and verification workflow.
+- Before creating or amending commits, rebasing (including continue), cherry-picking, or integrating a branch into main, read `asonas:commit-style` and follow its signing and verification workflow.
 
 - gitリポジトリで新しい作業（機能開発、バグ修正、実験）を始めるときは、標準の `git worktree` でworktreeを作成すること。mainブランチで直接コミットしない
 - 新しいブランチとworktreeは `git worktree add -b <branch> .worktrees/<branch> <start-point>` で作成する
