@@ -8,18 +8,6 @@
       "variants": []
     },
     {
-      "path": "home/.apm/apm.yml",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        }
-      ]
-    },
-    {
       "path": "home/.apm/codex-instructions/codex-cli.instructions.md",
       "autosave": true,
       "encrypt": false,
@@ -141,25 +129,6 @@
       ]
     },
     {
-      "path": "home/.apm/local-skills/herdr-agent-launch/SKILL.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
       "path": "home/.claude/scripts",
       "autosave": true,
       "encrypt": false,
@@ -196,12 +165,6 @@
           "default": false
         }
       ]
-    },
-    {
-      "path": "home/.codex-platform/config.toml",
-      "autosave": true,
-      "encrypt": false,
-      "variants": []
     },
     {
       "path": "home/.config/chromium-flags.conf",
@@ -797,25 +760,6 @@
       ]
     },
     {
-      "path": "home/bin/apm-apply",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
       "path": "home/bin/check_sip.sh",
       "autosave": true,
       "encrypt": false,
@@ -837,44 +781,6 @@
         {
           "os": [
             "macos"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
-      "path": "home/bin/fix_agent_frontmatter",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
-      "path": "home/bin/fix_codex_agent_description",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
           ],
           "profile": null,
           "default": false
