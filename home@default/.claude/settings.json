@@ -95,7 +95,8 @@
     "library-update-review@shokai-agent-skills": true,
     "remote-claude-session@shokai-agent-skills": true,
     "unconventional-simplification@shokai-agent-skills": true,
-    "modern-web-guidance@googlechrome": true
+    "modern-web-guidance@googlechrome": true,
+    "asonas@asonas-skills": true
   },
   "extraKnownMarketplaces": {
     "cman": {
