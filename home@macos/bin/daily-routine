@@ -50,9 +50,25 @@ class DailyRoutine
     jobs.reject { |kind, date| read(job_path(kind, date))['wiki'] == 'done' }
   end
 
+  def skills_dir
+    return @skills_dir if @skills_dir
+    output, error, status = Open3.capture3('codex', 'plugin', 'list', '--marketplace', 'asonas-skills', '--json')
+    raise "Cannot list Codex plugins: #{error.strip}" unless status.success?
+    plugin = JSON.parse(output).fetch('installed').find { |entry| entry['pluginId'] == 'asonas@asonas-skills' }
+    raise 'Install and enable asonas@asonas-skills before running daily-routine' unless plugin && plugin['enabled']
+    version = plugin.fetch('version')
+    raise 'Invalid asonas plugin version' unless version.is_a?(String) && version.match?(/\A[0-9A-Za-z][0-9A-Za-z._-]*\z/)
+    codex_home = File.expand_path(ENV.fetch('CODEX_HOME', '~/.codex'))
+    directory = File.join(codex_home, 'plugins/cache/asonas-skills/asonas', version, 'skills')
+    %w[obsidian-vault today wrapup save-conversation raindrop-sync wiki-update].each do |name|
+      raise "Missing installed skill: #{name}" unless File.file?(File.join(directory, name, 'SKILL.md'))
+    end
+    @skills_dir = directory
+  end
+  
   def resolve_vault
     return @vault if @vault
-    script = File.expand_path('~/.agents/skills/obsidian-vault/scripts/resolve-vault.rb')
+    script = File.join(skills_dir, 'obsidian-vault/scripts/resolve-vault.rb')
     result, status = Open3.capture2(RbConfig.ruby, script, 'asonas')
     raise 'Vault resolution failed' unless status.success? && File.directory?(result.strip)
     @vault = result.strip
@@ -62,7 +78,8 @@ class DailyRoutine
     prior = (Date.iso8601(date) - 1).to_s
     <<~PROMPT
       ユーザーが承認済みの日次自動化です。対象: #{kind} #{date} (Asia/Tokyo)。
-      obsidian-vault と #{kind} の ~/.agents/skills/<name>/SKILL.md を読み、品質・出典の規範を守ってください。
+同じインストール済みプラグインの $asonas:obsidian-vault と $asonas:#{kind} を使い、品質・出典の規範を守ってください。
+スキル本文は #{skills_dir}/<name>/SKILL.md にあります。参照スキルも同じディレクトリから読み、スキル呼び出しツールがなければ本文の手順を実行してください。
       Vault登録先は親プロセスが共通resolverで検証済み: #{resolve_vault}。
       今回の明示的なユーザー指示: 定期実行では候補提示後の承認待ちを省略し、対象日のdailyを作成・追記してよい。
       この指示はスキル内の承認ゲートと欠落dailyの質問より優先します。質問で停止しないこと。
@@ -291,10 +308,11 @@ if $PROGRAM_NAME == __FILE__
     case ARGV.first
     when 'setup' then runner.setup
     when 'status', 'plan' then runner.status
+    when 'recent-dates' then exec RbConfig.ruby, File.join(runner.skills_dir, 'today/scripts/find-recent-daily-notes.rb'), *ARGV.drop(1)
     when 'run' then puts runner.run
     when 'retry' then puts runner.run(force: true)
     when 'stop' then runner.stop
-    else abort 'Usage: daily-routine setup|status|plan|run|retry|stop'
+    else abort 'Usage: daily-routine setup|status|plan|run|retry|stop|recent-dates [YYYY-MM-DD]'
     end
   rescue StandardError => e
     warn "#{Time.now.iso8601}: #{e.message}"
