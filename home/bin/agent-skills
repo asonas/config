@@ -90,10 +90,12 @@ end
 # does not collide with APM-owned directories. Files edited since deployment
 # are kept. Safe to run repeatedly and on machines where APM is already gone.
 def retire
+  # Once synced config no longer declares these services, `services status`
+  # stops listing them, but their LaunchAgent or unit stays installed until
+  # removed by name. Removing one that is already gone just fails.
   APM_SERVICES.each do |name|
-    next unless capture('mise', 'bootstrap', 'services', 'status').include?("user-service:#{name} ")
-
-    run!('mise', 'bootstrap', 'services', 'remove', name)
+    output = capture('mise', 'bootstrap', 'services', 'remove', name)
+    puts output.lines.first if output.include?('removed')
   end
 
   receipts = Dir.glob(File.join(HOME, '.apm/deployment-receipts/*.json'))
