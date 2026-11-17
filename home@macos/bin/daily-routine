@@ -65,7 +65,7 @@ class DailyRoutine
     end
     @skills_dir = directory
   end
-  
+
   def resolve_vault
     return @vault if @vault
     script = File.join(skills_dir, 'obsidian-vault/scripts/resolve-vault.rb')
@@ -78,8 +78,8 @@ class DailyRoutine
     prior = (Date.iso8601(date) - 1).to_s
     <<~PROMPT
       ユーザーが承認済みの日次自動化です。対象: #{kind} #{date} (Asia/Tokyo)。
-同じインストール済みプラグインの $asonas:obsidian-vault と $asonas:#{kind} を使い、品質・出典の規範を守ってください。
-スキル本文は #{skills_dir}/<name>/SKILL.md にあります。参照スキルも同じディレクトリから読み、スキル呼び出しツールがなければ本文の手順を実行してください。
+      同じインストール済みプラグインの $asonas:obsidian-vault と $asonas:#{kind} を使い、品質・出典の規範を守ってください。
+      スキル本文は #{skills_dir}/<name>/SKILL.md にあります。参照スキルも同じディレクトリから読み、スキル呼び出しツールがなければ本文の手順を実行してください。
       Vault登録先は親プロセスが共通resolverで検証済み: #{resolve_vault}。
       今回の明示的なユーザー指示: 定期実行では候補提示後の承認待ちを省略し、対象日のdailyを作成・追記してよい。
       この指示はスキル内の承認ゲートと欠落dailyの質問より優先します。質問で停止しないこと。
