@@ -760,6 +760,12 @@
       ]
     },
     {
+      "path": "home/bin/agent-skills",
+      "autosave": true,
+      "encrypt": false,
+      "variants": []
+    },
+    {
       "path": "home/bin/check_sip.sh",
       "autosave": true,
       "encrypt": false,

@@ -159,6 +159,7 @@ run_windows = [{ task = "apm:apply" }]
 "~/.yabairc" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.zshrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/Documents/PowerShell/profile.ps1" = { mode = "track", variants = [{ os = "windows" }] }
+"~/bin/agent-skills" = { mode = "track" }
 "~/bin/check_sip.sh" = { mode = "track", variants = [{ os = "macos" }] }
 "~/bin/daily-routine" = { mode = "track", variants = [{ os = "macos" }] }
 "~/bin/herdr-focus-attention" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
