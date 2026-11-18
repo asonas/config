@@ -32,8 +32,18 @@ case "$FILE_PATH" in
     fi
     ;;
   *.rs)
-    if [ -f Cargo.toml ] && command -v cargo >/dev/null 2>&1; then
-      cargo fmt -- "$FILE_PATH" >/dev/null 2>&1
+    # `cargo fmt -- <file>` formats the whole crate as well as the file, so
+    # call rustfmt on the file alone. rustfmt cannot learn the edition from a
+    # single file, so read it from the nearest Cargo.toml above the file.
+    if command -v rustfmt >/dev/null 2>&1; then
+      dir=$(dirname "$FILE_PATH")
+      while [ "$dir" != "/" ] && [ ! -f "$dir/Cargo.toml" ]; do
+        dir=$(dirname "$dir")
+      done
+      if [ -f "$dir/Cargo.toml" ]; then
+        edition=$(sed -n 's/^edition *= *"\([0-9]*\)".*/\1/p' "$dir/Cargo.toml" | head -n 1)
+        rustfmt --edition "${edition:-2021}" "$FILE_PATH" >/dev/null 2>&1
+      fi
     fi
     ;;
   *.css|*.json)
