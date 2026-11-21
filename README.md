@@ -204,6 +204,31 @@ plugins. Its APM helpers use Ruby and separate watcher logs. Put the absolute
 mise executable paths needed by Windows Scheduled Tasks in untracked
 `~/.config/mise/config.local.toml` service overrides.
 
+## Nastack
+
+The global bootstrap declares `asonas/nastack` as a Git checkout and runs
+`nastack:setup` after the existing tasks on macOS/Linux. Scripts remain owned
+by that repository; mise history tracks only its deployment declarations and
+`~/.config/nastack/bootstrap.toml`, a non-secret template with workspace,
+project mappings, GitHub App identity, and portable paths.
+
+The setup creates the runner links and a mode-600 local configuration only
+when missing. Existing machine configuration is preserved and conflicting
+paths stop setup. Private keys, envchain secrets, and execution history are
+never tracked. Run `mise run nastack:check` to identify missing local setup;
+it does not access authentication APIs or display stored secrets.
+
+An isolated mise bootstrap fixture verified repository cloning, first-time
+configuration and link creation, and idempotent reruns. This Mac also passed
+the GitHub configuration/key check. Linear App registration and Keychain
+setup were completed on 2026-10-30, with Bot-authored Issue/comment/Attachment
+creation and reuse verified on ASO-15. Both local checks now pass. Verified
+Linear identity IDs are in the tracked template; the client secret remains
+in envchain. Generic PR/Issue skills and personal gh/Linear MCP authentication
+are unchanged.
+
+See `asonas/nastack/docs/bootstrap.md` for restoration and credential setup.
+
 ## Bootstrap operation
 
 Linux desktop machines and headless Linux hosts use different mise profiles.

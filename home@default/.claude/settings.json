@@ -1,6 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "includeCoAuthoredBy": false,
+  "cleanupPeriodDays": 3650,
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
   "permissions": {
     "allow": [
       "Bash(npm run build)",
@@ -13,31 +18,15 @@
       "Bash(mkdir:*)",
       "Bash(mv:*)",
       "Bash(grep:*)",
-      "Bash(bundle:*)",
-      "Bash(gemini:*)",
-      "Bash(twiggy:*)",
-      "Bash(wasm-snip:*)",
-      "Bash(iris:*)"
+      "Bash(bundle:*)"
     ],
     "deny": [
-      "Bash(gh pr create*)",
       "Bash(gh repo create*)"
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "hooks": {
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/scripts/ghostty-attention.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit|MultiEdit",
@@ -45,20 +34,7 @@
           {
             "type": "command",
             "command": "~/.claude/scripts/lint-on-edit.sh",
-            "async": true
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "echo \"[$(date)] $USER: $(jq -r '.tool_input.command')\" >> ~/.claude/command_history.log"
-          },
-          {
-            "type": "command",
-            "command": "jq -r 'if .tool_input.command | test(\"rm -rf|dd if=|:(){ :|:& };:\") then {\"decision\": \"block\", \"reason\": \"This command is blocked as potentially destructive. Consider a safer approach.\"} else empty end'"
+            "timeout": 60
           }
         ]
       }
@@ -90,23 +66,29 @@
     "command": "~/.claude/scripts/statusline-usage.py"
   },
   "enabledPlugins": {
-    "cafleet@cafleet": false,
     "clangd-lsp@claude-plugins-official": false,
     "cman@cman": true,
     "crit@crit": true,
-    "obsidian@obsidian-skills": false,
     "ruby-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
-    "sorah-guides@sorah-marketplace": false,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "pstack@cursor-plugins": true,
+    "codex-consultation@shokai-agent-skills": true,
+    "sanity-review@shokai-agent-skills": true,
+    "conversation-context@shokai-agent-skills": true,
+    "subagent-consultation@shokai-agent-skills": true,
+    "kuden@shokai-agent-skills": true,
+    "software-factory-mode@shokai-agent-skills": true,
+    "skill-usability-test@shokai-agent-skills": true,
+    "codepatrol@shokai-agent-skills": true,
+    "dependency-update@shokai-agent-skills": true,
+    "library-update-review@shokai-agent-skills": true,
+    "remote-claude-session@shokai-agent-skills": true,
+    "unconventional-simplification@shokai-agent-skills": true,
+    "modern-web-guidance@googlechrome": true,
+    "asonas@asonas-skills": true
   },
   "extraKnownMarketplaces": {
-    "cafleet": {
-      "source": {
-        "source": "directory",
-        "path": "/Users/asonas/ghq/github.com/asonas/cafleet"
-      }
-    },
     "cman": {
       "source": {
         "source": "github",
@@ -119,16 +101,64 @@
         "repo": "tomasz-tomczyk/crit"
       }
     },
-    "obsidian-skills": {
+    "cursor-plugins": {
       "source": {
         "source": "github",
-        "repo": "kepano/obsidian-skills"
+        "repo": "cursor/plugins"
+      }
+    },
+    "shokai-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "shokai/agent-skills"
+      },
+      "autoUpdate": true
+    },
+    "googlechrome": {
+      "source": {
+        "source": "github",
+        "repo": "GoogleChrome/modern-web-guidance"
+      }
+    },
+    "asonas-skills": {
+      "source": {
+        "source": "github",
+        "repo": "asonas/skills"
       }
     }
   },
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "advisorModel": "opus",
   "tui": "fullscreen",
-  "skipAutoPermissionPrompt": true
+  "theme": "auto",
+  "skipAutoPermissionPrompt": true,
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: private (asonas/nastack, verified via gh)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: main (default); no classic protected branches listed; rulesets not queryable here — treat main as potentially protected by ruleset even though none are listed",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine or CI runner with open internet",
+      "**Source control**: The trusted repo (asonas/nastack) and its origin remote only (no additional orgs configured)",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar — note: .env and .env.* are gitignored in this repo, indicating local secrets likely live there",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: personal/hobby software development (Linear-issue-driven local automation tool)",
+      "**Trusted repo**: /Users/asonas/ghq/github.com/asonas/nastack (origin: github.com/asonas/nastack, private)",
+      "**Org-specific CLIs**: None configured — project uses mise, apm, launchctl, ruby as routine tooling in this repo",
+      "routine under /Users/asonas/ghq/github.com/asonas/nastack/ prefix: Linear issue automation, PR creation, mise-managed toolchain invocations"
+    ]
+  }
 }

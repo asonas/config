@@ -8,7 +8,7 @@
       "variants": []
     },
     {
-      "path": "home/.apm/apm.yml",
+      "path": "home/.apm/codex-instructions/codex-cli.instructions.md",
       "autosave": true,
       "encrypt": false,
       "variants": [
@@ -21,25 +21,6 @@
     },
     {
       "path": "home/.apm/instructions/base.instructions.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
-      "path": "home/.apm/instructions/debugging.instructions.md",
       "autosave": true,
       "encrypt": false,
       "variants": [
@@ -96,25 +77,6 @@
       ]
     },
     {
-      "path": "home/.apm/instructions/installer.instructions.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
       "path": "home/.apm/instructions/macos-containers.instructions.md",
       "autosave": true,
       "encrypt": false,
@@ -149,25 +111,6 @@
     },
     {
       "path": "home/.apm/instructions/testing.instructions.md",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
-      "path": "home/.apm/local-skills/herdr-agent-launch/SKILL.md",
       "autosave": true,
       "encrypt": false,
       "variants": [
@@ -250,6 +193,104 @@
         {
           "os": [],
           "profile": "desktop",
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/keys.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/mods/focus-attention/main.js",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/mods/focus-attention/mod.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/mods/legacy-prefix/main.js",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/mods/legacy-prefix/mod.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/settings.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/themes/tokyo-night.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
           "default": false
         }
       ]
@@ -355,6 +396,27 @@
         {
           "os": [
             "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/nastack/bootstrap.toml",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        },
+        {
+          "os": [
+            "linux"
           ],
           "profile": null,
           "default": false
@@ -698,23 +760,10 @@
       ]
     },
     {
-      "path": "home/bin/apm-apply",
+      "path": "home/bin/agent-skills",
       "autosave": true,
       "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
+      "variants": []
     },
     {
       "path": "home/bin/check_sip.sh",
@@ -731,37 +780,13 @@
       ]
     },
     {
-      "path": "home/bin/fix_agent_frontmatter",
+      "path": "home/bin/daily-routine",
       "autosave": true,
       "encrypt": false,
       "variants": [
         {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
           "os": [
-            "windows"
-          ],
-          "profile": null,
-          "default": false
-        }
-      ]
-    },
-    {
-      "path": "home/bin/fix_codex_agent_description",
-      "autosave": true,
-      "encrypt": false,
-      "variants": [
-        {
-          "os": [],
-          "profile": null,
-          "default": true
-        },
-        {
-          "os": [
-            "windows"
+            "macos"
           ],
           "profile": null,
           "default": false
@@ -929,7 +954,9 @@
   "recipients": [],
   "permissions": {
     "home/.apm": 448,
+    "home/.apm/codex-instructions": 509,
     "home@macos/.config/karabiner": 448,
-    "home@macos/.config/karabiner/assets/complex_modifications": 448
+    "home@macos/.config/karabiner/assets/complex_modifications": 448,
+    "home@macos/bin/daily-routine": 448
   }
 }

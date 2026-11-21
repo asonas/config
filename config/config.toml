@@ -12,7 +12,6 @@ colima = { version = "latest", os = ["linux", "macos"] }
 "github:tokuhirom/mdroll" = "latest"
 aws-cli = { version = "latest", symlink_bins = "true" }
 codex = "latest"
-apm = "latest"
 watchexec = "latest"
 claude = "latest"
 "npm:@tobilu/qmd" = "latest"
@@ -27,7 +26,7 @@ cloudflare-cf = "latest"
 github_attestations = false
 idiomatic_version_file_enable_tools = ["node", "ruby", "rust"]
 self_update.auto = true
-minimum_release_age_excludes = ["codex"]
+minimum_release_age_excludes = ["codex", "claude"]
 
 [settings.tool_update]
 global_auto = true
@@ -35,67 +34,107 @@ global_auto = true
 [bootstrap.services.mise-history]
 builtin = "history-watch"
 
-[bootstrap.services.apm-watch]
+# Rebuild ~/.claude/rules and ~/.codex/AGENTS.md whenever an instruction
+# source changes, including edits synced in from other machines.
+[bootstrap.services.agent-rules-watch]
 scope = "user"
-command = "~/.local/bin/mise exec -- ruby bin/apm-apply --watch-manifest"
-working_directory = "~"
-requires_tools = true
-environment = { RUBYOPT = "-EUTF-8" }
-
-[bootstrap.services.apm-instructions-watch]
-scope = "user"
-command = "~/.local/bin/mise exec -- ruby bin/apm-apply --watch-instructions"
+command = "~/.local/bin/mise exec -- watchexec --postpone --debounce 2s --on-busy-update queue --no-discover-ignore --project-origin .apm --watch .apm/instructions --watch .apm/codex-instructions --shell=none -- ruby bin/agent-skills rules"
 working_directory = "~"
 requires_tools = true
 environment = { RUBYOPT = "-EUTF-8" }
 
 [tasks.update]
-description = "Upgrade mise tools and update APM skills"
+description = "Upgrade mise tools, agent skills and rules"
 dir = "~"
 raw = true
-run = ["mise upgrade", { task = "apm:update" }]
+run = ["mise upgrade", { task = "agents:update" }]
 
-[tasks."apm:update"]
-description = "Update APM skills and rebuild user instructions"
+[tasks."tokeneconomizer:update"]
+description = "Update TokenEconomizer for Codex"
+# Reinstall the Codex plugin only when its Codex-facing files change: reinstalling replaces the
+# plugin cache and breaks hooks in running sessions (openai/codex#31383). The core Python package
+# is loaded from this checkout, so `git pull` alone updates it.
+run = '''
+set -e
+repo="$HOME/ghq/github.com/microsoft/TokenEconomizer"
+before=$(git -C "$repo" rev-parse HEAD)
+git -C "$repo" pull --ff-only
+if git -C "$repo" diff --quiet "$before" HEAD -- plugin/.codex-plugin plugin/hooks/codex-hooks.json plugin/scripts plugin/codex-skills; then
+  echo "TokenEconomizer: Codex plugin files unchanged, skipping codex plugin add"
+else
+  codex plugin add tokeneconomizer@tokeneconomizer
+  echo "TokenEconomizer: plugin reinstalled. Restart running Codex sessions."
+fi
+'''
+
+# Install also retires what APM deployed earlier, so it is safe to run on a
+# machine that still has APM-managed skills.
+[tasks."agents:install"]
+description = "Install agent rules, the asonas plugin, third-party and Gist skills"
 dir = "~"
 raw = true
-run = ["apm update --global --target claude,cursor,codex", { task = "apm:apply" }]
+env = { RUBYOPT = "-EUTF-8" }
+run = "ruby \"$HOME/bin/agent-skills\" install"
+run_windows = 'ruby bin/agent-skills install'
 
-[tasks."apm:apply"]
-description = "Install APM dependencies and rebuild user instructions"
+[tasks."agents:update"]
+description = "Update the asonas plugin, third-party and Gist skills, then rules"
+dir = "~"
+raw = true
+env = { RUBYOPT = "-EUTF-8" }
+run = "ruby \"$HOME/bin/agent-skills\" update"
+run_windows = 'ruby bin/agent-skills update'
+
+[tasks."agents:rules"]
+description = "Rebuild ~/.claude/rules and ~/.codex/AGENTS.md from ~/.apm instructions"
 dir = "~"
 env = { RUBYOPT = "-EUTF-8" }
-run = "ruby \"$HOME/bin/apm-apply\""
-run_windows = 'ruby bin/apm-apply'
+run = "ruby \"$HOME/bin/agent-skills\" rules"
+run_windows = 'ruby bin/agent-skills rules'
 
 [tasks."herdr:plugins"]
 description = "Install pinned Herdr plugins"
 dir = "~"
 run = "ruby \"$HOME/bin/herdr-plugins-apply\""
 
+[bootstrap.repos]
+"~/ghq/github.com/asonas/nastack" = { url = "https://github.com/asonas/nastack.git" }
+
+[tasks."nastack:setup"]
+description = "Deploy nastack entry points and report missing Bot credentials"
+dir = "~"
+run = 'uv run --no-project --python 3.13 python "$HOME/ghq/github.com/asonas/nastack/bootstrap.py"'
+
+[tasks."nastack:check"]
+description = "Check local nastack Bot configuration without accessing APIs"
+dir = "~"
+run = 'uv run --no-project --python 3.13 python "$HOME/ghq/github.com/asonas/nastack/bootstrap.py" --check'
+
 [tasks.bootstrap]
-run = [{ task = "apm:apply" }, { task = "herdr:plugins" }]
-run_windows = [{ task = "apm:apply" }]
+run = [{ task = "agents:install" }, { task = "herdr:plugins" }, { task = "nastack:setup" }]
+run_windows = [{ task = "agents:install" }]
 
 # Track authored sources only. Generated agent outputs and mixed-state
 # directories such as ~/.claude/skills and ~/.zsh.d are intentionally excluded.
 [dotfiles]
-"~/Documents/PowerShell/profile.ps1" = { mode = "track", variants = [{ os = "windows" }] }
-"~/.wezterm.lua" = { mode = "track", variants = [{ os = "windows" }] }
-"~/.apm/apm.yml" = { mode = "track", variants = [{ default = true }] }
+"~/.apm/codex-instructions/codex-cli.instructions.md" = { mode = "track", variants = [{ default = true }] }
 "~/.apm/instructions/base.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
-"~/.apm/instructions/debugging.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/git-workflow.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/github-cli.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
-"~/.apm/instructions/installer.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/macos-containers.instructions.md" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.apm/instructions/shell.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.apm/instructions/testing.instructions.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
-"~/.apm/local-skills/herdr-agent-launch/SKILL.md" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.claude/scripts" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.claude/settings.json" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/chromium-flags.conf" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/ghostty" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
+"~/.config/herdr-app/keys.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/focus-attention/main.js" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/focus-attention/mod.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/legacy-prefix/main.js" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/legacy-prefix/mod.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/settings.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/themes/tokyo-night.json" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr/attention-view/apply.py" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/herdr/attention-view/herdr-plugin.toml" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/herdr/config.toml" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }, { profile = "wsl" }] }
@@ -103,6 +142,7 @@ run_windows = [{ task = "apm:apply" }]
 "~/.config/hypr/bindings.lua" = { mode = "track", variants = [{ profile = "desktop" }] }
 "~/.config/karabiner" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/mise/config.toml" = { mode = "track" }
+"~/.config/nastack/bootstrap.toml" = { mode = "track", variants = [{ os = "macos" }, { os = "linux" }] }
 "~/.config/nvim" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/peco" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.config/qmd/index.yml" = { mode = "track", variants = [{ os = "linux" }, { os = "macos" }] }
@@ -118,12 +158,13 @@ run_windows = [{ task = "apm:apply" }]
 "~/.skhdrc" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.tigrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/.tmux.conf" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/.wezterm.lua" = { mode = "track", variants = [{ os = "windows" }] }
 "~/.yabairc" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.zshrc" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
-"~/bin/apm-apply" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/Documents/PowerShell/profile.ps1" = { mode = "track", variants = [{ os = "windows" }] }
+"~/bin/agent-skills" = { mode = "track" }
 "~/bin/check_sip.sh" = { mode = "track", variants = [{ os = "macos" }] }
-"~/bin/fix_agent_frontmatter" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
-"~/bin/fix_codex_agent_description" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
+"~/bin/daily-routine" = { mode = "track", variants = [{ os = "macos" }] }
 "~/bin/herdr-focus-attention" = { mode = "track", variants = [{ os = "macos" }, { profile = "desktop" }] }
 "~/bin/herdr-fork-claude-session" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
 "~/bin/herdr-fork-codex-session" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
@@ -135,3 +176,19 @@ run_windows = [{ task = "apm:apply" }]
 
 [history]
 exclude = ["~/.config/nvim/.netrwhist", "~/.config/nvim/lua/plugins/theme.lua", "~/.config/karabiner/automatic_backups/**"]
+
+# The scheduler is opt-in per machine; setup is deliberately not a bootstrap dependency.
+[tasks."daily:setup"]
+description = "Enable daily automation on this Mac (one writer per Vault)"
+dir = "~"
+run = 'ruby "$HOME/bin/daily-routine" setup'
+
+[tasks."daily:status"]
+description = "Show pending daily work, warnings, and retry status"
+dir = "~"
+run = 'ruby "$HOME/bin/daily-routine" status'
+
+[tasks."daily:run"]
+description = "Process one pending daily routine with locking and retry backoff"
+dir = "~"
+run = 'ruby "$HOME/bin/daily-routine" run'

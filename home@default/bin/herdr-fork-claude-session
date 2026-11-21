@@ -8,23 +8,36 @@
 #
 #   direction   right (default) | down  -- which way to split off the new pane
 #
-# Requirements: run from inside a Herdr-managed pane (HERDR_ENV=1). The session
-# ID comes from CLAUDE_CODE_SESSION_ID; if that is unset, it falls back to the
-# session ID of the currently focused Herdr Claude agent. Needs python3 for JSON.
+# Two hosts are supported:
+#   - Legacy herdr TUI (HERDR_ENV=1): uses the `herdr` CLI. The session ID comes
+#     from CLAUDE_CODE_SESSION_ID; if that is unset, it falls back to the session
+#     ID of the currently focused Herdr Claude agent.
+#   - Herdr.app on herdr-core (HC_TERMINAL_ID set and `herdr-app` available):
+#     splits the pane that holds this terminal (found by HC_TERMINAL_ID, never
+#     the focused pane). CLAUDE_CODE_SESSION_ID is required.
+# Needs python3 for JSON.
 #
 # Source: https://gist.github.com/miyagawa/cb1a9f6c8695d1219efba0c66d5f78f7
 set -euo pipefail
 
-if [ "${HERDR_ENV:-}" != "1" ]; then
-    echo "herdr-fork-claude-session: not running inside Herdr (HERDR_ENV != 1)" >&2
-    exit 1
-fi
+name=herdr-fork-claude-session
 
-sid="${CLAUDE_CODE_SESSION_ID:-}"
-if [ -z "$sid" ]; then
-    # Fall back to the session ID of the currently focused Herdr agent.
-    if ! sid=$(herdr agent list |
-        python3 -c "
+validate_direction() {
+    case "$direction" in
+        right | down) ;;
+        *)
+            echo "$name: direction must be 'right' or 'down', got '$direction'" >&2
+            exit 1
+            ;;
+    esac
+}
+
+fork_legacy_herdr() {
+    sid="${CLAUDE_CODE_SESSION_ID:-}"
+    if [ -z "$sid" ]; then
+        # Fall back to the session ID of the currently focused Herdr agent.
+        if ! sid=$(herdr agent list |
+            python3 -c "
 import sys, json
 agents = json.load(sys.stdin)['result']['agents']
 focused = [a for a in agents if a.get('focused')]
@@ -35,22 +48,83 @@ if a.get('agent') != 'claude':
     sys.exit(\"focused agent is '%s', not claude\" % a.get('agent'))
 print(a['agent_session']['value'])
 "); then
-        echo "herdr-fork-claude-session: CLAUDE_CODE_SESSION_ID is not set and could not resolve the focused Claude session" >&2
+            echo "$name: CLAUDE_CODE_SESSION_ID is not set and could not resolve the focused Claude session" >&2
+            exit 1
+        fi
+    fi
+
+    direction="${1:-right}"
+    validate_direction
+
+    pane=$(herdr pane split --current --direction "$direction" --cwd "$PWD" --no-focus |
+        python3 -c "import sys, json; print(json.load(sys.stdin)['result']['pane']['pane_id'])")
+
+    herdr pane run "$pane" "claude --resume $sid --fork-session"
+    echo "forked session $sid -> pane $pane"
+}
+
+fork_herdr_app() {
+    sid="${CLAUDE_CODE_SESSION_ID:-}"
+    if [ -z "$sid" ]; then
+        echo "$name: CLAUDE_CODE_SESSION_ID is not set" >&2
         exit 1
     fi
-fi
 
-direction="${1:-right}"
-case "$direction" in
-    right | down) ;;
-    *)
-        echo "herdr-fork-claude-session: direction must be 'right' or 'down', got '$direction'" >&2
+    direction="${1:-right}"
+    validate_direction
+
+    if ! claude_bin=$(command -v claude); then
+        echo "$name: claude is not on PATH" >&2
         exit 1
-        ;;
-esac
+    fi
 
-pane=$(herdr pane split --current --direction "$direction" --cwd "$PWD" --no-focus |
-    python3 -c "import sys, json; print(json.load(sys.stdin)['result']['pane']['pane_id'])")
+    # The pane that holds this terminal, not whichever pane has focus.
+    if ! pane=$(herdr-app ls | python3 -c "
+import sys, json, os
+me = os.environ['HC_TERMINAL_ID']
+hits = [t['pane'] for s in json.load(sys.stdin).get('spaces', [])
+        for tab in s.get('tabs', []) for t in tab.get('terminals', [])
+        if t.get('terminal') == me]
+if len(hits) != 1:
+    sys.exit('terminal %s appears %d times in herdr-app ls' % (me, len(hits)))
+print(hits[0])
+"); then
+        echo "$name: could not find the pane holding terminal $HC_TERMINAL_ID" >&2
+        exit 1
+    fi
 
-herdr pane run "$pane" "claude --resume $sid --fork-session"
-echo "forked session $sid -> pane $pane"
+    # pane.split has no folder argument, and claude --resume looks sessions up
+    # by project directory, so cd explicitly. PATH is passed so the new
+    # terminal resolves the same tools as this shell.
+    argv=$(python3 -c "
+import json, sys
+print(json.dumps(['/usr/bin/env', 'PATH=' + sys.argv[1], 'sh', '-c',
+                  'cd \"\$1\" && exec \"\$2\" --resume \"\$3\" --fork-session',
+                  'sh', sys.argv[2], sys.argv[3], sys.argv[4]]))
+" "$PATH" "$PWD" "$claude_bin" "$sid")
+
+    if ! result=$(herdr-app do pane.split --direction "$direction" --pane "$pane" --argv "$argv"); then
+        echo "$name: herdr-app pane.split failed: $result" >&2
+        exit 1
+    fi
+    new=$(printf '%s' "$result" | python3 -c "
+import sys, json
+r = json.load(sys.stdin)
+if 'error' in r:
+    sys.exit(r['error'])
+print('%s (terminal %s)' % (r.get('pane'), r.get('terminal')))
+")
+    echo "forked session $sid -> pane $new"
+}
+
+if [ "${HERDR_ENV:-}" = "1" ]; then
+    fork_legacy_herdr "$@"
+elif [ -n "${HC_TERMINAL_ID:-}" ] && command -v herdr-app >/dev/null 2>&1; then
+    fork_herdr_app "$@"
+elif [ -n "${HC_TERMINAL_ID:-}" ]; then
+    echo "$name: running under herdr-core (HC_TERMINAL_ID=$HC_TERMINAL_ID) but herdr-app is not available on this machine" >&2
+    exit 1
+else
+    echo "$name: not running inside Herdr (HERDR_ENV != 1 and HC_TERMINAL_ID unset)" >&2
+    exit 1
+fi

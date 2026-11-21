@@ -1,0 +1,30 @@
+# Shared settings only. Never add keys, secrets, or tokens.
+workspace = "asonas"
+state_dir = "~/ghq/github.com/asonas/nastack/.local/runs"
+codex = "codex"
+
+[github_app]
+app_id = 5526984
+slug = "nastack-agent"
+private_key_path = "~/ghq/github.com/asonas/nastack/.local/github-app/private-key.pem"
+
+[[projects]]
+id = "7596bdcc-8697-44a6-973a-d04f4ed7e9cc"
+repo = "~/ghq/github.com/asonas/syncstr"
+
+[[projects]]
+id = "69e305ea-0813-4994-8706-9b911c9c103e"
+repo = "~/ghq/github.com/asonas/weblog.ason.as"
+
+[linear_app]
+client_id = "f2bbc7fc3ca6c5c4aefa0dbe35bcb5d8"
+actor_id = "edc9d57a-6ab8-4d91-924c-67068b90b8e0"
+workspace_id = "5d3383ad-0d37-418f-b5d8-f4345f6108a8"
+
+[model_routing]
+standard_model = "gpt-6.1-sol"
+advanced_model = "gpt-6-astra"
+
+[[projects]]
+id = "0ca84d82-dd2d-471b-9161-defcf19609c2"
+repo = "~/ghq/github.com/asonas/nastack"

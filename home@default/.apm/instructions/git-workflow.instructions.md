@@ -4,19 +4,11 @@ description: Git workflow rules (worktree-first development, safe path handling)
 
 # Git Workflow
 
-- Before creating or amending commits, rebasing (including continue), cherry-picking, or integrating a branch into main, read `/commit-style` and follow its signing and verification workflow.
+- Before creating or amending commits, rebasing (including continue), cherry-picking, or integrating a branch into main, read `asonas:commit-style` and follow its signing and verification workflow.
 
 - gitリポジトリで新しい作業（機能開発、バグ修正、実験）を始めるときは、標準の `git worktree` でworktreeを作成すること。mainブランチで直接コミットしない
 - 新しいブランチとworktreeは `git worktree add -b <branch> .worktrees/<branch> <start-point>` で作成する
+- 例外: `/software-factory-mode-2026aki`（および2026akiを土台にする2026hashi）を起動したsessionでは、worktreeの場所・branch名の付け方・後始末はそのスキルの指示に従う（`.claude/worktrees/<branch>`、`対象-性質` のcamelCase）。それ以外のsessionでは `.worktrees/<branch>` を使う
 - 作業完了後は `git worktree remove .worktrees/<branch>` でworktreeを削除し、マージ済みを確認してから `git branch -d <branch>` と `git worktree prune` を実行する
 - Never use `cd /path && git ...`. Use `git -C /path ...` instead to avoid bare repository attack warnings
 - カレントディレクトリがworktree内であれば、絶対パスで `cd` せずそのままコマンドを実行すること。`cd /absolute/path/to/worktree && mise run test:backend` のような冗長なコマンドは禁止。単に `mise run test:backend` と実行すればよい
-
-## Linear Integration
-
-- Do not create merge commits in this repository.
-- Immediately before integration, rebase the worktree branch onto the current `main` branch using the AI-key signing procedure in `/commit-style`, then verify every commit being integrated as specified there.
-- Resolve rebase conflicts on the worktree branch, then run the relevant focused verification again before integration.
-- From `main`, integrate a rebased branch only with `git merge --ff-only <branch>`.
-- If fast-forward integration fails, stop and repair the branch history. Do not use a regular merge, `--no-ff`, or another workaround that creates a merge commit.
-- Confirm that `main` is clean and has not moved unexpectedly before the fast-forward integration.

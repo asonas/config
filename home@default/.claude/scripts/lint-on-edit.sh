@@ -1,6 +1,7 @@
 #!/bin/bash
-# PostToolUse hook: Run formatter and linter on edited files
-# Reads JSON from stdin, extracts file_path, runs appropriate tools
+# PostToolUse hook: format and lint only the file that was just edited.
+# Runs synchronously so the file is settled before Claude's next edit, and
+# never rewrites other files in the project.
 
 INPUT=$(cat)
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
@@ -14,29 +15,40 @@ if [ -z "$PROJECT_DIR" ]; then
   exit 0
 fi
 
+cd "$PROJECT_DIR" || exit 0
+
 case "$FILE_PATH" in
   *.ts|*.tsx|*.js|*.jsx)
-    # Format first, then lint
-    if [ -f "$PROJECT_DIR/node_modules/.bin/prettier" ]; then
-      cd "$PROJECT_DIR" && npx prettier --write "$FILE_PATH" 2>&1
+    if [ -x node_modules/.bin/prettier ]; then
+      node_modules/.bin/prettier --write "$FILE_PATH" >/dev/null 2>&1
     fi
-    if [ -f "$PROJECT_DIR/node_modules/.bin/eslint" ]; then
-      cd "$PROJECT_DIR" && npx eslint --fix "$FILE_PATH" 2>&1
+    if [ -x node_modules/.bin/eslint ]; then
+      node_modules/.bin/eslint --fix "$FILE_PATH" >/dev/null 2>&1
     fi
     ;;
   *.rb)
-    if [ -f "$PROJECT_DIR/Gemfile" ] && grep -q "rubocop" "$PROJECT_DIR/Gemfile"; then
-      cd "$PROJECT_DIR" && bundle exec rubocop -a "$FILE_PATH" 2>&1
+    if [ -f Gemfile ] && grep -q "rubocop" Gemfile; then
+      bundle exec rubocop -a "$FILE_PATH" >/dev/null 2>&1
     fi
     ;;
   *.rs)
-    if [ -f "$PROJECT_DIR/Cargo.toml" ]; then
-      cd "$PROJECT_DIR" && cargo clippy --fix --allow-dirty --allow-staged -- -W clippy::all 2>&1
+    # `cargo fmt -- <file>` formats the whole crate as well as the file, so
+    # call rustfmt on the file alone. rustfmt cannot learn the edition from a
+    # single file, so read it from the nearest Cargo.toml above the file.
+    if command -v rustfmt >/dev/null 2>&1; then
+      dir=$(dirname "$FILE_PATH")
+      while [ "$dir" != "/" ] && [ ! -f "$dir/Cargo.toml" ]; do
+        dir=$(dirname "$dir")
+      done
+      if [ -f "$dir/Cargo.toml" ]; then
+        edition=$(sed -n 's/^edition *= *"\([0-9]*\)".*/\1/p' "$dir/Cargo.toml" | head -n 1)
+        rustfmt --edition "${edition:-2021}" "$FILE_PATH" >/dev/null 2>&1
+      fi
     fi
     ;;
   *.css|*.json)
-    if [ -f "$PROJECT_DIR/node_modules/.bin/prettier" ]; then
-      cd "$PROJECT_DIR" && npx prettier --write "$FILE_PATH" 2>&1
+    if [ -x node_modules/.bin/prettier ]; then
+      node_modules/.bin/prettier --write "$FILE_PATH" >/dev/null 2>&1
     fi
     ;;
 esac
