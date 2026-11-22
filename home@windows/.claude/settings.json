@@ -1,17 +1,30 @@
 {
-  "autoUpdatesChannel": "latest",
   "hooks": {
     "SessionStart": [
       {
+        "matcher": "startup|clear|compact",
         "hooks": [
           {
             "type": "command",
             "command": "\"C:\\Users\\asonas\\.claude\\hooks\\superpowers\\hooks\\run-hook.cmd\" session-start",
             "async": false
           }
-        ],
-        "matcher": "startup|clear|compact"
+        ]
       }
     ]
-  }
+  },
+  "extraKnownMarketplaces": {
+    "cursor-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "cursor/plugins"
+      },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "asonas@asonas-skills": true,
+    "pstack@cursor-plugins": true
+  },
+  "autoUpdatesChannel": "latest"
 }
