@@ -13,7 +13,15 @@
       }
     ]
   },
-  "extraKnownMarketplaces": {"cursor-plugins": {"source": {"source": "github", "repo": "cursor/plugins"}}},
+  "extraKnownMarketplaces": {
+    "cursor-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "cursor/plugins"
+      },
+      "autoUpdate": true
+    }
+  },
   "enabledPlugins": {
     "asonas@asonas-skills": true,
     "pstack@cursor-plugins": true
