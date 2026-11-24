@@ -389,13 +389,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 eval "$(mise activate zsh)"
 
-# herdr: 新規 pane を開いたとき（=ログインシェル起動時）に入力ソースを英数(ABC)へ切り替える。
-# herdr に on-create hook は無いが、pane ごとに login shell が起動し HERDR_ENV=1 が入るので
-# それを pane 作成の callback 代わりに使う。`-o login` でガードして、pane 内で手動起動した
-# 非ログインの zsh サブシェルでは再発火させない。第2引数は付けず macism のデフォルト workaround
-# (150ms) を効かせる。macOS 26 (Tahoe) では入力ソース選択がアクティベーション周期を経るまで確定
-# しないため、workaround を切ると (第2引数 0) pane 生成時の切替が確定せず日本語のまま残ることがある。
-if [[ "$HERDR_ENV" == "1" && -o login ]] && (( $+commands[macism] )); then
+# Start Herdr login shells in ABC. The legacy CLI sets HERDR_ENV and Herdr.app uses HC_TERMINAL_ID.
+# Keep macism's default activation delay so the input source reliably switches on macOS 26.
+if [[ -o login && ( "$HERDR_ENV" == "1" || -n "$HC_TERMINAL_ID" ) ]] && (( $+commands[macism] )); then
   macism com.apple.keylayout.ABC >/dev/null 2>&1
 fi
 
