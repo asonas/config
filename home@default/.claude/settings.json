@@ -66,7 +66,7 @@
     "command": "~/.claude/scripts/statusline-usage.py"
   },
   "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": false,
+    "clangd-lsp@claude-plugins-official": true,
     "cman@cman": true,
     "crit@crit": true,
     "ruby-lsp@claude-plugins-official": true,
