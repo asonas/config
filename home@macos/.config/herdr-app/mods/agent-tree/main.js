@@ -117,13 +117,15 @@ function etimeMs(etime) {
   return (((days * 24 + hours) * 60 + minutes) * 60 + seconds) * 1000;
 }
 
+// Reads `LC_ALL=C TZ=UTC0 ps -o pid=,ppid=,lstart=,etime=,args=`. lstart ("Fri Nov  7 21:53:12 2026") is kept as text: with pid it
+// tells a reused pid apart. `started` is only for showing an age
 function parsePs(stdout, now) {
   const procs = new Map();
   const kids = new Map();
   for (const line of stdout.split("\n")) {
-    const m = line.match(/^\s*(\d+)\s+(\d+)\s+(\S+)\s+(.*)$/);
+    const m = line.match(/^\s*(\d+)\s+(\d+)\s+(\S+\s+\S+\s+\d+\s+[\d:]+\s+\d+)\s+(\S+)\s+(.*)$/);
     if (!m) continue;
-    const p = { pid: Number(m[1]), ppid: Number(m[2]), started: now - etimeMs(m[3]), args: m[4] };
+    const p = { pid: Number(m[1]), ppid: Number(m[2]), since: m[3].replace(/\s+/g, " "), started: now - etimeMs(m[4]), args: m[5] };
     procs.set(p.pid, p);
     if (!kids.has(p.ppid)) kids.set(p.ppid, []);
     kids.get(p.ppid).push(p.pid);
@@ -131,17 +133,25 @@ function parsePs(stdout, now) {
   return { procs, kids };
 }
 
-// Agent CLIs below `pid`, nested by which CLI started which, skipping the processes in between
-// `path` stops a cycle, which a ps snapshot can hold while pids are reused
-function cliNodes(ps, pid, ownerSeen, path = new Set([pid])) {
+// The CLI's name when a runtime runs it: such a launcher (npm's codex) starts the native binary of the same name
+function launcherOf(proc) {
+  const cli = agentCli(proc.args);
+  return cli && RUNTIMES.test(basename(proc.args.trim().split(/\s+/)[0])) ? cli.name : null;
+}
+
+// Agent CLIs below `pid`, nested by which CLI started which, skipping the processes in between.
+// `ownerSeen` is decided per branch: a shell with a second branch beside its agent shows that branch's first CLI as the agent.
+// `path` stops a cycle, which a ps snapshot can hold while pids are reused. `launched` merges a launcher and its binary into one row
+function cliNodes(ps, pid, ownerSeen, path = new Set([pid]), launched = null) {
   return (ps.kids.get(pid) ?? []).flatMap((child) => {
     if (path.has(child) || path.size > 64) return [];
     const below = new Set(path).add(child);
     const proc = ps.procs.get(child);
     const cli = agentCli(proc.args);
-    if (!cli) return cliNodes(ps, child, ownerSeen, below);
-    if (!ownerSeen) return cliNodes(ps, child, true, below);
-    return [{ proc, cli, children: cliNodes(ps, child, true, below) }];
+    if (!cli) return cliNodes(ps, child, ownerSeen, below, launched);
+    if (cli.name === launched) return cliNodes(ps, child, ownerSeen, below, null);
+    if (!ownerSeen) return cliNodes(ps, child, true, below, launcherOf(proc));
+    return [{ proc, cli, children: cliNodes(ps, child, true, below, launcherOf(proc)) }];
   });
 }
 
@@ -164,7 +174,7 @@ export default class Agents extends View {
     if (!Array.isArray(this.pendingPins)) this.pendingPins = [];
     if (!this.pendingPins.length) localStorage.removeItem("pins");
     this.migratingPins = new Set();
-    // Terminal address → { pid, started } of the program it started, and → the agent CLIs running below it
+    // Terminal address → { pid, since, checked } of the program it started, and → the agent CLIs running below it
     this.roots = new Map();
     this.procs = new Map();
     cx.timer.every(30000, (cx) => cx.notify());
@@ -179,32 +189,37 @@ export default class Agents extends View {
         // ps sees this computer only
         const local = agents().filter((a) => !a.address.includes("/")).map((a) => a.address);
         for (const address of local) {
-          if (this.roots.has(address)) continue;
+          const known = this.roots.get(address);
+          // hc gives no process identity: a pid reused before the first ps is caught only by this periodic recheck
+          if (known && Date.now() - known.checked < 60000) continue;
           try {
             const r = await hc(["get", address, "--json"]);
             const pid = r.code === 0 ? JSON.parse(r.stdout).pid : null;
-            if (pid) this.roots.set(address, { pid, started: null });
+            if (pid) this.roots.set(address, { pid, since: pid === known?.pid ? known.since : null, checked: Date.now() });
           } catch {
             // Asked again on the next poll; the other terminals go on
           }
         }
         for (const address of [...this.roots.keys()]) if (!local.includes(address)) this.roots.delete(address);
-        const r = await exec("ps", ["-A", "-o", "pid=,ppid=,etime=,args="], { timeout: 5000 });
+        // TZ keeps lstart the same text for one process when the system time zone changes
+        const r = await exec("/usr/bin/env", ["LC_ALL=C", "TZ=UTC0", "/bin/ps", "-A", "-o", "pid=,ppid=,lstart=,etime=,args="], { timeout: 5000 });
         if (r.code !== 0) return;
         const now = Date.now();
         const ps = parsePs(r.stdout, now);
         const next = new Map();
         for (const [address, known] of this.roots) {
+          // A pairing hc has not confirmed for a while may point at another process: show nothing until hc answers again
+          if (now - known.checked > 70000) continue;
           const root = ps.procs.get(known.pid);
           // A kept terminal can come back with a new process under the same address, and its old pid can go to another
-          // process. etime has whole seconds, so the start time read from two snapshots can differ by about one
-          if (!root || (known.started != null && Math.abs(root.started - known.started) > 2000)) {
-            this.roots.delete(address);
+          // process. `since` stays, so a pid that hc still reports is not taken again while another process holds it
+          if (!root || (known.since != null && root.since !== known.since)) {
+            known.checked = 0;
             continue;
           }
-          known.started ??= root.started;
+          known.since ??= root.since;
           // The started program is a shell, or the agent itself when the terminal runs it directly
-          const nodes = cliNodes(ps, known.pid, Boolean(agentCli(root.args)));
+          const nodes = cliNodes(ps, known.pid, Boolean(agentCli(root.args)), undefined, launcherOf(root));
           if (nodes.length) next.set(address, nodes);
         }
         // Every redraw repaints the whole window: redraw only when what the rows read changes
