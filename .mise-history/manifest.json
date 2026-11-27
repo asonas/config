@@ -212,6 +212,48 @@
       ]
     },
     {
+      "path": "home/.config/herdr-app/layouts/asonas.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/mods/agent-tree/main.js",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
+      "path": "home/.config/herdr-app/mods/agent-tree/mod.json",
+      "autosave": true,
+      "encrypt": false,
+      "variants": [
+        {
+          "os": [
+            "macos"
+          ],
+          "profile": null,
+          "default": false
+        }
+      ]
+    },
+    {
       "path": "home/.config/herdr-app/mods/focus-attention/main.js",
       "autosave": true,
       "encrypt": false,
