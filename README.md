@@ -159,7 +159,9 @@ For a newly considered path:
 3. Show the exact tracking candidate set before mutation.
 4. Track the smallest stable path.
 5. Confirm `mise bootstrap dotfiles status` and the saved revision.
-6. Use manual synchronization until the remote candidate has been reviewed.
+6. Expect the path to be public soon after step 4: in sync mode the history
+   watcher pushes new checkpoints to the origin without a manual step, so finish
+   the review in steps 1-3 before tracking.
 
 Exclusions are a backstop, not the primary boundary. Prefer a narrow tracking
 entry over tracking a broad directory with a growing denylist.
@@ -306,14 +308,14 @@ accounted for. Archive it only after a second-machine restore succeeds.
 ## Current status
 
 - Repository design documented.
-- mise 2026.9.5 installed.
+- mise 2026.11.14 installed, with self-update enabled.
 - 24 legacy dotfile entries migrated from symlinks to regular live paths.
 - Eight APM source files migrated to regular live paths.
-- 32 explicit entries covering 62 files tracked in mise history.
+- 54 explicit entries covering 102 files tracked in mise history.
 - Neovim history and Karabiner automatic backups excluded from future captures.
 - The `mise-history` user service is running and automatic capture is active.
 - The public `asonas/config` repository is connected as the setup origin in
-  manual sync mode, and the initial history has been published.
+  sync mode: the history watcher publishes new checkpoints automatically.
 - Global APM install and compile were previewed but not applied. The install
   preview would remove two skills installed by the separate Gist workflow, so
   that workflow must be migrated before APM bootstrap can replace the old
