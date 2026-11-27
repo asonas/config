@@ -133,17 +133,25 @@ function parsePs(stdout, now) {
   return { procs, kids };
 }
 
-// Agent CLIs below `pid`, nested by which CLI started which, skipping the processes in between
-// `path` stops a cycle, which a ps snapshot can hold while pids are reused
-function cliNodes(ps, pid, ownerSeen, path = new Set([pid])) {
+// The CLI's name when a runtime runs it: such a launcher (npm's codex) starts the native binary of the same name
+function launcherOf(proc) {
+  const cli = agentCli(proc.args);
+  return cli && RUNTIMES.test(basename(proc.args.trim().split(/\s+/)[0])) ? cli.name : null;
+}
+
+// Agent CLIs below `pid`, nested by which CLI started which, skipping the processes in between.
+// `ownerSeen` is decided per branch: a shell with a second branch beside its agent shows that branch's first CLI as the agent.
+// `path` stops a cycle, which a ps snapshot can hold while pids are reused. `launched` merges a launcher and its binary into one row
+function cliNodes(ps, pid, ownerSeen, path = new Set([pid]), launched = null) {
   return (ps.kids.get(pid) ?? []).flatMap((child) => {
     if (path.has(child) || path.size > 64) return [];
     const below = new Set(path).add(child);
     const proc = ps.procs.get(child);
     const cli = agentCli(proc.args);
-    if (!cli) return cliNodes(ps, child, ownerSeen, below);
-    if (!ownerSeen) return cliNodes(ps, child, true, below);
-    return [{ proc, cli, children: cliNodes(ps, child, true, below) }];
+    if (!cli) return cliNodes(ps, child, ownerSeen, below, launched);
+    if (cli.name === launched) return cliNodes(ps, child, ownerSeen, below, null);
+    if (!ownerSeen) return cliNodes(ps, child, true, below, launcherOf(proc));
+    return [{ proc, cli, children: cliNodes(ps, child, true, below, launcherOf(proc)) }];
   });
 }
 
