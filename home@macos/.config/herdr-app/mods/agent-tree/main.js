@@ -117,7 +117,7 @@ function etimeMs(etime) {
   return (((days * 24 + hours) * 60 + minutes) * 60 + seconds) * 1000;
 }
 
-// Reads `LC_ALL=C ps -o pid=,ppid=,lstart=,etime=,args=`. lstart ("Fri Nov  7 21:53:12 2026") is kept as text: with pid it
+// Reads `LC_ALL=C TZ=UTC0 ps -o pid=,ppid=,lstart=,etime=,args=`. lstart ("Fri Nov  7 21:53:12 2026") is kept as text: with pid it
 // tells a reused pid apart. `started` is only for showing an age
 function parsePs(stdout, now) {
   const procs = new Map();
@@ -201,21 +201,25 @@ export default class Agents extends View {
           }
         }
         for (const address of [...this.roots.keys()]) if (!local.includes(address)) this.roots.delete(address);
-        const r = await exec("env", ["LC_ALL=C", "ps", "-A", "-o", "pid=,ppid=,lstart=,etime=,args="], { timeout: 5000 });
+        // TZ keeps lstart the same text for one process when the system time zone changes
+        const r = await exec("/usr/bin/env", ["LC_ALL=C", "TZ=UTC0", "/bin/ps", "-A", "-o", "pid=,ppid=,lstart=,etime=,args="], { timeout: 5000 });
         if (r.code !== 0) return;
         const now = Date.now();
         const ps = parsePs(r.stdout, now);
         const next = new Map();
         for (const [address, known] of this.roots) {
+          // A pairing hc has not confirmed for a while may point at another process: show nothing until hc answers again
+          if (now - known.checked > 70000) continue;
           const root = ps.procs.get(known.pid);
-          // A kept terminal can come back with a new process under the same address, and its old pid can go to another process
+          // A kept terminal can come back with a new process under the same address, and its old pid can go to another
+          // process. `since` stays, so a pid that hc still reports is not taken again while another process holds it
           if (!root || (known.since != null && root.since !== known.since)) {
-            this.roots.delete(address);
+            known.checked = 0;
             continue;
           }
           known.since ??= root.since;
           // The started program is a shell, or the agent itself when the terminal runs it directly
-          const nodes = cliNodes(ps, known.pid, Boolean(agentCli(root.args)));
+          const nodes = cliNodes(ps, known.pid, Boolean(agentCli(root.args)), undefined, launcherOf(root));
           if (nodes.length) next.set(address, nodes);
         }
         // Every redraw repaints the whole window: redraw only when what the rows read changes
