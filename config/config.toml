@@ -136,6 +136,13 @@ run_windows = [{ task = "agents:install" }]
 "~/.config/herdr-app/mods/focus-attention/mod.json" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr-app/mods/legacy-prefix/main.js" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr-app/mods/legacy-prefix/mod.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/my-prs/check.svg" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/my-prs/copy.svg" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/my-prs/main.js" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/my-prs/mod.json" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/my-prs/refresh.svg" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/my-prs/snooze.svg" = { mode = "track", variants = [{ os = "macos" }] }
+"~/.config/herdr-app/mods/my-prs/unsnooze.svg" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr-app/settings.json" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr-app/themes/tokyo-night.json" = { mode = "track", variants = [{ os = "macos" }] }
 "~/.config/herdr/attention-view/apply.py" = { mode = "track", variants = [{ default = true }, { os = "windows" }] }
