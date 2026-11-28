@@ -59,6 +59,8 @@ const kidStatus = (k, listed) => {
   const s = k.status;
   return s === "error" ? "blocked" : s === "done" ? "idle" : s;
 };
+// An OSC 7501 record (see recRows) read the same way: like a sub-agent without a pane, it reports to its parent
+const recStatus = (r) => (r.state === "error" ? "blocked" : r.state === "done" ? "idle" : r.state);
 const SORTS = [
   { id: "priority", label: "Priority", icon: "clock" },
   { id: "grouped", label: "Grouped by space", icon: "layers" },
@@ -246,6 +248,39 @@ export default class Agents extends View {
     });
   }
 
+  // OSC 7501 records other than the terminal's own status, e.g. Claude Code's in-process sub-agents. Claude Code drops a record when the sub-agent ends
+  recRows(term) {
+    const recs = Object.entries(term?.records ?? {});
+    return recs.map(([id, r], i) => ({ r: { id, ...r }, addr: term.address, lines: [i === recs.length - 1 ? "└" : "├"] }));
+  }
+
+  recRow(t, s) {
+    const { id, app, title, msg } = s.r;
+    const name = app === "claude-code" ? "claude" : app;
+    // An app without a bundled icon gets the generic one
+    const pic = AGENT_CLIS.has(name)
+      ? (TINTED.has(name) ? svg(`icons/${ICON[name] ?? name}.svg`).size(14).flex_none().text_color(t.foreground) : image(`icons/${ICON[name] ?? name}.svg`).w(14).h(14).flex_none())
+      : svg("icons/agent.svg").size(14).flex_none().text_color(t.foreground);
+    return h_flex()
+      .id(`rec-${s.addr}-${id}`)
+      .pl(39)
+      .pr(8)
+      .rounded(8)
+      .h(26)
+      .flex_none()
+      .gap(0)
+      .items_center()
+      .text_size(12.5)
+      .hover((el) => el.bg(t.hover))
+      .when(Boolean(msg), (el) => el.tooltip(msg))
+      .children(s.lines.map(l => div().self_start().mt(-4).w(9).h(17).mr(4).flex_none()
+        .when(Boolean(l), el => el.border_l(1.5).border_color(t.input))
+        .when(l === "└" || l === "├", el => el.border_b(1.5).rounded_bl(6))))
+      .child(div().mr(8).child(pic))
+      .child(div().flex_1().min_w(0).truncate().text_color(t.muted).child(title?.trim() || id))
+      .child(this.status(t, { status: recStatus(s.r) }, true));
+  }
+
   procRow(t, s, now) {
     const { proc, cli } = s.p;
     const model = cliModel(cli);
@@ -418,7 +453,8 @@ export default class Agents extends View {
     const byPriority = sort.id === "priority";
     // A helper's done is its own row's news: it doesn't pull a working parent out of Working.
     const kidRank = (k) => { const s = kidStatus(k, this.listed); return RANK[s === "done" ? "idle" : s] ?? 0; };
-    const urgency = new Map(list.map((a) => [a.address, Math.max(this.rank(a), ...this.tree(all, a.address).map((s) => kidRank(s.t)))]));
+    const recRank = (a) => Object.values(all.find((x) => x.address === a.address)?.records ?? {}).map((r) => RANK[recStatus(r)] ?? 0);
+    const urgency = new Map(list.map((a) => [a.address, Math.max(this.rank(a), ...this.tree(all, a.address).map((s) => kidRank(s.t)), ...recRank(a))]));
     const rankOf = (a) => urgency.get(a.address);
     if (byPriority) list = [...list].sort((x, y) => rankOf(y) - rankOf(x) || this.since(y) - this.since(x) || y.seq - x.seq);
     const pinned = list.filter((a) => a.pinned);
@@ -428,17 +464,20 @@ export default class Agents extends View {
 
     const withKids = (a, i) => {
       const subs = collapsed ? [] : this.tree(all, a.address);
+      const recs = collapsed ? [] : this.recRows(all.find((x) => x.address === a.address));
       const procs = collapsed ? [] : this.procRows(this.procs.get(a.address) ?? []);
-      // CLI processes come after the sub-agents, so the last sub-agent's branch continues past it
-      if (procs.length) for (const s of subs) s.lines[0] = s.lines[0] === "└" ? "├" : s.lines[0] === "" ? "│" : s.lines[0];
-      const r = row(a, i, [...subs, ...procs]);
+      // Groups follow one another, so the last branch of an earlier group continues past it
+      const cont = (group) => { for (const s of group) s.lines[0] = s.lines[0] === "└" ? "├" : s.lines[0] === "" ? "│" : s.lines[0]; };
+      if (recs.length || procs.length) cont(subs);
+      if (procs.length) cont(recs);
+      const r = row(a, i, [...subs, ...recs, ...procs]);
       if (this.folded.has(a.address)) return [r];
-      return [r, ...subs.map((s) => this.subRow(t, s, shown, byPriority)), ...procs.map((s) => this.procRow(t, s, now))];
+      return [r, ...subs.map((s) => this.subRow(t, s, shown, byPriority)), ...recs.map((s) => this.recRow(t, s)), ...procs.map((s) => this.procRow(t, s, now))];
     };
 
     // The fold chevron; folded, the count too, colored by the most urgent one.
     const fold = (a, subs) => {
-      const sts = subs.map((s) => (s.p ? "working" : kidStatus(s.t, this.listed)));
+      const sts = subs.map((s) => (s.p ? "working" : s.r ? recStatus(s.r) : kidStatus(s.t, this.listed)));
       const top = sts.reduce((m, s) => ((RANK[s] ?? 0) > (RANK[m] ?? 0) ? s : m), null);
       const open = !this.folded.has(a.address);
       return div()
