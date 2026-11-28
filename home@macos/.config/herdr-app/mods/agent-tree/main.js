@@ -84,7 +84,7 @@ const AGENT_CLIS = new Set(["codex", "claude", "pi", "gemini", "opencode", "curs
 const RUNTIMES = /^(node|bun|deno|python[\d.]*)$/i;
 // Icons that are one-color glyphs; the others carry their own colors
 const TINTED = new Set(["gemini", "opencode", "cursor-agent"]);
-const ICON = { "cursor-agent": "cursor", "claude-code": "claude" };
+const ICON = { "cursor-agent": "cursor" };
 const basename = (path) => (path ?? "").split("/").pop();
 
 // { name, rest } for an agent CLI's command line, else null. Splits on whitespace, so a path with spaces is not matched
@@ -256,7 +256,7 @@ export default class Agents extends View {
 
   recRow(t, s) {
     const { id, app, title, msg } = s.r;
-    const name = ICON[app] ?? app;
+    const name = app === "claude-code" ? "claude" : app;
     // An app without a bundled icon gets the generic one
     const pic = AGENT_CLIS.has(name)
       ? (TINTED.has(name) ? svg(`icons/${ICON[name] ?? name}.svg`).size(14).flex_none().text_color(t.foreground) : image(`icons/${ICON[name] ?? name}.svg`).w(14).h(14).flex_none())
