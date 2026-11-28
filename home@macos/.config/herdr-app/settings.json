@@ -9,5 +9,6 @@
   "minimum_contrast": 1,
   "appearance": "dark",
   "theme": "tokyo-night",
-  "font_size": 16
+  "font_size": 16,
+  "font_weight": 700
 }
