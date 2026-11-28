@@ -162,6 +162,39 @@
               "min": 280,
               "max": 900,
               "hidden": true
+            },
+            {
+              "id": "summary-panel",
+              "type": "column",
+              "size": {
+                "px": 420
+              },
+              "min": 280,
+              "max": 900,
+              "radius": 10,
+              "border": {
+                "width": 1,
+                "color": "border"
+              },
+              "children": [
+                {
+                  "id": "summary-head",
+                  "type": "block",
+                  "size": {
+                    "px": 30
+                  },
+                  "content": {
+                    "mod": "summary"
+                  }
+                },
+                {
+                  "id": "summary-body",
+                  "type": "block",
+                  "content": {
+                    "terminal": "t1gp"
+                  }
+                }
+              ]
             }
           ],
           "padding": 8,
