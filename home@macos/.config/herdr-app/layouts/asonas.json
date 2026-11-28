@@ -212,16 +212,6 @@
         }
       ],
       "resizable": false
-    },
-    {
-      "id": "b6dc46a39c8f5ed4998f9f3a398e9a8b9",
-      "type": "block",
-      "content": {
-        "mod": "summary"
-      },
-      "size": {
-        "px": 320
-      }
     }
   ],
   "background": "canvas",
