@@ -50,13 +50,13 @@
             {
               "id": "my-prs",
               "type": "block",
+              "content": {
+                "mod": "my-prs"
+              },
               "size": {
                 "weight": 1
               },
-              "min": 120,
-              "content": {
-                "mod": "my-prs"
-              }
+              "min": 120
             }
           ]
         },
@@ -179,6 +179,16 @@
         }
       ],
       "resizable": false
+    },
+    {
+      "id": "b6dc46a39c8f5ed4998f9f3a398e9a8b9",
+      "type": "block",
+      "content": {
+        "mod": "summary"
+      },
+      "size": {
+        "px": 320
+      }
     }
   ],
   "background": "canvas",
