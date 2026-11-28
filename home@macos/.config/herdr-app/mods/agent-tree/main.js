@@ -82,7 +82,7 @@ const AGENT_CLIS = new Set(["codex", "claude", "pi", "gemini", "opencode", "curs
 const RUNTIMES = /^(node|bun|deno|python[\d.]*)$/i;
 // Icons that are one-color glyphs; the others carry their own colors
 const TINTED = new Set(["gemini", "opencode", "cursor-agent"]);
-const ICON = { "cursor-agent": "cursor" };
+const ICON = { "cursor-agent": "cursor", "claude-code": "claude" };
 const basename = (path) => (path ?? "").split("/").pop();
 
 // { name, rest } for an agent CLI's command line, else null. Splits on whitespace, so a path with spaces is not matched
@@ -244,6 +244,38 @@ export default class Agents extends View {
       const last = i === nodes.length - 1;
       return [{ p: n, lines: [...lead, last ? "└" : "├"] }, ...this.procRows(n.children, [...lead, last ? "" : "│"])];
     });
+  }
+
+  // OSC 7501 records other than the terminal's own status, e.g. Claude Code's in-process sub-agents. Claude Code drops a record when the sub-agent ends
+  recRows(term) {
+    const recs = Object.entries(term?.records ?? {});
+    return recs.map(([id, r], i) => ({ r: { id, ...r }, lines: [i === recs.length - 1 ? "└" : "├"] }));
+  }
+
+  recRow(t, s) {
+    const { id, app, title, msg, state } = s.r;
+    const name = ICON[app] ?? app;
+    const path = `icons/${name}.svg`;
+    const pic = !app ? null : TINTED.has(name) ? svg(path).size(14).flex_none().text_color(t.foreground) : image(path).w(14).h(14).flex_none();
+    const status = state === "error" ? "blocked" : state === "done" ? "idle" : state;
+    return h_flex()
+      .id(`rec-${id}`)
+      .pl(39)
+      .pr(8)
+      .rounded(8)
+      .h(26)
+      .flex_none()
+      .gap(0)
+      .items_center()
+      .text_size(12.5)
+      .hover((el) => el.bg(t.hover))
+      .when(Boolean(msg), (el) => el.tooltip(msg))
+      .children(s.lines.map(l => div().self_start().mt(-4).w(9).h(17).mr(4).flex_none()
+        .when(Boolean(l), el => el.border_l(1.5).border_color(t.input))
+        .when(l === "└" || l === "├", el => el.border_b(1.5).rounded_bl(6))))
+      .when(Boolean(pic), (el) => el.child(div().mr(8).child(pic)))
+      .child(div().flex_1().min_w(0).truncate().text_color(t.muted).child(title || id))
+      .child(this.status(t, { status }, true));
   }
 
   procRow(t, s, now) {
@@ -428,17 +460,20 @@ export default class Agents extends View {
 
     const withKids = (a, i) => {
       const subs = collapsed ? [] : this.tree(all, a.address);
+      const recs = collapsed ? [] : this.recRows(all.find((x) => x.address === a.address));
       const procs = collapsed ? [] : this.procRows(this.procs.get(a.address) ?? []);
-      // CLI processes come after the sub-agents, so the last sub-agent's branch continues past it
-      if (procs.length) for (const s of subs) s.lines[0] = s.lines[0] === "└" ? "├" : s.lines[0] === "" ? "│" : s.lines[0];
-      const r = row(a, i, [...subs, ...procs]);
+      // Groups follow one another, so the last branch of an earlier group continues past it
+      const cont = (group) => { for (const s of group) s.lines[0] = s.lines[0] === "└" ? "├" : s.lines[0] === "" ? "│" : s.lines[0]; };
+      if (recs.length || procs.length) cont(subs);
+      if (procs.length) cont(recs);
+      const r = row(a, i, [...subs, ...recs, ...procs]);
       if (this.folded.has(a.address)) return [r];
-      return [r, ...subs.map((s) => this.subRow(t, s, shown, byPriority)), ...procs.map((s) => this.procRow(t, s, now))];
+      return [r, ...subs.map((s) => this.subRow(t, s, shown, byPriority)), ...recs.map((s) => this.recRow(t, s)), ...procs.map((s) => this.procRow(t, s, now))];
     };
 
     // The fold chevron; folded, the count too, colored by the most urgent one.
     const fold = (a, subs) => {
-      const sts = subs.map((s) => (s.p ? "working" : kidStatus(s.t, this.listed)));
+      const sts = subs.map((s) => (s.p ? "working" : s.r ? (s.r.state === "error" ? "blocked" : s.r.state) : kidStatus(s.t, this.listed)));
       const top = sts.reduce((m, s) => ((RANK[s] ?? 0) > (RANK[m] ?? 0) ? s : m), null);
       const open = !this.folded.has(a.address);
       return div()
