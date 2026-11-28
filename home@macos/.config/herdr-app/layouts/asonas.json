@@ -178,20 +178,10 @@
               },
               "children": [
                 {
-                  "id": "summary-head",
+                  "id": "summary",
                   "type": "block",
-                  "size": {
-                    "px": 30
-                  },
                   "content": {
                     "mod": "summary"
-                  }
-                },
-                {
-                  "id": "summary-body",
-                  "type": "block",
-                  "content": {
-                    "terminal": "t1gp"
                   }
                 }
               ]
